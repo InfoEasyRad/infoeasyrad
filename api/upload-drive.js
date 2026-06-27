@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const { Readable } = require('stream');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -15,21 +15,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Faltan campos: texto y nombreArchivo' });
     }
 
-    // Limpiar y formatear la private key correctamente
-    // Maneja: \n literales, \\n escapados, y saltos de línea reales
+    // Limpiar y formatear la private key
     let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
-    
-    // Si viene con comillas al inicio/fin, quitarlas
     privateKey = privateKey.replace(/^["']|["']$/g, '');
-    
-    // Reemplazar todos los tipos de \n por salto de línea real
     privateKey = privateKey.replace(/\\n/g, '\n');
-    
-    // Si no tiene el header correcto, algo está mal
+
     if (!privateKey.includes('-----BEGIN')) {
       return res.status(500).json({ 
-        error: 'Private key inválida. Verificá la variable GOOGLE_PRIVATE_KEY en Vercel.',
-        hint: 'La key debe empezar con -----BEGIN RSA PRIVATE KEY----- o -----BEGIN PRIVATE KEY-----'
+        error: 'Private key inválida. Verificá GOOGLE_PRIVATE_KEY en Vercel.'
       });
     }
 
@@ -46,7 +39,6 @@ export default async function handler(req, res) {
     const folderId = process.env.GOOGLE_FOLDER_ID;
 
     // 1. Subir texto como Google Doc
-    const stream = Readable.from([texto]);
     const gdoc = await drive.files.create({
       requestBody: {
         name: nombreArchivo + '.docx',
@@ -55,10 +47,9 @@ export default async function handler(req, res) {
       },
       media: {
         mimeType: 'text/plain',
-        body: stream,
+        body: Readable.from([texto]),
       },
     });
-
     const gdocId = gdoc.data.id;
 
     // 2. Exportar como PDF
@@ -67,17 +58,15 @@ export default async function handler(req, res) {
       { responseType: 'stream' }
     );
 
-    // 3. Recoger el PDF
+    // 3. Recoger chunks del PDF
     const chunks = [];
     await new Promise((resolve, reject) => {
       pdfResponse.data.on('data', chunk => chunks.push(chunk));
       pdfResponse.data.on('end', resolve);
       pdfResponse.data.on('error', reject);
     });
-    const pdfBuffer = Buffer.concat(chunks);
-    const pdfStream = Readable.from([pdfBuffer]);
 
-    // 4. Subir PDF a la carpeta Ultrasonidos 2026
+    // 4. Subir PDF a carpeta Ultrasonidos 2026
     const pdfFile = await drive.files.create({
       requestBody: {
         name: nombreArchivo + '.pdf',
@@ -86,32 +75,27 @@ export default async function handler(req, res) {
       },
       media: {
         mimeType: 'application/pdf',
-        body: pdfStream,
+        body: Readable.from([Buffer.concat(chunks)]),
       },
     });
 
     // 5. Eliminar Google Doc temporal
     await drive.files.delete({ fileId: gdocId });
 
-    // 6. Hacer el PDF visible con link directo
+    // 6. Hacer PDF accesible con link
     await drive.permissions.create({
       fileId: pdfFile.data.id,
       requestBody: { role: 'reader', type: 'anyone' },
     });
 
-    const pdfLink = `https://drive.google.com/file/d/${pdfFile.data.id}/view`;
-
     return res.status(200).json({
       success: true,
-      link: pdfLink,
+      link: `https://drive.google.com/file/d/${pdfFile.data.id}/view`,
       nombre: nombreArchivo + '.pdf',
     });
 
   } catch (error) {
-    console.error('Error completo:', error);
-    return res.status(500).json({ 
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    console.error('Error:', error);
+    return res.status(500).json({ error: error.message });
   }
 }
