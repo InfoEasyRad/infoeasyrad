@@ -1,7 +1,6 @@
 {
   "name": "infoeasyrad",
   "version": "1.0.0",
-  "description": "Generador de informes radiológicos por voz",
   "dependencies": {
     "googleapis": "^140.0.0"
   }
