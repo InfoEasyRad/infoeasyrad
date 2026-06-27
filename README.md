@@ -1,16 +1,21 @@
-## Hi there 👋
+# InfoEasyRad
 
-<!--
-**InfoEasyRad/infoeasyrad** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Generador de informes radiológicos por voz para Angiotomografía Coronaria (CCTA).
 
-Here are some ideas to get you started:
+**Dr. Carlos Maldonado — Imagen Cardiovascular**
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Características
+- Dictado por voz con transcripción automática (Whisper)
+- Generación de informes estructurados (GPT-4o)
+- Plantilla CCTA con categoría CAD-RADS
+- Exportación a Word (.docx) con sello y firma
+- Subida automática a Google Drive como PDF
+
+## Tecnologías
+- OpenAI Whisper (transcripción)
+- OpenAI GPT-4o (generación de informes)
+- JSZip (generación de .docx)
+- Google Drive API (almacenamiento)
+
+## Versión
+v8 — 2026
