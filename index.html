@@ -1,1 +1,559 @@
-cat ~/infoeasyrad/index.html | pbcopy
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InfoEasyRad</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f5;display:flex;justify-content:center;padding:2rem 1rem;min-height:100vh}
+.app{width:100%;max-width:680px}
+.hdr{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+.logo{width:40px;height:40px;background:#1D9E75;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600;flex-shrink:0}
+.htitle{font-size:20px;font-weight:600;color:#111}
+.hsub{font-size:12px;color:#888;margin-top:1px}
+.badge{margin-left:auto;font-size:11px;background:#e6f9f2;color:#0f6e56;padding:3px 10px;border-radius:20px;font-weight:500}
+.slabel{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1.25rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+label{font-size:11px;color:#888;font-weight:600;display:block;margin-bottom:3px}
+input[type=text],input[type=password],input[type=date]{width:100%;padding:8px 10px;font-size:13px;border:1px solid #ddd;border-radius:8px;outline:none;font-family:inherit;color:#222}
+input:focus{border-color:#1D9E75}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1}
+.sbtn{padding:8px 14px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;color:#333;font-family:inherit;white-space:nowrap}
+.sbtn:hover{background:#f5f5f5}
+.mic-pac{padding:8px 12px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;color:#333;font-family:inherit;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px}
+.mic-pac:hover{background:#f0faf6;border-color:#1D9E75}
+.mic-pac.rec{background:#fff5f5;border-color:#e24b4a;color:#e24b4a;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(226,75,74,.2)}50%{box-shadow:0 0 0 6px rgba(226,75,74,0)}}
+.srow{display:flex;align-items:center;gap:6px;margin-top:8px}
+.dot{width:7px;height:7px;border-radius:50%;background:#ccc;flex-shrink:0}
+.dot.ok{background:#1D9E75}.dot.err{background:#e24b4a}
+.stext{font-size:12px;color:#888}
+.mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+@media(max-width:500px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
+.mod-btn{padding:10px 6px;font-size:12px;border:2px solid #e8e8e8;border-radius:10px;cursor:pointer;background:#fff;color:#555;font-family:inherit;text-align:center;line-height:1.5;font-weight:500;transition:all .15s}
+.mod-btn:hover{border-color:var(--mc);color:var(--mc)}
+.mod-btn.active{border-color:var(--mc);background:var(--mc);color:#fff}
+.tabs{display:flex;gap:4px;margin-bottom:14px}
+.tab{padding:6px 16px;font-size:13px;border:1px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#888;font-family:inherit}
+.tab.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.reca{display:flex;flex-direction:column;align-items:center;gap:12px;padding:1rem 0}
+.rtime{font-size:22px;font-weight:600;color:#111;font-variant-numeric:tabular-nums}
+.rbtn{width:64px;height:64px;border-radius:50%;border:2px solid #ddd;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px}
+.rbtn:hover{border-color:#1D9E75}
+.rbtn.rec{border-color:#e24b4a;background:#fff5f5;animation:pulse 1.2s infinite}
+.rstat{font-size:13px;color:#888;text-align:center}
+.dropzone{border:2px dashed #ddd;border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer}
+.dropzone:hover,.dropzone.over{background:#f0faf6;border-color:#1D9E75}
+.dropzone .icon{font-size:32px;margin-bottom:8px}
+.dropzone p{font-size:13px;color:#666}
+.dropzone small{font-size:11px;color:#aaa}
+.finfo{margin-top:8px;font-size:12px;color:#555;display:none;align-items:center;gap:6px}
+.finfo.show{display:flex}
+.gbtn{width:100%;padding:11px;font-size:14px;font-weight:600;background:#1D9E75;color:#fff;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-family:inherit}
+.gbtn:hover{opacity:.88}
+.gbtn:disabled{opacity:.4;cursor:not-allowed}
+textarea{width:100%;font-size:13px;line-height:1.6;padding:10px 12px;border:1px solid #ddd;border-radius:8px;resize:vertical;color:#222;background:#fff;font-family:inherit;outline:none}
+textarea:focus{border-color:#1D9E75}
+.alert{font-size:12px;padding:8px 12px;border-radius:8px;margin-top:8px;display:none}
+.alert.show{display:block}
+.alert.warn{background:#fffbea;color:#92610a;border:1px solid #f5e0a0}
+.alert.ok{background:#e6f9f2;color:#0f6e56;border:1px solid #9fe1cb}
+.alert.err{background:#fff0f0;color:#9a1c1c;border:1px solid #f5b8b8}
+.rout{display:none}
+.rout.show{display:block}
+.redit{width:100%;min-height:300px;font-size:13px;line-height:1.9;padding:1.5rem;border:1px solid #e8e8e8;border-radius:12px;color:#222;background:#fff;font-family:inherit;outline:none;resize:vertical}
+.redit:focus{border-color:#1D9E75}
+.hint{font-size:11px;color:#aaa;margin-top:4px;text-align:right}
+.sello-prev{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;background:#f9f9f9;border-radius:8px;border:1px solid #eee}
+.sello-prev img{height:55px;opacity:.88}
+.sello-prev span{font-size:11px;color:#888;line-height:1.6}
+.arow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.abtn{flex:1;min-width:60px;padding:9px 4px;font-size:12px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;color:#333;display:flex;align-items:center;justify-content:center;gap:4px;font-family:inherit}
+.abtn:hover{background:#f5f5f5}
+.abtn.grn{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.abtn.blu{background:#185FA5;color:#fff;border-color:#185FA5}
+.abtn.wrd{background:#2B579A;color:#fff;border-color:#2B579A}
+.abtn.drv{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.footer{text-align:center;font-size:11px;color:#bbb;margin-top:1.5rem;padding-bottom:2rem}
+.tip{font-size:11px;color:#aaa;margin-top:6px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <div class="logo">IR</div>
+  <div><div class="htitle">InfoEasyRad</div><div class="hsub" id="modSub">Seleccioná una modalidad</div></div>
+  <span class="badge">v10</span>
+</div>
+
+<div class="slabel">Modalidad</div>
+<div class="card">
+  <div class="mod-grid">
+    <button class="mod-btn active" id="mod-ccta" style="--mc:#e74c3c">🫀<br>Angiotomografía coronaria</button>
+    <button class="mod-btn" id="mod-rx" style="--mc:#2980b9">🩻<br>Rayos X</button>
+    <button class="mod-btn" id="mod-us" style="--mc:#27ae60">〰️<br>Ultrasonido</button>
+    <button class="mod-btn" id="mod-tc" style="--mc:#8e44ad">🔬<br>Tomografía computada</button>
+    <button class="mod-btn" id="mod-rm" style="--mc:#d35400">🧲<br>Resonancia magnética</button>
+    <button class="mod-btn" id="mod-fl" style="--mc:#16a085">📡<br>Fluoroscopía</button>
+    <button class="mod-btn" id="mod-otro" style="--mc:#7f8c8d">📋<br>Otro</button>
+  </div>
+  <div id="customFmt" style="display:none;margin-top:8px">
+    <label style="font-weight:400;color:#888">Subir formato personalizado (.docx o .txt):</label>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <label style="flex:1;padding:8px;font-size:12px;border:1px dashed #ddd;border-radius:8px;cursor:pointer;text-align:center;color:#888" for="fmtFile">📄 Seleccionar archivo</label>
+      <input type="file" id="fmtFile" accept=".docx,.txt" style="display:none"/>
+      <button class="sbtn" id="fmtClear" style="font-size:12px;padding:6px 10px">✕</button>
+    </div>
+    <div id="fmtName" style="font-size:11px;color:#1D9E75;margin-top:4px;display:none"></div>
+  </div>
+</div>
+
+<div class="slabel">Datos del paciente</div>
+<div class="card">
+  <div class="g2">
+    <div><label>Nombre completo</label><input type="text" id="pNom" placeholder="Apellidos, Nombre"/></div>
+    <div><label>Edad</label><input type="text" id="pEd" placeholder="Ej. 58 años"/></div>
+  </div>
+  <div class="g3">
+    <div><label>N° expediente</label><input type="text" id="pExp" placeholder="000000"/></div>
+    <div><label>Localidad</label><input type="text" id="pLoc" placeholder="Ciudad"/></div>
+    <div><label>Fecha</label><input type="date" id="pFch"/></div>
+  </div>
+  <button class="mic-pac" id="pacBtn">🎙 Dictar datos del paciente</button>
+  <div class="tip" id="pacTip" style="display:none">"Nombre Juan Pérez, edad 55 años, expediente 123456, localidad Tegucigalpa"</div>
+  <div class="alert" id="pacAlert"></div>
+</div>
+
+<div class="slabel">API key de OpenAI</div>
+<div class="card">
+  <div class="row">
+    <input type="password" id="apiKey" placeholder="sk-proj-..." autocomplete="off"/>
+    <button class="sbtn" id="keyBtn">🔌 Conectar</button>
+  </div>
+  <div class="srow"><span class="dot" id="dot"></span><span class="stext" id="kst">Ingresá tu API key de OpenAI</span></div>
+</div>
+
+<div class="slabel">Dictado</div>
+<div class="card">
+  <div class="tabs">
+    <button class="tab active" id="tabMic">🎙 Grabar</button>
+    <button class="tab" id="tabFile">📁 Subir audio</button>
+  </div>
+  <div id="pMic">
+    <div class="reca">
+      <div class="rtime" id="rtime">0:00</div>
+      <button class="rbtn" id="rbtn">🎙</button>
+      <div class="rstat" id="rstat">Presioná para dictar el informe</div>
+    </div>
+  </div>
+  <div id="pFile" style="display:none">
+    <div class="dropzone" id="dz">
+      <div class="icon">🎵</div>
+      <p>Arrastrá o hacé clic para seleccionar</p>
+      <small>MP3 · M4A · WAV · OGG · WEBM · máx 25 MB</small>
+    </div>
+    <input type="file" id="audioInput" accept="audio/*" style="display:none"/>
+    <div class="finfo" id="finfo"><span style="color:#1D9E75">✓</span><span id="fname"></span></div>
+  </div>
+  <button class="gbtn" id="tbtn" disabled>✨ Transcribir con Whisper</button>
+  <div class="alert" id="ta"></div>
+</div>
+
+<div class="slabel">Transcripción</div>
+<div class="card">
+  <textarea id="tbox" style="min-height:100px" placeholder="La transcripción aparecerá aquí..."></textarea>
+  <button class="gbtn" id="gbtn" disabled>📄 Generar informe</button>
+  <div class="alert" id="ga"></div>
+</div>
+
+<div class="rout" id="rout">
+  <div class="slabel">Informe generado</div>
+  <textarea class="redit" id="redit" spellcheck="true"></textarea>
+  <div class="hint">✏️ Hacé clic para editar</div>
+  <div class="sello-prev">
+    <img src="/sello.png" alt="Sello" id="selloImg"/>
+    <span>Sello y firma · Dr. Carlos Maldonado<br>Se incluye en el Word automáticamente</span>
+  </div>
+  <div class="arow">
+    <button class="abtn" id="btnCopy">📋 Copiar</button>
+    <button class="abtn blu" id="btnRegen">🔄 Corregir</button>
+    <button class="abtn" id="btnNew">➕ Nuevo</button>
+    <button class="abtn grn" id="btnTxt">⬇ .txt</button>
+    <button class="abtn wrd" id="btnWord">📝 Word</button>
+    <button class="abtn drv" id="btnDrive">▲ PDF a Drive</button>
+  </div>
+  <div class="alert" id="ra"></div>
+</div>
+
+<div class="footer">InfoEasyRad · Dr. Carlos Maldonado · Imagen cardiovascular</div>
+</div>
+<script>
+var SELLO_B64 = "";
+var IMG_W = 4320000;
+var IMG_H = 2109767;
+var currentMod = "ccta";
+var customFmtText = null;
+var mrInforme = null, chunksInforme = [], rintInforme = null, rsecsInforme = 0;
+var mrPac = null, chunksPac = [], rintPac = null;
+var afile = null, tab = "mic";
+
+fetch("/sello.png").then(function(r){return r.blob();}).then(function(blob){
+  var reader = new FileReader();
+  reader.onload = function(e){ SELLO_B64 = e.target.result.split(",")[1]; };
+  reader.readAsDataURL(blob);
+});
+
+document.getElementById("pFch").value = new Date().toISOString().slice(0,10);
+
+var PROMPTS = {
+  ccta: "Eres radiologo especialista en imagen cardiovascular. Informe formal de CCTA en espanol medico.\nREGLAS: Tipo oracion excepto siglas (CAD-RADS, DA, CD, TPI, DP, Cx, OM, DER, DLP, EAC, ACI). Incisos no mencionados: valores normales. Conclusiones numeradas. CAD-RADS con interpretacion: 0 (ausencia de EAC), 1 (minima 1-24%), 2 (leve 25-49%), 3 (moderada 50-69%), 4A (grave 70-99%), 4B (TCI>50%), 5 (oclusion). Score sin dato: 0 UA. Ramo intermedio sin dato: Ausente.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: El estudio fue practicado en un tomografo multidetector de 512 cortes. Se realizo estudio en fase simple y post contraste no ionico (vol. 70 ml) con protocolo prospectivo de baja radiacion y reconstruccion con algoritmo de Deep Learning (DER [valor] mSv, DLP [valor] mGy cm), CT Scanner Lomas Altas. Premedicado con 5 mg de isosorbide S.L. Incidentes: ninguno.\nCalidad del estudio: [contenido]\nHallazgos:\na) Score de calcio: [UA + riesgo + percentil]\nb) Arterias coronarias: Existe dominancia [derecha/izquierda]. El origen de las coronarias es normal.\n- Coronaria derecha: [contenido]\n- Tronco principal izquierdo: [contenido]\n- Descendente anterior: [contenido]\n- Circunfleja: [contenido]\n- Ramo intermedio: [contenido]\nc) Evaluacion funcional: [sin dato: No valorable por la naturaleza prospectiva del estudio. Las cavidades cardiacas son de tamano normal.]\nd) Evaluacion pericardica y vascular: [sin dato: Pericardio de grosor normal y sin derrame. Aorta y arteria pulmonar principal de calibre normal.]\ne) Valvula aortica: [sin dato: Trivalva de morfologia normal.]\nf) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. Indice de calcio de [valor] UA (riesgo [bajo/intermedio/alto], percentil [X]).\n2. Arterias coronarias epicardicas [sin/con lesiones], categoria CAD-RADS [X] ([interpretacion]).\n3. [Adicional si aplica]",
+  rx: "Eres radiologo especialista. Informe formal de Radiografia en espanol medico.\nREGLAS: Tipo oracion excepto siglas. Incisos no mencionados: valores normales. Conclusiones numeradas.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: Radiografia de [region] en proyeccion [proyeccion]. Tecnica digital. Sin incidentes.\nCalidad del estudio: [sin dato: Tecnicamente adecuada.]\nHallazgos:\na) Partes blandas: [sin dato: Sin alteraciones evidentes.]\nb) Estructuras oseas: [sin dato: Densidad y morfologia conservadas, sin lesiones ni fracturas.]\nc) Hallazgos de la region: [contenido especifico]\nd) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. [Hallazgo principal.]\n2. [Recomendacion si aplica.]",
+  us: "Eres radiologo especialista en ultrasonido. Informe formal de Ultrasonografia en espanol medico.\nREGLAS: Tipo oracion excepto siglas. Incisos no mencionados: hallazgos normales. Conclusiones numeradas.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: Estudio ultrasonografico de [region] con tecnica en escala de grises y Doppler color. Sin incidentes.\nCalidad del estudio: [sin dato: Adecuada ventana acustica y calidad diagnostica.]\nHallazgos:\na) Higado: [sin dato: Tamano normal, ecoestructura homogenea, sin lesiones focales.]\nb) Vesicula biliar y vias biliares: [sin dato: Vesicula de paredes delgadas, sin litiasis. Via biliar no dilatada.]\nc) Pancreas: [sin dato: Morfologia y ecogenicidad normales.]\nd) Bazo: [sin dato: Tamano y ecoestructura normales.]\ne) Rinones: [sin dato: Tamano y morfologia normales, sin litiasis ni dilatacion.]\nf) Liquido libre: [sin dato: No se evidencia liquido libre.]\ng) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. [Hallazgo principal.]\n2. [Recomendacion si aplica.]",
+  tc: "Eres radiologo especialista en TC. Informe formal de Tomografia Computada en espanol medico.\nREGLAS: Tipo oracion excepto siglas (TC, UH, mSv, DLP, DER). Incisos no mencionados: hallazgos normales. Conclusiones numeradas.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: Tomografia computada de [region] en tomografo multidetector. DER [valor] mSv. Sin incidentes.\nCalidad del estudio: [sin dato: Adecuada calidad diagnostica.]\nHallazgos:\na) [Region principal]: [sin dato: Dentro de limites normales.]\nb) Estructuras vasculares: [sin dato: Calibre y densidad normales.]\nc) Estructuras oseas: [sin dato: Sin lesiones oseas.]\nd) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. [Hallazgo principal.]\n2. [Diagnostico diferencial si aplica.]\n3. [Adicional si aplica.]",
+  rm: "Eres radiologo especialista en RM. Informe formal de Resonancia Magnetica en espanol medico.\nREGLAS: Tipo oracion excepto siglas (RM, T1, T2, FLAIR, DWI, ADC, Gd). Incisos no mencionados: hallazgos normales. Conclusiones numeradas.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: Resonancia magnetica de [region] con secuencias T1, T2 y adicionales. Sin incidentes.\nCalidad del estudio: [sin dato: Adecuada calidad con artefactos minimos.]\nHallazgos:\na) Senal T1 y T2: [sin dato: Senal normal en todas las secuencias.]\nb) [Estructura 1]: [sin dato: Morfologia y senal normales.]\nc) [Estructura 2]: [sin dato: Sin alteraciones.]\nd) Realce post-contraste: [sin contraste: No se administro contraste.]\ne) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. [Hallazgo principal.]\n2. [Diagnostico mas probable.]\n3. [Recomendacion si aplica.]",
+  fl: "Eres radiologo especialista en fluoroscopia. Informe formal de estudio fluoroscopico en espanol medico.\nREGLAS: Tipo oracion excepto siglas. Incisos no mencionados: hallazgos normales. Conclusiones numeradas.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: Estudio fluoroscopico de [region]. Se utilizo [medio de contraste] por via [oral/rectal]. DER [valor] mSv. Sin incidentes.\nCalidad del estudio: [sin dato: Adecuada opacificacion y calidad diagnostica.]\nHallazgos:\na) Transito y morfologia: [sin dato: Progresa normalmente sin estenosis ni defectos.]\nb) Mucosa: [sin dato: Patron mucoso conservado.]\nc) Contornos: [sin dato: Regulares y bien definidos.]\nd) Motilidad: [sin dato: Conservada sin dismotilidad.]\ne) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. [Hallazgo principal.]\n2. [Recomendacion si aplica.]",
+  otro: "Eres radiologo especialista. Informe radiologico formal en espanol medico adaptado a la modalidad dictada.\nREGLAS: Tipo oracion excepto siglas. Incisos no mencionados: valores normales. Conclusiones numeradas.\nPLANTILLA:\nMotivo de envio: [contenido]\nMetodo de estudio: [Modalidad y tecnica segun lo dictado.]\nCalidad del estudio: [sin dato: Adecuada calidad diagnostica.]\nHallazgos:\na) [Primera region]: [contenido]\nb) [Segunda region]: [contenido]\nc) Hallazgos incidentales: [sin dato: Ninguno.]\nConclusiones:\n1. [Hallazgo principal.]\n2. [Diagnostico diferencial si aplica.]"
+};
+
+var NOMBRES = {ccta:"Angiotomografia coronaria",rx:"Rayos X",us:"Ultrasonido",tc:"Tomografia computada",rm:"Resonancia magnetica",fl:"Fluoroscopia",otro:"Otro"};
+
+document.querySelectorAll(".mod-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".mod-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    currentMod = btn.id.replace("mod-","");
+    document.getElementById("modSub").textContent = NOMBRES[currentMod];
+    document.getElementById("customFmt").style.display = currentMod === "otro" ? "block" : "none";
+  });
+});
+
+document.getElementById("fmtFile").addEventListener("change", function() {
+  var f = this.files[0]; if(!f) return;
+  var reader = new FileReader();
+  reader.onload = function(e){ customFmtText = e.target.result; document.getElementById("fmtName").textContent = "Cargado: "+f.name; document.getElementById("fmtName").style.display = "block"; };
+  reader.readAsText(f);
+});
+document.getElementById("fmtClear").addEventListener("click", function() {
+  customFmtText = null; document.getElementById("fmtFile").value = ""; document.getElementById("fmtName").style.display = "none";
+});
+
+document.getElementById("keyBtn").addEventListener("click", function() {
+  var k = document.getElementById("apiKey").value.trim();
+  var d = document.getElementById("dot"), s = document.getElementById("kst");
+  if(!k.startsWith("sk-")){ d.className="dot err"; s.textContent="Formato invalido"; return; }
+  d.className="dot ok"; s.textContent="Conectada - solo en esta sesion";
+  checkGenBtn();
+});
+
+function checkGenBtn() {
+  var hasKey = document.getElementById("apiKey").value.trim().startsWith("sk-");
+  var hasText = document.getElementById("tbox").value.trim().length >= 5;
+  document.getElementById("gbtn").disabled = !(hasKey && hasText);
+}
+
+document.getElementById("tabMic").addEventListener("click", function() {
+  tab="mic"; afile=null;
+  this.classList.add("active"); document.getElementById("tabFile").classList.remove("active");
+  document.getElementById("pMic").style.display="block"; document.getElementById("pFile").style.display="none";
+  document.getElementById("tbtn").disabled=true; document.getElementById("finfo").classList.remove("show");
+});
+document.getElementById("tabFile").addEventListener("click", function() {
+  tab="file"; afile=null;
+  this.classList.add("active"); document.getElementById("tabMic").classList.remove("active");
+  document.getElementById("pFile").style.display="block"; document.getElementById("pMic").style.display="none";
+  document.getElementById("tbtn").disabled=true; document.getElementById("finfo").classList.remove("show");
+});
+
+document.getElementById("pacBtn").addEventListener("click", async function() {
+  if(mrPac && mrPac.state==="recording"){ mrPac.stop(); return; }
+  try {
+    var stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    chunksPac=[];
+    var mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")?"audio/webm;codecs=opus":MediaRecorder.isTypeSupported("audio/webm")?"audio/webm":"audio/mp4";
+    mrPac = new MediaRecorder(stream,{mimeType:mime});
+    mrPac.ondataavailable = function(e){ if(e.data.size>0) chunksPac.push(e.data); };
+    mrPac.onstop = async function() {
+      stream.getTracks().forEach(function(t){t.stop();}); clearInterval(rintPac);
+      document.getElementById("pacBtn").classList.remove("rec");
+      document.getElementById("pacBtn").textContent="🎙 Dictar datos del paciente";
+      document.getElementById("pacTip").style.display="none";
+      var ext=mime.includes("mp4")?"mp4":"webm";
+      await transcribePac(new File([new Blob(chunksPac,{type:mime})],"pac."+ext,{type:mime}));
+    };
+    mrPac.start(200);
+    document.getElementById("pacBtn").classList.add("rec");
+    document.getElementById("pacBtn").textContent="⏹ Detener";
+    document.getElementById("pacTip").style.display="block";
+    rintPac=setInterval(function(){},1000);
+  } catch(e){ alert2("pacAlert","Error mic: "+e.message,"err"); }
+});
+
+async function transcribePac(af) {
+  var key=document.getElementById("apiKey").value.trim();
+  if(!key.startsWith("sk-")){ alert2("pacAlert","Conecta tu API key","warn"); return; }
+  var btn=document.getElementById("pacBtn"); btn.textContent="Procesando..."; btn.disabled=true;
+  try {
+    var fd=new FormData(); fd.append("file",af); fd.append("model","whisper-1"); fd.append("language","es"); fd.append("response_format","text");
+    var r=await fetch("https://api.openai.com/v1/audio/transcriptions",{method:"POST",headers:{Authorization:"Bearer "+key},body:fd});
+    if(!r.ok) throw new Error("Error Whisper "+r.status);
+    var txt=await r.text();
+    var r2=await fetch("https://api.openai.com/v1/chat/completions",{
+      method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+      body:JSON.stringify({model:"gpt-4o",max_tokens:200,temperature:0,
+        messages:[{role:"system",content:'Extrae datos del paciente y responde SOLO con JSON. Claves: nombre (Apellidos Nombre), edad (incluir anos), expediente, localidad. Si no se menciona dejar vacio.'},{role:"user",content:txt}]})
+    });
+    var d2=await r2.json();
+    var datos=JSON.parse(d2.choices[0].message.content.replace(/```json|```/g,"").trim());
+    if(datos.nombre) document.getElementById("pNom").value=datos.nombre;
+    if(datos.edad) document.getElementById("pEd").value=datos.edad;
+    if(datos.expediente) document.getElementById("pExp").value=datos.expediente;
+    if(datos.localidad) document.getElementById("pLoc").value=datos.localidad;
+    alert2("pacAlert","Datos completados","ok");
+  } catch(e){ alert2("pacAlert","Error: "+e.message,"err"); }
+  finally { btn.textContent="🎙 Dictar datos del paciente"; btn.disabled=false; }
+}
+
+document.getElementById("rbtn").addEventListener("click", async function() {
+  if(mrInforme && mrInforme.state==="recording"){ mrInforme.stop(); return; }
+  try {
+    var stream=await navigator.mediaDevices.getUserMedia({audio:true}); chunksInforme=[];
+    var mime=MediaRecorder.isTypeSupported("audio/webm;codecs=opus")?"audio/webm;codecs=opus":MediaRecorder.isTypeSupported("audio/webm")?"audio/webm":"audio/mp4";
+    mrInforme=new MediaRecorder(stream,{mimeType:mime});
+    mrInforme.ondataavailable=function(e){ if(e.data.size>0) chunksInforme.push(e.data); };
+    mrInforme.onstop=function() {
+      var ext=mime.includes("mp4")?"mp4":"webm";
+      afile=new File([new Blob(chunksInforme,{type:mime})],"dictado."+ext,{type:mime});
+      stream.getTracks().forEach(function(t){t.stop();}); clearInterval(rintInforme);
+      document.getElementById("rbtn").classList.remove("rec"); document.getElementById("rbtn").textContent="🎙";
+      document.getElementById("rstat").textContent="Grabado ("+fmt(rsecsInforme)+") - listo para transcribir";
+      document.getElementById("tbtn").disabled=false;
+    };
+    mrInforme.start(200); rsecsInforme=0;
+    document.getElementById("rbtn").classList.add("rec"); document.getElementById("rbtn").textContent="⏹";
+    document.getElementById("rstat").textContent="Grabando...";
+    rintInforme=setInterval(function(){rsecsInforme++;document.getElementById("rtime").textContent=fmt(rsecsInforme);},1000);
+  } catch(e){ document.getElementById("rstat").textContent="Error: "+e.message; }
+});
+
+function fmt(s){ return Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60; }
+
+document.getElementById("dz").addEventListener("click",function(){ document.getElementById("audioInput").click(); });
+document.getElementById("dz").addEventListener("dragover",function(e){ e.preventDefault(); this.classList.add("over"); });
+document.getElementById("dz").addEventListener("dragleave",function(){ this.classList.remove("over"); });
+document.getElementById("dz").addEventListener("drop",function(e){ e.preventDefault(); this.classList.remove("over"); if(e.dataTransfer.files[0]) setAF(e.dataTransfer.files[0]); });
+document.getElementById("audioInput").addEventListener("change",function(){ if(this.files[0]) setAF(this.files[0]); });
+
+function setAF(f) {
+  if(f.size>25*1024*1024){ alert2("ta","Supera 25MB","err"); return; }
+  var ext=f.name.split(".").pop().toLowerCase();
+  var tm={mp3:"audio/mpeg",m4a:"audio/mp4",wav:"audio/wav",ogg:"audio/ogg",webm:"audio/webm",mp4:"audio/mp4"};
+  var nm={mp3:"audio.mp3",m4a:"audio.m4a",wav:"audio.wav",ogg:"audio.ogg",webm:"audio.webm",mp4:"audio.mp4"};
+  afile=new File([f],nm[ext]||("audio."+ext),{type:tm[ext]||f.type||"audio/mpeg"});
+  document.getElementById("fname").textContent=f.name+" - "+Math.round(f.size/1024)+" KB";
+  document.getElementById("finfo").classList.add("show"); document.getElementById("tbtn").disabled=false;
+}
+
+document.getElementById("tbtn").addEventListener("click", async function() {
+  var key=document.getElementById("apiKey").value.trim();
+  if(!key.startsWith("sk-")){ alert2("ta","Conecta tu API key","warn"); return; }
+  if(!afile){ alert2("ta","Sin audio","warn"); return; }
+  var btn=this; btn.disabled=true; btn.innerHTML="<span class='spin'></span> Transcribiendo...";
+  try {
+    var fd=new FormData(); fd.append("file",afile); fd.append("model","whisper-1"); fd.append("language","es"); fd.append("response_format","text");
+    var r=await fetch("https://api.openai.com/v1/audio/transcriptions",{method:"POST",headers:{Authorization:"Bearer "+key},body:fd});
+    if(!r.ok){ var m="Error "+r.status; try{var j=await r.json();m=j.error&&j.error.message||m;}catch(x){} throw new Error(m); }
+    document.getElementById("tbox").value=(await r.text()).trim(); checkGenBtn(); alert2("ta","Transcripcion lista","ok");
+  } catch(e){ alert2("ta","Error: "+e.message,"err"); }
+  finally { btn.disabled=false; btn.innerHTML="✨ Transcribir con Whisper"; }
+});
+
+function normCR(t) {
+  return t.replace(/\bcad[-\s]?r[ao]d[sz]?\s*([0-5][abAB]?)\b/gi,"CAD-RADS $1")
+    .replace(/\bcadr[ao]d[sz]?\s*([0-5][abAB]?)\b/gi,"CAD-RADS $1")
+    .replace(/\bcad\s*r[ao]s\s*([0-5][abAB]?)\b/gi,"CAD-RADS $1")
+    .replace(/\bcategor[i\u00ed]a\s*([0-5][abAB]?)\b/gi,"CAD-RADS $1");
+}
+
+function getPac() {
+  var n=document.getElementById("pNom").value.trim()||"___"; var e=document.getElementById("pEd").value.trim()||"___";
+  var x=document.getElementById("pExp").value.trim()||"___"; var l=document.getElementById("pLoc").value.trim()||"___";
+  var fr=document.getElementById("pFch").value; var fecha="___";
+  if(fr){ var p=fr.split("-"); var m=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]; fecha=parseInt(p[2])+" de "+m[parseInt(p[1])-1]+" de "+p[0]; }
+  return {n:n,e:e,x:x,l:l,fecha:fecha};
+}
+
+document.getElementById("gbtn").addEventListener("click", async function() {
+  var key=document.getElementById("apiKey").value.trim();
+  var raw=document.getElementById("tbox").value.trim();
+  if(!raw){ alert2("ga","Ingresa el dictado primero","warn"); return; }
+  var txt=currentMod==="ccta"?normCR(raw):raw;
+  var pac=getPac(); var mn=NOMBRES[currentMod];
+  var sysP=PROMPTS[currentMod]+(customFmtText?"\n\nFORMATO DE REFERENCIA:\n"+customFmtText:"")+"\n\nDatos del paciente:\n"+pac.n+"\nEdad: "+pac.e+"\nNumero de expediente: "+pac.x+"\nLocalidad: "+pac.l+"\nFecha: "+pac.fecha+"\n\nEncabezado institucional:\nUnidad de imagen cardiovascular y toracica\nModalidad: "+mn+"\n\nFirma al final:\nAtentamente,\n\nDr. Carlos Maldonado\nRadiologo - Imagen cardiovascular";
+  var btn=this; btn.disabled=true; btn.innerHTML="<span class='spin'></span> Generando...";
+  try {
+    var r=await fetch("https://api.openai.com/v1/chat/completions",{
+      method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+      body:JSON.stringify({model:"gpt-4o",max_tokens:2000,temperature:0.2,
+        messages:[{role:"system",content:sysP},{role:"user",content:"Estructura este dictado como informe formal:\n\n"+txt}]})
+    });
+    if(!r.ok){ var msg="Error "+r.status; try{var jj=await r.json();msg=jj.error&&jj.error.message||msg;}catch(x){} throw new Error(msg); }
+    var d=await r.json(); var rep=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||"";
+    if(!rep) throw new Error("Respuesta vacia");
+    document.getElementById("redit").value=rep;
+    document.getElementById("rout").classList.add("show");
+    document.getElementById("redit").scrollIntoView({behavior:"smooth",block:"start"});
+    alert2("ga","Informe generado","ok");
+  } catch(e){ alert2("ga","Error: "+e.message,"err"); }
+  finally { btn.disabled=false; btn.innerHTML="📄 Generar informe - "+mn; }
+});
+
+document.getElementById("btnRegen").addEventListener("click", function() {
+  var inf=document.getElementById("redit").value.trim(); if(!inf){ alert2("ra","No hay informe","warn"); return; }
+  var ins=prompt("Que queres corregir o cambiar?"); if(!ins) return;
+  var key=document.getElementById("apiKey").value.trim(); if(!key.startsWith("sk-")){ alert2("ra","Conecta tu API key","warn"); return; }
+  var ta=document.getElementById("redit"); ta.disabled=true; alert2("ra","Corrigiendo...","warn");
+  fetch("https://api.openai.com/v1/chat/completions",{
+    method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+    body:JSON.stringify({model:"gpt-4o",max_tokens:2000,temperature:0.2,
+      messages:[{role:"system",content:"Corrige el informe segun la instruccion. Mantene el formato. Responde SOLO con el informe corregido."},{role:"user",content:"Informe:\n\n"+inf+"\n\nInstruccion: "+ins}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    ta.value=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||""; alert2("ra","Actualizado","ok");
+  }).catch(function(e){alert2("ra","Error: "+e.message,"err");}).finally(function(){ta.disabled=false;});
+});
+
+document.getElementById("btnCopy").addEventListener("click",function(){
+  var txt=document.getElementById("redit").value;
+  navigator.clipboard.writeText(txt).then(function(){alert2("ra","Copiado","ok");}).catch(function(){
+    var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);alert2("ra","Copiado","ok");
+  });
+});
+
+document.getElementById("btnTxt").addEventListener("click",function(){
+  var nom=document.getElementById("pNom").value.trim().replace(/[,\s]+/g,"_")||"paciente";
+  var mod=NOMBRES[currentMod].replace(/\s+/g,"_");
+  var blob=new Blob([document.getElementById("redit").value],{type:"text/plain;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=mod+"_"+nom+"_"+new Date().toISOString().slice(0,10)+".txt";a.click();
+});
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+document.getElementById("btnWord").addEventListener("click", async function() {
+  var txt=document.getElementById("redit").value.trim(); if(!txt){alert2("ra","No hay informe","warn");return;}
+  if(typeof JSZip==="undefined"){alert2("ra","JSZip no cargo","err");return;}
+  var nom=document.getElementById("pNom").value.trim().replace(/[,\s]+/g,"_")||"paciente";
+  var mod=NOMBRES[currentMod].replace(/\s+/g,"_");
+  var btn=this;btn.innerHTML="<span class='spin'></span>";btn.disabled=true;
+  try {
+    var zip=buildDocx(txt);
+    var blob=await zip.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=mod+"_"+nom+"_"+new Date().toISOString().slice(0,10)+".docx";a.click();
+    alert2("ra","Word descargado","ok");
+  } catch(e){alert2("ra","Error Word: "+e.message,"err");}
+  finally{btn.innerHTML="📝 Word";btn.disabled=false;}
+});
+
+function buildDocx(texto) {
+  function p(t,opts){
+    opts=opts||{};
+    var bold=opts.bold||false,center=opts.center||false,indent=opts.indent||0,hang=opts.hang||0,before=opts.before||0,after=opts.after===undefined?120:opts.after,color=opts.color||"",size=opts.size||22;
+    var pPr="<w:pPr>";
+    if(center)pPr+="<w:jc w:val="center"/>";
+    if(indent||hang)pPr+="<w:ind w:left=""+indent+"""+(hang?" w:hanging=""+hang+""":"")+"/>";
+    if(before||after!==120)pPr+="<w:spacing w:before=""+before+"" w:after=""+after+""/>";
+    pPr+="</w:pPr>";
+    var rPr="<w:rPr>";
+    if(bold)rPr+="<w:b/>";
+    if(color)rPr+="<w:color w:val=""+color+""/>";
+    if(size!==22)rPr+="<w:sz w:val=""+size+""/><w:szCs w:val=""+size+""/>";
+    rPr+="</w:rPr>";
+    return "<w:p>"+pPr+"<w:r>"+rPr+"<w:t xml:space="preserve">"+esc(t)+"</w:t></w:r></w:p>";
+  }
+  function imgTbl(nombre,cargo){
+    var nc="<w:tc><w:tcPr><w:tcW w:w="5400" w:type="dxa"/><w:tcBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:spacing w:before="300" w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1D5C3A"/></w:rPr><w:t>"+esc(nombre)+"</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="0" w:after="40"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1D5C3A"/></w:rPr><w:t>"+esc(cargo)+"</w:t></w:r></w:p></w:tc>";
+    var sc="<w:tc><w:tcPr><w:tcW w:w="3960" w:type="dxa"/><w:tcBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/></w:tcBorders><w:vAlign w:val="center"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:rPr/><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><wp:extent cx=""+IMG_W+"" cy=""+IMG_H+""/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="1" name="sello"/><wp:cNvGraphicFramePr/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="1" name="sello"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdSello" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx=""+IMG_W+"" cy=""+IMG_H+""/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p></w:tc>";
+    return "<w:tbl><w:tblPr><w:tblW w:w="9360" w:type="dxa"/><w:tblBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/><w:insideH w:val="none"/><w:insideV w:val="none"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="5400"/><w:gridCol w:w="3960"/></w:tblGrid><w:tr>"+nc+sc+"</w:tr></w:tbl>";
+  }
+  var lines=texto.split("\n"); var atentIdx=-1;
+  for(var i=0;i<lines.length;i++){if(/^Atentamente/i.test(lines[i].trim())){atentIdx=i;break;}}
+  var pl=function(arr){return arr.map(function(line){
+    var t=line.trim(); if(!t)return "<w:p><w:pPr><w:spacing w:after="0"/></w:pPr></w:p>";
+    if(/^(Unidad de imagen|Modalidad|Angiotomograf)/i.test(t))return p(t,{bold:true,center:true,size:24,after:60});
+    if(/^[a-fA-F]\)\s|^(Motivo|M[eé]todo|Calidad|Hallazgos|Conclusiones|Atentamente)/i.test(t))return p(t,{bold:true,before:200,after:80});
+    if(t.startsWith("-"))return p("- "+t.substring(1).trim(),{indent:360,after:60});
+    if(/^\d+\.\s/.test(t))return p(t,{indent:360,hang:360,after:80});
+    if(/^Dr\.|^Radiol/i.test(t))return p(t,{bold:true,color:"1D5C3A",after:40});
+    if(/^(Edad:|N[uú]mero|Localidad:|Fecha:)/i.test(t))return p(t,{after:40});
+    return p(t,{after:60});
+  }).join("\n");};
+  var bodyXml;
+  if(atentIdx>=0){
+    var antes=pl(lines.slice(0,atentIdx));
+    var atent="<w:p><w:pPr><w:spacing w:before="200" w:after="80"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>"+esc(lines[atentIdx].trim())+"</w:t></w:r></w:p>";
+    var resta=lines.slice(atentIdx+1).filter(function(l){return l.trim();});
+    var nom=resta.find(function(l){return /^Dr\./.test(l.trim());})||"Dr. Carlos Maldonado";
+    var cargo=resta.find(function(l){return /^Radiol/i.test(l.trim());})||"Radiologo - Imagen cardiovascular";
+    bodyXml=antes+"\n"+atent+"\n"+imgTbl(nom.trim(),cargo.trim());
+  } else {
+    bodyXml=pl(lines)+"\n"+imgTbl("Dr. Carlos Maldonado","Radiologo - Imagen cardiovascular");
+  }
+  var docXml="<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" mc:Ignorable="w14"><w:body>"+bodyXml+"<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr></w:body></w:document>";
+  var stylesXml="<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="es-419"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>";
+  var docRels="<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdSello" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/sello.png"/></Relationships>";
+  var cTypes="<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>";
+  var appRels="<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>";
+  var bin=atob(SELLO_B64);var arr=new Uint8Array(bin.length);for(var ii=0;ii<bin.length;ii++)arr[ii]=bin.charCodeAt(ii);
+  var zip=new JSZip();
+  zip.file("[Content_Types].xml",cTypes);zip.file("_rels/.rels",appRels);
+  zip.file("word/document.xml",docXml);zip.file("word/styles.xml",stylesXml);
+  zip.file("word/_rels/document.xml.rels",docRels);zip.file("word/media/sello.png",arr);
+  return zip;
+}
+
+document.getElementById("btnDrive").addEventListener("click", async function() {
+  var txt=document.getElementById("redit").value.trim(); if(!txt){alert2("ra","No hay informe","warn");return;}
+  var nom=document.getElementById("pNom").value.trim()||"Paciente";
+  var mod=NOMBRES[currentMod].replace(/\s+/g,"_");
+  var nombreArchivo=mod+"_"+nom.replace(/[,\s]+/g,"_")+"_"+new Date().toISOString().slice(0,10);
+  var btn=this;btn.innerHTML="<span class='spin'></span> Subiendo...";btn.disabled=true;
+  try {
+    var r=await fetch("/api/upload-drive",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texto:txt,nombreArchivo:nombreArchivo})});
+    var d=await r.json(); if(!r.ok) throw new Error(d.error||"Error "+r.status);
+    alert2("ra","PDF subido a Drive","ok");
+    var old=document.getElementById("driveLink");if(old)old.remove();
+    var lnk=document.createElement("div");lnk.id="driveLink";
+    lnk.style.cssText="margin-top:10px;font-size:12px;padding:8px 12px;background:#e6f9f2;border-radius:8px;border:1px solid #9fe1cb";
+    lnk.innerHTML="PDF listo: <a href=""+d.link+"" target="_blank" style="color:#0f6e56;font-weight:600">Abrir en Drive</a> - "+d.nombre;
+    document.getElementById("ra").insertAdjacentElement("afterend",lnk);
+  } catch(e){alert2("ra","Error: "+e.message,"err");}
+  finally{btn.innerHTML="▲ PDF a Drive";btn.disabled=false;}
+});
+
+document.getElementById("btnNew").addEventListener("click",function(){
+  ["pNom","pEd","pExp","pLoc","tbox"].forEach(function(id){document.getElementById(id).value="";});
+  document.getElementById("pFch").value=new Date().toISOString().slice(0,10);
+  document.getElementById("redit").value=""; document.getElementById("rout").classList.remove("show");
+  document.getElementById("rtime").textContent="0:00"; document.getElementById("rstat").textContent="Presiona para dictar el informe";
+  afile=null; document.getElementById("tbtn").disabled=true; document.getElementById("gbtn").disabled=true;
+  document.getElementById("finfo").classList.remove("show");
+  var lnk=document.getElementById("driveLink");if(lnk)lnk.remove();
+  ["ta","ga","ra","pacAlert"].forEach(function(id){alert2(id,"","");});
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+function alert2(id,msg,type){
+  var el=document.getElementById(id); if(!msg){el.className="alert";return;}
+  el.className="alert show "+type; el.textContent=msg;
+  if(type==="ok")setTimeout(function(){el.className="alert";},4000);
+}
+
+document.getElementById("tbox").addEventListener("input",checkGenBtn);
+</script>
+</body>
+</html>
