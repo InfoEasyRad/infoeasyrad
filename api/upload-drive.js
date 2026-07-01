@@ -26,9 +26,9 @@ module.exports = async (req, res) => {
       scopes: ['https://www.googleapis.com/auth/drive'],
     });
     const drive = google.drive({ version: 'v3', auth });
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+    const folderId = process.env.GOOGLE_FOLDER_ID;
     if (!folderId) {
-      return res.status(500).json({ error: 'GOOGLE_DRIVE_FOLDER_ID no está configurado en Vercel' });
+      return res.status(500).json({ error: 'GOOGLE_FOLDER_ID no está configurado en Vercel' });
     }
     // Subir como Google Doc
     const gdoc = await drive.files.create({
