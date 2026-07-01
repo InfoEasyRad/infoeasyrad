@@ -571,24 +571,34 @@ async function doUploadDrive(){
   const fecha=new Date().toISOString().slice(0,10);
   const nombreArchivo='CCTA_'+pacNombre.replace(/[,\s]+/g,'_')+'_'+fecha;
 
-  // Construir mensaje para Claude
-  const msg='INFORME_DRIVE::'+nombreArchivo+'\n\n'+txt;
+  const btn=document.getElementById('driveBtn');
+  const btnHtmlOriginal=btn.innerHTML;
+  btn.innerHTML='<span class="spin"></span> Subiendo...';
+  btn.disabled=true;
 
-  // Copiar al portapapeles
-  try{await navigator.clipboard.writeText(msg);}catch(e){}
-
-  // Abrir Claude en nueva pestaña con instrucción
-  const instruccion=encodeURIComponent('Subí este informe a Drive como PDF:\n\n'+txt.substring(0,200)+'...');
-  window.open('https://claude.ai/new','_blank');
-
-  // Mostrar instrucciones
   const oldLnk=document.getElementById('driveLink');if(oldLnk)oldLnk.remove();
-  const lnk=document.createElement('div');
-  lnk.id='driveLink';
-  lnk.style.cssText='margin-top:10px;font-size:12px;padding:10px 14px;background:#fffbea;border-radius:8px;border:1px solid #f5e0a0;line-height:1.7';
-  lnk.innerHTML='<strong>Pasos para subir a Drive:</strong><br>1. Se copió el informe al portapapeles automaticamente<br>2. Pega en el chat de Claude que se abrio (Ctrl+V / Cmd+V)<br>3. Claude lo sube a Drive y te manda el link';
-  document.getElementById('ra').insertAdjacentElement('afterend',lnk);
-  alert2('ra','Informe copiado — pegalo en Claude','ok');
+
+  try{
+    const r=await fetch('/api/upload-drive',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({texto:txt,nombreArchivo:nombreArchivo})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.success){throw new Error(d.error||'Error desconocido al subir a Drive');}
+
+    const lnk=document.createElement('div');
+    lnk.id='driveLink';
+    lnk.style.cssText='margin-top:10px;font-size:12px;padding:10px 14px;background:#e6f9f2;border-radius:8px;border:1px solid #9fe1cb;line-height:1.7';
+    lnk.innerHTML='✓ Subido a Drive: <a href="'+d.link+'" target="_blank" style="color:#0f6e56;font-weight:600">'+d.nombre+'</a>';
+    document.getElementById('ra').insertAdjacentElement('afterend',lnk);
+    alert2('ra','PDF subido a Drive ✓','ok');
+  }catch(e){
+    alert2('ra','Error al subir a Drive: '+e.message,'err');
+  }finally{
+    btn.innerHTML=btnHtmlOriginal;
+    btn.disabled=false;
+  }
 }
 </script>
 </body>
