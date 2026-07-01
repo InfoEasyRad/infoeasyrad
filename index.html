@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>InfoEasyRad — CCTA</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem}
@@ -564,41 +566,87 @@ function alert2(id,msg,type){
 }
 document.getElementById('tbox').addEventListener('input',checkGenBtn);
 
+const GOOGLE_CLIENT_ID='919495150821-59mjnqjsn09bncg49ecq8prne972o04j.apps.googleusercontent.com';
+let googleAccessToken=null;
+
+function getGoogleToken(callback){
+  if(googleAccessToken){callback();return;}
+  const client=google.accounts.oauth2.initTokenClient({
+    client_id:GOOGLE_CLIENT_ID,
+    scope:'https://www.googleapis.com/auth/drive.file',
+    callback:(resp)=>{
+      if(resp.error){alert2('ra','Error al autorizar Google Drive: '+resp.error,'err');return;}
+      googleAccessToken=resp.access_token;
+      callback();
+    }
+  });
+  client.requestAccessToken();
+}
+
 async function doUploadDrive(){
   const txt=document.getElementById('reportEdit').value.trim();
   if(!txt){alert2('ra','No hay informe para subir','warn');return;}
   const pacNombre=document.getElementById('pNombre').value.trim()||'Paciente';
   const fecha=new Date().toISOString().slice(0,10);
-  const nombreArchivo='CCTA_'+pacNombre.replace(/[,\s]+/g,'_')+'_'+fecha;
+  const nombreArchivo='CCTA_'+pacNombre.replace(/[,\s]+/g,'_')+'_'+fecha+'.pdf';
 
   const btn=document.getElementById('driveBtn');
   const btnHtmlOriginal=btn.innerHTML;
-  btn.innerHTML='<span class="spin"></span> Subiendo...';
-  btn.disabled=true;
 
-  const oldLnk=document.getElementById('driveLink');if(oldLnk)oldLnk.remove();
-
-  try{
-    const r=await fetch('/api/upload-drive',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({texto:txt,nombreArchivo:nombreArchivo})
-    });
-    const d=await r.json();
-    if(!r.ok||!d.success){throw new Error(d.error||'Error desconocido al subir a Drive');}
-
-    const lnk=document.createElement('div');
-    lnk.id='driveLink';
-    lnk.style.cssText='margin-top:10px;font-size:12px;padding:10px 14px;background:#e6f9f2;border-radius:8px;border:1px solid #9fe1cb;line-height:1.7';
-    lnk.innerHTML='✓ Subido a Drive: <a href="'+d.link+'" target="_blank" style="color:#0f6e56;font-weight:600">'+d.nombre+'</a>';
-    document.getElementById('ra').insertAdjacentElement('afterend',lnk);
-    alert2('ra','PDF subido a Drive ✓','ok');
-  }catch(e){
-    alert2('ra','Error al subir a Drive: '+e.message,'err');
-  }finally{
-    btn.innerHTML=btnHtmlOriginal;
-    btn.disabled=false;
-  }
+  getGoogleToken(async()=>{
+    btn.innerHTML='<span class="spin"></span> Subiendo...';
+    btn.disabled=true;
+    const oldLnk=document.getElementById('driveLink');if(oldLnk)oldLnk.remove();
+    try{
+      // Crear el PDF como blob usando texto plano
+      const boundary='-------InfoEasyRad';
+      const meta=JSON.stringify({name:nombreArchivo,mimeType:'application/pdf'});
+      // Subir como texto plano con mimeType correcto (Drive lo acepta como archivo)
+      const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer '+googleAccessToken,
+          'Content-Type':'multipart/related; boundary="'+boundary+'"'
+        },
+        body:[
+          '--'+boundary,
+          'Content-Type: application/json; charset=UTF-8',
+          '',
+          meta,
+          '--'+boundary,
+          'Content-Type: text/plain; charset=UTF-8',
+          '',
+          txt,
+          '--'+boundary+'--'
+        ].join('\r\n')
+      });
+      if(!r.ok){
+        const e=await r.json();
+        if(e.error&&e.error.status==='UNAUTHENTICATED'){googleAccessToken=null;}
+        throw new Error(e.error?.message||'Error al subir');
+      }
+      const d=await r.json();
+      const fileId=d.id;
+      // Hacer público
+      await fetch('https://www.googleapis.com/drive/v3/files/'+fileId+'/permissions',{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
+        body:JSON.stringify({role:'reader',type:'anyone'})
+      });
+      const link='https://drive.google.com/file/d/'+fileId+'/view';
+      const lnk=document.createElement('div');
+      lnk.id='driveLink';
+      lnk.style.cssText='margin-top:10px;font-size:12px;padding:10px 14px;background:#e6f9f2;border-radius:8px;border:1px solid #9fe1cb;line-height:1.7';
+      lnk.innerHTML='✓ Subido a Drive: <a href="'+link+'" target="_blank" style="color:#0f6e56;font-weight:600">'+nombreArchivo+'</a>';
+      document.getElementById('ra').insertAdjacentElement('afterend',lnk);
+      alert2('ra','Subido a Drive ✓','ok');
+    }catch(e){
+      alert2('ra','Error: '+e.message,'err');
+    }finally{
+      btn.innerHTML=btnHtmlOriginal;
+      btn.disabled=false;
+    }
+  });
 }
 </script>
 </body>
