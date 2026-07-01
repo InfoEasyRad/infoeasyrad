@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -586,9 +585,9 @@ function getGoogleToken(callback){
 async function doUploadDrive(){
   const txt=document.getElementById('reportEdit').value.trim();
   if(!txt){alert2('ra','No hay informe para subir','warn');return;}
-  const pacNombre=document.getElementById('pNombre').value.trim()||'Paciente';
-  const fecha=new Date().toISOString().slice(0,10);
-  const nombreArchivo='CCTA_'+pacNombre.replace(/[,\s]+/g,'_')+'_'+fecha+'.pdf';
+  if(typeof JSZip==='undefined'){alert2('ra','JSZip no cargó, verificá tu conexión','err');return;}
+  const nombre=document.getElementById('pNombre').value.trim().replace(/[\s,]+/g,'_')||'paciente';
+  const nombreArchivo='CCTA_'+nombre+'_'+new Date().toISOString().slice(0,10)+'.docx';
 
   const btn=document.getElementById('driveBtn');
   const btnHtmlOriginal=btn.innerHTML;
@@ -598,27 +597,37 @@ async function doUploadDrive(){
     btn.disabled=true;
     const oldLnk=document.getElementById('driveLink');if(oldLnk)oldLnk.remove();
     try{
-      // Crear el PDF como blob usando texto plano
-      const boundary='-------InfoEasyRad';
-      const meta=JSON.stringify({name:nombreArchivo,mimeType:'application/pdf'});
-      // Subir como texto plano con mimeType correcto (Drive lo acepta como archivo)
+      // Generar el mismo .docx que el botón Word
+      const zip=buildDocx(txt,SELLO_B64);
+      const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+
+      // Subir a Drive como multipart
+      const boundary='-------InfoEasyRadBoundary';
+      const meta=JSON.stringify({
+        name:nombreArchivo,
+        mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      });
+
+      // Construir el body multipart manualmente
+      const metaBytes=new TextEncoder().encode(
+        '--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+meta+'\r\n--'+boundary+'\r\nContent-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n\r\n'
+      );
+      const endBytes=new TextEncoder().encode('\r\n--'+boundary+'--');
+      const docxBytes=await blob.arrayBuffer();
+
+      const bodyParts=[metaBytes,new Uint8Array(docxBytes),endBytes];
+      const totalLength=bodyParts.reduce((sum,p)=>sum+p.byteLength,0);
+      const bodyBuffer=new Uint8Array(totalLength);
+      let offset=0;
+      for(const part of bodyParts){bodyBuffer.set(part,offset);offset+=part.byteLength;}
+
       const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
         method:'POST',
         headers:{
           'Authorization':'Bearer '+googleAccessToken,
           'Content-Type':'multipart/related; boundary="'+boundary+'"'
         },
-        body:[
-          '--'+boundary,
-          'Content-Type: application/json; charset=UTF-8',
-          '',
-          meta,
-          '--'+boundary,
-          'Content-Type: text/plain; charset=UTF-8',
-          '',
-          txt,
-          '--'+boundary+'--'
-        ].join('\r\n')
+        body:bodyBuffer
       });
       if(!r.ok){
         const e=await r.json();
@@ -627,7 +636,7 @@ async function doUploadDrive(){
       }
       const d=await r.json();
       const fileId=d.id;
-      // Hacer público
+      // Hacer público para que el link funcione
       await fetch('https://www.googleapis.com/drive/v3/files/'+fileId+'/permissions',{
         method:'POST',
         headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
