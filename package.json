@@ -2,6 +2,7 @@
   "name": "infoeasyrad",
   "version": "1.0.0",
   "dependencies": {
-    "googleapis": "^140.0.0"
+    "googleapis": "^140.0.0",
+    "pdfkit": "^0.14.0"
   }
 }
