@@ -1,14 +1,7 @@
 // /api/transcribe.js — Transcribe audio usando OpenAI Whisper (key server-side)
-export const config = { api: { bodyParser: false } };
+const { createClient } = require('@supabase/supabase-js');
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
-
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,12 +9,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
   try {
-    // Leer el body como buffer
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
     const buffer = Buffer.concat(chunks);
 
-    // Reenviar a OpenAI Whisper
+    const { FormData, Blob } = await import('node-fetch');
     const formData = new FormData();
     const blob = new Blob([buffer], { type: req.headers['content-type'] });
     formData.append('file', blob, 'audio.webm');
@@ -47,4 +39,4 @@ export default async function handler(req, res) {
     console.error('Error transcribe:', e);
     return res.status(500).json({ error: e.message });
   }
-}
+};
