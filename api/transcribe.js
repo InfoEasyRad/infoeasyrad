@@ -1,26 +1,26 @@
 // /api/transcribe.js — Transcribe audio usando OpenAI Whisper (key server-side)
 export const config = { api: { bodyParser: false } };
- 
+
 import { createClient } from '@supabase/supabase-js';
- 
+
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
- 
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
- 
+
   try {
     // Leer el body como buffer
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
     const buffer = Buffer.concat(chunks);
- 
+
     // Reenviar a OpenAI Whisper
     const formData = new FormData();
     const blob = new Blob([buffer], { type: req.headers['content-type'] });
@@ -28,24 +28,23 @@ export default async function handler(req, res) {
     formData.append('model', 'whisper-1');
     formData.append('language', 'es');
     formData.append('response_format', 'text');
- 
+
     const whisperRes = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
       body: formData
     });
- 
+
     if (!whisperRes.ok) {
       const err = await whisperRes.json();
       throw new Error('Error Whisper: ' + (err.error?.message || whisperRes.status));
     }
- 
+
     const texto = await whisperRes.text();
     return res.status(200).json({ texto });
- 
+
   } catch (e) {
     console.error('Error transcribe:', e);
     return res.status(500).json({ error: e.message });
   }
 }
- 
