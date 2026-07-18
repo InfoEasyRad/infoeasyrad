@@ -1,20 +1,14 @@
 // /api/status.js — Verifica el plan y cuántos informes le quedan al usuario
-import { createClient } from '@supabase/supabase-js';
+const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const LIMITES = {
-  trial:     null,  // ilimitado durante trial
-  gratis:    5,
-  starter:   50,
-  pro:       200,
-  ilimitado: null   // sin límite
-};
+const LIMITES = { trial: null, gratis: 5, starter: 50, pro: 200, ilimitado: null };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -33,11 +27,7 @@ export default async function handler(req, res) {
 
     if (error) throw error;
 
-    // Resetear contador si cambió el mes
-    const mesActual = new Date().toFullYear
-      ? new Date().toISOString().slice(0, 7)
-      : new Date().toISOString().slice(0, 7);
-
+    const mesActual = new Date().toISOString().slice(0, 7);
     if (usuario.mes_actual !== mesActual) {
       await supabase
         .from('usuarios')
@@ -64,4 +54,4 @@ export default async function handler(req, res) {
     console.error('Error status:', e);
     return res.status(500).json({ error: e.message });
   }
-}
+};
