@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,7 +8,7 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem;padding-top:max(2rem, env(safe-area-inset-top));padding-left:max(1rem, env(safe-area-inset-left));padding-right:max(1rem, env(safe-area-inset-right));padding-bottom:max(1rem, env(safe-area-inset-bottom))}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem;padding-top:calc(env(safe-area-inset-top) + 1.2rem);padding-left:max(1rem, env(safe-area-inset-left));padding-right:max(1rem, env(safe-area-inset-right));padding-bottom:max(1rem, env(safe-area-inset-bottom))}
 .app{width:100%;max-width:640px}
 .header{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
 .logo{width:40px;height:40px;background:#1D9E75;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600;flex-shrink:0}
@@ -112,10 +111,17 @@ textarea:focus{border-color:#1D9E75}
 .hist-actions{display:flex;gap:8px;margin-top:1rem;justify-content:flex-end}
 .hist-clear{font-size:12px;color:#aaa;background:none;border:none;cursor:pointer;padding:6px 10px}
 .hist-clear:hover{color:#e24b4a}
+.plan-badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600;margin-right:6px}
+.plan-trial{background:#e8f4fd;color:#1a6fa8}
+.plan-gratis{background:#f0f0f0;color:#666}
+.plan-starter{background:#e6f9f2;color:#0f6e56}
+.plan-pro{background:#fff3cd;color:#856404}
+.plan-ilimitado{background:#f3e8ff;color:#6f42c1}
+.plan-counter{color:#777;font-size:11px}
 
 /* ── MOBILE ──────────────────────────────────────────────── */
 @media (max-width:480px){
-  body{padding:0.75rem 0.6rem}
+  body{padding:0.75rem 0.6rem;padding-top:max(0.75rem, env(safe-area-inset-top));padding-bottom:max(0.75rem, env(safe-area-inset-bottom))}
   .app{max-width:100%}
 
   /* Header */
@@ -257,13 +263,15 @@ textarea:focus{border-color:#1D9E75}
     <div class="alert" id="pacAlert"></div>
   </div>
 
-  <div class="slabel">API key de OpenAI</div>
+  <div class="slabel">Acceso</div>
   <div class="card">
     <div class="row">
-      <input type="password" id="apiKey" placeholder="sk-proj-..." autocomplete="off"/>
-      <button class="sbtn" onclick="verifyKey()">🔌 Conectar</button>
+      <input type="email" id="userEmail" placeholder="tu@email.com" autocomplete="email"/>
+      <button class="sbtn" id="loginBtn" onclick="doLogin()">🔑 Ingresar</button>
     </div>
-    <div class="srow"><span class="dot" id="dot"></span><span class="stext" id="kst">Ingresá tu API key de OpenAI</span></div>
+    <div class="srow"><span class="dot" id="dot"></span><span class="stext" id="kst">Ingresá tu email para acceder</span></div>
+    <div id="planInfo" style="display:none;margin-top:8px;font-size:12px;color:#555"></div>
+    <div style="margin-top:6px;text-align:right"><button onclick="doLogout()" id="logoutBtn" style="display:none;font-size:11px;background:none;border:none;color:#aaa;cursor:pointer;text-decoration:underline">Cerrar sesión</button></div>
   </div>
 
   <div class="slabel">Nombre del médico</div>
@@ -356,11 +364,17 @@ function saveMedNombre(){
 
 // Cargar API key guardada
 (function(){
-  const saved=localStorage.getItem('oai_key');
-  if(saved&&saved.startsWith('sk-')){
-    document.getElementById('apiKey').value=saved;
-    document.getElementById('dot').className='dot ok';
-    document.getElementById('kst').textContent='Conectada · guardada en este dispositivo';
+  // Cargar sesión guardada
+  const savedUser=localStorage.getItem('ier_user');
+  if(savedUser){
+    try{
+      usuarioActual=JSON.parse(savedUser);
+      document.getElementById('userEmail').value=usuarioActual.email||'';
+      document.getElementById('dot').className='dot ok';
+      document.getElementById('kst').textContent='Bienvenido · '+usuarioActual.email;
+      document.getElementById('logoutBtn').style.display='inline';
+      mostrarPlanInfo(usuarioActual);
+    }catch(e){localStorage.removeItem('ier_user');}
   }
   // Cargar nombre del médico guardado
   const savedMed=localStorage.getItem('med_nombre');
@@ -408,17 +422,62 @@ function switchTab(t){
   document.getElementById('tbtn').disabled=true;
   document.getElementById('finfo').classList.remove('show');
 }
-function verifyKey(){
-  const k=document.getElementById('apiKey').value.trim();
+// ── AUTH / LOGIN ─────────────────────────────────────────
+const API_BASE='';  // Vercel functions en el mismo dominio
+let usuarioActual=null;
+
+async function doLogin(){
+  const email=document.getElementById('userEmail').value.trim();
   const d=document.getElementById('dot'),s=document.getElementById('kst');
-  if(!k.startsWith('sk-')){d.className='dot err';s.textContent='Formato inválido';return;}
-  localStorage.setItem('oai_key',k);
-  d.className='dot ok';s.textContent='Conectada · guardada en este dispositivo';checkGenBtn();
+  const btn=document.getElementById('loginBtn');
+  if(!email||!email.includes('@')){d.className='dot err';s.textContent='Email inválido';return;}
+  btn.disabled=true;btn.textContent='⏳...';
+  try{
+    const r=await fetch(API_BASE+'/api/auth',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,nombre:''})
+    });
+    if(!r.ok)throw new Error('Error '+r.status);
+    const data=await r.json();
+    usuarioActual=data;
+    localStorage.setItem('ier_user',JSON.stringify(data));
+    d.className='dot ok';
+    s.textContent='Bienvenido · '+email;
+    mostrarPlanInfo(data);
+    checkGenBtn();
+  }catch(e){
+    d.className='dot err';s.textContent='Error: '+e.message;
+  }finally{btn.disabled=false;btn.textContent='🔐 Entrar';}
 }
+
+function doLogout(){
+  usuarioActual=null;
+  localStorage.removeItem('ier_user');
+  document.getElementById('userEmail').value='';
+  document.getElementById('dot').className='dot';
+  document.getElementById('kst').textContent='Ingresá tu email para acceder';
+  document.getElementById('planInfo').style.display='none';
+  document.getElementById('logoutBtn').style.display='none';
+  document.getElementById('gbtn').disabled=true;
+}
+
+function mostrarPlanInfo(u){
+  const pi=document.getElementById('planInfo');
+  const LIMITES={trial:null,gratis:5,starter:50,pro:200,ilimitado:null};
+  const limite=LIMITES[u.plan];
+  const restantes=limite===null?'∞':Math.max(0,limite-(u.informes_mes||0));
+  const planNombre={trial:'Trial (1 mes gratis)',gratis:'Gratis',starter:'Starter',pro:'Pro',ilimitado:'Ilimitado'};
+  const clasePlan={'trial':'plan-trial','gratis':'plan-gratis','starter':'plan-starter','pro':'plan-pro','ilimitado':'plan-ilimitado'};
+  pi.style.display='block';
+  pi.innerHTML='<span class="plan-badge '+clasePlan[u.plan]+'">'+planNombre[u.plan]+'</span><span class="plan-counter">'+
+    (u.informes_mes||0)+(limite?'/'+limite:'')+' informes · '+restantes+' restantes</span>';
+  document.getElementById('logoutBtn').style.display='inline';
+}
+
 function checkGenBtn(){
-  const hasKey=document.getElementById('apiKey').value.trim().startsWith('sk-');
+  const hasUser=!!usuarioActual;
   const hasText=document.getElementById('tbox').value.trim().length>=5;
-  document.getElementById('gbtn').disabled=!(hasKey&&hasText);
+  document.getElementById('gbtn').disabled=!(hasUser&&hasText);
 }
 async function togglePacMic(){
   if(mrPac&&mrPac.state==='recording'){mrPac.stop();return;}
@@ -444,14 +503,14 @@ async function togglePacMic(){
   }catch(e){alert2('pacAlert','Error mic: '+e.message,'err');}
 }
 async function transcribePaciente(audioFile){
-  const key=document.getElementById('apiKey').value.trim();
-  if(!key.startsWith('sk-')){alert2('pacAlert','Conectá tu API key','warn');return;}
+  if(!usuarioActual){alert2('pacAlert','Iniciá sesión primero','warn');return;}
   const btn=document.getElementById('pacMicBtn');btn.textContent='⏳ Procesando...';btn.disabled=true;
   try{
-    const fd=new FormData();fd.append('file',audioFile);fd.append('model','whisper-1');fd.append('language','es');fd.append('response_format','text');
-    const r=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{Authorization:'Bearer '+key},body:fd});
-    if(!r.ok)throw new Error('Error Whisper '+r.status);
-    const txt=await r.text();
+    const fd=new FormData();fd.append('file',audioFile);
+    const r=await fetch(API_BASE+'/api/transcribe',{method:'POST',body:fd});
+    if(!r.ok)throw new Error('Error transcripción '+r.status);
+    const td=await r.json();
+    const txt=td.texto;
     const sysPrompt=`Extraé datos de un paciente médico del texto dictado por voz y respondé SOLO con JSON válido, sin texto adicional ni bloques de código.
 
 Formato: {"nombre":"","edad":"","expediente":"","localidad":""}
@@ -463,12 +522,17 @@ REGLAS DE EXTRACCIÓN:
 - localidad: Ciudad, municipio o región. Ej: "Tegucigalpa", "San Pedro Sula", "México". Puede venir como "de Tegucigalpa", "localidad Tegucigalpa", "vive en...".
 
 Si un dato no se menciona o no se puede determinar con seguridad, dejá la cadena vacía "".`;
-    const r2=await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({model:'gpt-4o',max_tokens:200,temperature:0,
-        messages:[{role:'system',content:sysPrompt},{role:'user',content:'Texto dictado: '+txt}]})
+    const r2=await fetch(API_BASE+'/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        system_prompt:sysPrompt,
+        transcripcion:'Texto dictado: '+txt,
+        _solo_parseo:true
+      })
     });
-    const d2=await r2.json();
+    const d2raw=await r2.json();
+    const d2={choices:[{message:{content:d2raw.informe||d2raw.error||''}}]};
     const raw=d2.choices[0].message.content.replace(/```json|```/g,'').trim();
     const datos=JSON.parse(raw);
 
@@ -535,15 +599,15 @@ function setFile(f){
   document.getElementById('finfo').classList.add('show');document.getElementById('tbtn').disabled=false;
 }
 async function doTranscribe(){
-  const key=document.getElementById('apiKey').value.trim();
-  if(!key.startsWith('sk-')){alert2('ta','Conectá tu API key','warn');return;}
+  if(!usuarioActual){alert2('ta','Iniciá sesión primero','warn');return;}
   if(!afile){alert2('ta','Sin audio','warn');return;}
   const btn=document.getElementById('tbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Transcribiendo...';
   try{
-    const fd=new FormData();fd.append('file',afile);fd.append('model','whisper-1');fd.append('language','es');fd.append('response_format','text');
-    const r=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{Authorization:'Bearer '+key},body:fd});
+    const fd=new FormData();fd.append('file',afile);
+    const r=await fetch(API_BASE+'/api/transcribe',{method:'POST',body:fd});
     if(!r.ok){let m='Error '+r.status;try{const j=await r.json();m=j.error?.message||m;}catch(x){}throw new Error(m);}
-    document.getElementById('tbox').value=(await r.text()).trim();checkGenBtn();alert2('ta','Transcripción lista ✓','ok');
+    const td=await r.json();
+    document.getElementById('tbox').value=td.texto.trim();checkGenBtn();alert2('ta','Transcripción lista ✓','ok');
   }catch(e){alert2('ta','Error: '+e.message,'err');}
   finally{btn.disabled=false;btn.innerHTML='✨ Transcribir con Whisper';}
 }
@@ -569,24 +633,41 @@ function buildSystemPrompt(pac){
   return 'Eres un radiólogo especialista en imagen cardiovascular. Estructurás dictados médicos como informes formales de CCTA en español médico formal.\n\nREGLAS:\n1. Tipo oración en todo el texto, excepto siglas médicas (CAD-RADS, DA, CD, TPI, DP, Cx, OM, DER, DLP, EAC, ACI, HRP, S.L.) siempre en mayúsculas.\n2. Incisos no mencionados: completar con valores normales.\n3. Conclusiones numeradas 1. 2. 3. — nunca guiones.\n4. CAD-RADS siempre con interpretación entre paréntesis: CAD-RADS 0 (ausencia de EAC) · 1 (mínima no obstructiva, 1-24%) · 2 (leve no obstructiva, 25-49%) · 3 (estenosis moderada, 50-69%) · 4A (estenosis grave, 70-99%) · 4B (TCI >50% o 3 vasos >70%) · 5 (oclusión total).\n5. Autocorregir errores.\n6. Score de calcio sin dato: 0 UA.\n7. Ramo intermedio sin dato: Ausente.\n\nPLANTILLA:\n\n'+pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\nUnidad de imagen cardiovascular y torácica\nModalidad de tomografía computada\nAngiotomografía de arterias coronarias\n\nMotivo de envío:\n[contenido]\n\nMétodo de estudio:\nEl estudio fue practicado en un tomógrafo multidetector de 512 cortes. Se realizó estudio en fase simple para cálculo del índice de calcio y post contraste no iónico (vol. 70 ml) en fase arterial con protocolo prospectivo de baja radiación y reconstrucción con algoritmo de Deep Learning de acuerdo al protocolo (DER [valor] mSv, DLP [valor] mGy·cm) del centro de diagnóstico por imagen, CT Scanner Lomas Altas. El paciente fue premedicado con 5 mg de isosorbide S.L. para vasodilatación coronaria. Incidentes: ninguno.\n\nCalidad del estudio:\n[contenido]\n\nHallazgos:\n\na) Score de calcio:\n[UA + riesgo + percentil si se mencionó]\n\nb) Arterias coronarias:\nExiste dominancia [derecha/izquierda/codominancia]. El origen de las coronarias es normal.\n- Coronaria derecha: [contenido]\n- Tronco principal izquierdo: [contenido]\n- Descendente anterior: [contenido]\n- Circunfleja: [contenido]\n- Ramo intermedio: [contenido]\n\nc) Evaluación funcional:\n[sin dato: "No valorable por la naturaleza prospectiva del estudio. Las cavidades cardiacas son de tamaño normal."]\n\nd) Evaluación pericárdica y vascular:\n[sin dato: "Pericardio de grosor normal y sin derrame. Aorta y arteria pulmonar principal de calibre normal."]\n\ne) Válvula aórtica:\n[sin dato: "Trivalva de morfología normal."]\n\nf) Hallazgos incidentales:\n[sin dato: "Ninguno."]\n\nConclusiones:\n1. Índice de calcio de [valor] UA (riesgo [bajo/intermedio/alto], percentil [X] de acuerdo a género y edad).\n2. Arterias coronarias epicárdicas [sin/con lesiones], corresponde a categoría CAD-RADS [X] ([interpretación])[modificadores].\n3. [Adicional si aplica]\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo · Imagen cardiovascular';
 }
 async function doGenerate(){
-  const key=document.getElementById('apiKey').value.trim();
+  if(!usuarioActual){alert2('ga','Iniciá sesión primero','warn');return;}
   const rawTxt=document.getElementById('tbox').value.trim();
   if(!rawTxt){alert2('ga','Ingresá el dictado primero','warn');return;}
   const txt=normalizeCadRads(rawTxt);const pac=getPacienteData();
   const btn=document.getElementById('gbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generando informe...';
   try{
-    const r=await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({model:'gpt-4o',max_tokens:2000,temperature:0.2,
-        messages:[{role:'system',content:buildSystemPrompt(pac)},{role:'user',content:'Estructurá este dictado como informe CCTA formal:\n\n'+txt}]})
+    const r=await fetch(API_BASE+'/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        system_prompt:buildSystemPrompt(pac),
+        transcripcion:'Estructurá este dictado como informe CCTA formal:\n\n'+txt,
+        modalidad:modalidadActual||'CCTA'
+      })
     });
-    if(!r.ok){let m='Error '+r.status;try{const j=await r.json();m=j.error?.message||m;}catch(x){}throw new Error(m);}
-    const d=await r.json();const rep=d.choices?.[0]?.message?.content||'';
+    const d=await r.json();
+    if(!r.ok){
+      if(d.error==='limite_alcanzado'){
+        alert2('ga',d.mensaje,'warn');
+        return;
+      }
+      throw new Error(d.error||'Error '+r.status);
+    }
+    const rep=d.informe||'';
     if(!rep)throw new Error('Respuesta vacía');
     document.getElementById('reportEdit').value=rep;
     document.getElementById('rout').classList.add('show');
     document.getElementById('reportEdit').scrollIntoView({behavior:'smooth',block:'start'});
     saveToHistorial(rep,pac);
+    // Actualizar contador en UI
+    if(usuarioActual){
+      usuarioActual.informes_mes=(usuarioActual.informes_mes||0)+1;
+      localStorage.setItem('ier_user',JSON.stringify(usuarioActual));
+      mostrarPlanInfo(usuarioActual);
+    }
     alert2('ga','Informe generado ✓','ok');
   }catch(e){alert2('ga','Error: '+e.message,'err');}
   finally{btn.disabled=false;btn.innerHTML='📄 Generar informe CCTA';}
@@ -599,21 +680,24 @@ function doRegenerate(){
   _regen(informe,instruccion);
 }
 async function _regen(informe,instruccion){
-  const key=document.getElementById('apiKey').value.trim();
-  if(!key.startsWith('sk-')){alert2('ra','Conectá tu API key','warn');return;}
+  if(!usuarioActual){alert2('ra','Iniciá sesión primero','warn');return;}
   document.getElementById('reportEdit').disabled=true;alert2('ra','Aplicando corrección...','warn');
   try{
-    const r=await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({model:'gpt-4o',max_tokens:2000,temperature:0.2,
-        messages:[
-          {role:'system',content:'Eres un radiólogo especialista. Corregí el informe según la instrucción. Mantené formato y plantilla. Respondé SOLO con el informe corregido.'},
-          {role:'user',content:'Informe actual:\n\n'+informe+'\n\nInstrucción: '+instruccion}
-        ]})
+    const r=await fetch(API_BASE+'/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        system_prompt:'Eres un radiólogo especialista. Corregí el informe según la instrucción. Mantené formato y plantilla. Respondé SOLO con el informe corregido.',
+        transcripcion:'Informe actual:\n\n'+informe+'\n\nInstrucción: '+instruccion,
+        modalidad:modalidadActual||'CCTA'
+      })
     });
-    if(!r.ok)throw new Error('Error '+r.status);
     const d=await r.json();
-    document.getElementById('reportEdit').value=d.choices?.[0]?.message?.content||'';
+    if(!r.ok){
+      if(d.error==='limite_alcanzado'){alert2('ra',d.mensaje,'warn');return;}
+      throw new Error(d.error||'Error '+r.status);
+    }
+    document.getElementById('reportEdit').value=d.informe||'';
     alert2('ra','Actualizado ✓','ok');
   }catch(e){alert2('ra','Error: '+e.message,'err');}
   finally{document.getElementById('reportEdit').disabled=false;}
