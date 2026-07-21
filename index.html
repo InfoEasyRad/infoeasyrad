@@ -364,6 +364,46 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 .auth-forgot a{color:var(--green);cursor:pointer;text-decoration:none;font-weight:500}
 .auth-forgot a:hover{text-decoration:underline}
 
+/* ── PANTALLA PRECIOS ─────────────────────────────────────── */
+.pricing-overlay{display:none;position:fixed;inset:0;background:rgba(13,17,23,0.55);z-index:150;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;backdrop-filter:blur(3px)}
+.pricing-overlay.open{display:flex}
+.pricing-box{background:var(--card);border-radius:20px;width:100%;max-width:700px;padding:2rem 1.75rem;margin:auto;box-shadow:var(--shadow-md);border:1px solid var(--border)}
+.pricing-head{text-align:center;margin-bottom:1.75rem}
+.pricing-head h2{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-0.4px;margin-bottom:6px}
+.pricing-head p{font-size:13.5px;color:var(--ink-3);line-height:1.5}
+.pricing-toggle{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:1.75rem}
+.pricing-toggle span{font-size:13px;color:var(--ink-3);font-weight:500}
+.toggle-switch{width:44px;height:24px;background:var(--border);border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;border:none;padding:0}
+.toggle-switch.on{background:var(--green)}
+.toggle-knob{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle-switch.on .toggle-knob{left:23px}
+.badge-ahorro{background:var(--green-light);color:var(--green);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.plan-card{border:1.5px solid var(--border);border-radius:14px;padding:1.25rem 1.1rem;position:relative;transition:all 0.15s;background:#fff}
+.plan-card:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(10,123,92,0.10)}
+.plan-card.popular{border-color:var(--green);box-shadow:0 4px 16px rgba(10,123,92,0.12)}
+.plan-popular-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green),#0D9B73);color:#fff;font-size:10.5px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:13px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.plan-price{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-1px;line-height:1}
+.plan-price sup{font-size:15px;font-weight:600;vertical-align:top;margin-top:5px;margin-right:1px}
+.plan-price-period{font-size:12px;color:var(--ink-4);margin-top:4px;margin-bottom:12px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem}
+.plan-features li{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+.plan-features li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:10px;font-size:13px;font-weight:600;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.plan-btn-outline{background:#fff;border:1.5px solid var(--border);color:var(--ink-2)}
+.plan-btn-outline:hover{border-color:var(--green);color:var(--green)}
+.plan-btn-fill{background:linear-gradient(135deg,var(--green),#0D9B73);color:#fff;box-shadow:0 2px 8px rgba(10,123,92,0.25)}
+.plan-btn-fill:hover{opacity:0.92}
+.plan-btn:disabled{opacity:0.4;cursor:not-allowed}
+.pricing-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-4);padding:4px 6px;border-radius:6px}
+.pricing-close:hover{background:var(--surface);color:var(--ink)}
+.pricing-footer{text-align:center;font-size:12px;color:var(--ink-4);margin-top:0.5rem}
+.plan-actual-badge{display:inline-block;background:var(--green-light);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle}
+/* Botón ver planes en la card de cuenta */
+.upgrade-btn{font-size:12px;background:linear-gradient(135deg,var(--green),#0D9B73);color:#fff;border:none;cursor:pointer;padding:6px 13px;border-radius:8px;font-family:inherit;font-weight:500;white-space:nowrap;box-shadow:0 2px 6px rgba(10,123,92,0.20)}
+.upgrade-btn:hover{opacity:0.9}
+
 /* ── MOBILE ───────────────────────────────────────────────── */
 @media (max-width:480px){
   body{padding:0.75rem 0.75rem;padding-top:max(0.75rem,env(safe-area-inset-top));padding-bottom:max(1rem,env(safe-area-inset-bottom))}
@@ -410,6 +450,75 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 </style>
 </head>
 <body>
+<!-- ── MODAL PRECIOS ──────────────────────────────────────── -->
+<div class="pricing-overlay" id="pricingOverlay" onclick="closePricingIfOutside(event)">
+  <div class="pricing-box" style="position:relative">
+    <button class="pricing-close" onclick="closePricing()">✕</button>
+    <div class="pricing-head">
+      <h2>Elegí tu plan</h2>
+      <p>Comenzá con 30 días gratis · Sin tarjeta de crédito · Cancelá cuando quieras</p>
+    </div>
+    <!-- Toggle mensual/anual -->
+    <div class="pricing-toggle">
+      <span>Mensual</span>
+      <button class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+        <div class="toggle-knob"></div>
+      </button>
+      <span>Anual <span class="badge-ahorro">Ahorrá 20%</span></span>
+    </div>
+    <!-- Grid de planes -->
+    <div class="pricing-grid" id="pricingGrid">
+      <!-- Básico -->
+      <div class="plan-card">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price"><sup>$</sup><span id="precioBasico">19</span></div>
+        <div class="plan-price-period" id="periodoBasico">por mes</div>
+        <ul class="plan-features">
+          <li>50 informes por mes</li>
+          <li>Todas las modalidades</li>
+          <li>Descarga Word y TXT</li>
+          <li>Subida a Google Drive</li>
+          <li>Historial de informes</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" id="btnBasico" onclick="suscribirse('basico')">Elegir Básico</button>
+      </div>
+      <!-- Pro (popular) -->
+      <div class="plan-card popular">
+        <div class="plan-popular-badge">⭐ Más popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><sup>$</sup><span id="precioPro">39</span></div>
+        <div class="plan-price-period" id="periodoPro">por mes</div>
+        <ul class="plan-features">
+          <li>200 informes por mes</li>
+          <li>Todas las modalidades</li>
+          <li>Descarga Word y TXT</li>
+          <li>Subida a Google Drive</li>
+          <li>Historial de informes</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <button class="plan-btn plan-btn-fill" id="btnPro" onclick="suscribirse('pro')">Elegir Pro</button>
+      </div>
+      <!-- Clínica -->
+      <div class="plan-card">
+        <div class="plan-name">Clínica</div>
+        <div class="plan-price"><sup>$</sup><span id="precioClinica">79</span></div>
+        <div class="plan-price-period" id="periodoClinica">por mes</div>
+        <ul class="plan-features">
+          <li>Informes ilimitados</li>
+          <li>Todas las modalidades</li>
+          <li>Descarga Word y TXT</li>
+          <li>Subida a Google Drive</li>
+          <li>Historial de informes</li>
+          <li>Soporte prioritario</li>
+          <li>Ideal para clínicas</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" id="btnClinica" onclick="suscribirse('clinica')">Elegir Clínica</button>
+      </div>
+    </div>
+    <div class="pricing-footer">🔒 Pagos seguros con Stripe · Cancelás en cualquier momento</div>
+  </div>
+</div>
+
 <!-- ── PANTALLA DE AUTH ─────────────────────────────────── -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
@@ -523,14 +632,17 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
   <div class="slabel">Cuenta</div>
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-      <div>
+      <div style="flex:1;min-width:0">
         <div class="srow" style="margin-top:0">
           <span class="dot ok" id="dot"></span>
-          <span class="stext" id="kst" style="font-weight:500;color:var(--ink-2)">Cargando...</span>
+          <span class="stext" id="kst" style="font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Cargando...</span>
         </div>
         <div id="planInfo" style="margin-top:6px"></div>
       </div>
-      <button onclick="doLogout()" id="logoutBtn" style="font-size:12px;background:none;border:1.5px solid var(--border);color:var(--ink-3);cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit;white-space:nowrap">Cerrar sesión</button>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button onclick="openPricing()" class="upgrade-btn">⬆ Planes</button>
+        <button onclick="doLogout()" style="font-size:11px;background:none;border:1.5px solid var(--border);color:var(--ink-3);cursor:pointer;padding:5px 10px;border-radius:7px;font-family:inherit;white-space:nowrap">Salir</button>
+      </div>
     </div>
   </div>
 
@@ -1271,6 +1383,101 @@ async function doUploadDrive(){
       btn.disabled=false;
     }
   });
+}
+
+// ── STRIPE CHECKOUT ────────────────────────────────────────
+const STRIPE_PK='pk_test_51Ttqrz2UwoUQkw5sxj5RSRO2wmkAErWZ3oRIwYUVEFSDVkuOBTg9tUk4xIKTeleilYPIfSAGPjGsmSZgPCrGypAO00uRR1wlW3';
+
+const PRICES={
+  basico: {
+    mensual:'price_1Tvk952UwoUQkw5sFpEbLoS3',
+    anual:  'price_1Tvk962UwoUQkw5sQwSXlupm'
+  },
+  pro: {
+    mensual:'price_1Tvk972UwoUQkw5sSO9EEHN9',
+    anual:  'price_1Tvk972UwoUQkw5s8O3e4hZ0'
+  },
+  clinica: {
+    mensual:'price_1Tvk982UwoUQkw5stwF6ec8R',
+    anual:  'price_1Tvk982UwoUQkw5sJOBbShcm'
+  }
+};
+
+const PRECIOS_DISPLAY={
+  basico: {mensual:19, anual:Math.round(19*12*0.8/12)},
+  pro:    {mensual:39, anual:Math.round(39*12*0.8/12)},
+  clinica:{mensual:79, anual:Math.round(79*12*0.8/12)}
+};
+
+let billingAnual=false;
+
+function toggleBilling(){
+  billingAnual=!billingAnual;
+  const tog=document.getElementById('billingToggle');
+  tog.classList.toggle('on',billingAnual);
+  // Actualizar precios mostrados
+  ['basico','pro','clinica'].forEach(p=>{
+    const precio=billingAnual?PRECIOS_DISPLAY[p].anual:PRECIOS_DISPLAY[p].mensual;
+    const nombre=p.charAt(0).toUpperCase()+p.slice(1);
+    document.getElementById('precio'+nombre).textContent=precio;
+    document.getElementById('periodo'+nombre).textContent=billingAnual?'por mes (pago anual)':'por mes';
+  });
+}
+
+function openPricing(){
+  // Marcar el plan actual del usuario
+  if(usuarioActual){
+    const planActual=usuarioActual.plan;
+    ['basico','pro','clinica'].forEach(p=>{
+      const btn=document.getElementById('btn'+p.charAt(0).toUpperCase()+p.slice(1));
+      const esPlanActual=(p===planActual)||(p==='clinica'&&planActual==='ilimitado');
+      if(esPlanActual){
+        btn.textContent='Plan actual';
+        btn.disabled=true;
+      } else {
+        btn.disabled=false;
+        btn.textContent='Elegir '+p.charAt(0).toUpperCase()+p.slice(1);
+      }
+    });
+  }
+  document.getElementById('pricingOverlay').classList.add('open');
+}
+
+function closePricing(){
+  document.getElementById('pricingOverlay').classList.remove('open');
+}
+
+function closePricingIfOutside(e){
+  if(e.target===document.getElementById('pricingOverlay'))closePricing();
+}
+
+async function suscribirse(plan){
+  if(!usuarioActual){alert('Iniciá sesión primero');return;}
+  const billing=billingAnual?'anual':'mensual';
+  const priceId=PRICES[plan][billing];
+  const btn=document.getElementById('btn'+plan.charAt(0).toUpperCase()+plan.slice(1));
+  btn.disabled=true;btn.textContent='Redirigiendo...';
+  try{
+    // Llamar al backend para crear la sesión de Stripe Checkout
+    const r=await fetch(API_BASE+'/api/checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        email:usuarioActual.email,
+        price_id:priceId,
+        plan
+      })
+    });
+    if(!r.ok)throw new Error('Error '+r.status);
+    const d=await r.json();
+    // Redirigir a Stripe Checkout
+    window.location.href=d.url;
+  }catch(e){
+    alert('Error al procesar: '+e.message);
+    btn.disabled=false;
+    btn.textContent='Elegir '+plan.charAt(0).toUpperCase()+plan.slice(1);
+  }
 }
 
 // ── HISTORIAL ──────────────────────────────────────────────
