@@ -7,8 +7,12 @@ const supabase = createClient(
 );
 
 const PRICE_A_PLAN = {
-  // Se completan cuando crees los productos en Stripe
-  // 'price_xxx': 'starter',
+  'price_1Tvk952UwoUQkw5sFpEbLoS3': 'basico',
+  'price_1Tvk962UwoUQkw5sQwSXlupm': 'basico',
+  'price_1Tvk972UwoUQkw5sSO9EEHN9': 'pro',
+  'price_1Tvk972UwoUQkw5s8O3e4hZ0': 'pro',
+  'price_1Tvk982UwoUQkw5stwF6ec8R': 'clinica',
+  'price_1Tvk982UwoUQkw5sJOBbShcm': 'clinica',
 };
 
 module.exports = async function handler(req, res) {
