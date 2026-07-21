@@ -570,7 +570,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 <div class="app">
   <div class="header">
     <div class="logo">IR</div>
-    <div><div class="ttl">InfoEasyRad</div><div class="sub" id="subModalidad">Seleccioná una modalidad</div></div>
+    <div><div class="ttl">InfoEasyRad</div><div class="sub">Informes radiológicos por voz</div></div>
     <span class="badge">v9</span>
     <button class="hist-btn" onclick="openHistorial()">📋 Historial</button>
   </div>
@@ -748,7 +748,7 @@ function saveMedNombre(){
 })();
 
 const SUBTITULOS={
-  'CCTA':'Angiotomografía coronaria · CCTA',
+  'CCTA':'Informes radiológicos por voz · CCTA',
   'Rayos X':'Radiología simple',
   'Ultrasonido':'Ultrasonido diagnóstico',
   'Tomografía computada':'Tomografía computada',
@@ -760,7 +760,7 @@ const SUBTITULOS={
 function selectModalidad(mod){
   modalidadActual=mod;
   document.querySelectorAll('.modbtn').forEach(b=>b.classList.toggle('active',b.dataset.mod===mod));
-  document.getElementById('subModalidad').textContent=SUBTITULOS[mod]||mod;
+  // subtítulo fijo
 }
 function onDropRef(e){e.preventDefault();document.getElementById('dzRef').classList.remove('over');if(e.dataTransfer.files[0])setRefFile(e.dataTransfer.files[0]);}
 function onFileSelectRef(el){if(el.files[0])setRefFile(el.files[0]);}
