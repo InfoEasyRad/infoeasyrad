@@ -793,16 +793,21 @@ const SUPA_URL='https://huqkgxlddbjvcxzasnba.supabase.co';
 const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cWtneGxkZGJqdmN4emFzbmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMDU1NzEsImV4cCI6MjA5OTc4MTU3MX0.saPSEkGfoeA2QBqM-XwJXaUj0CvCmZ7jJ0jus6h7XvY';
 
 async function supaAuthFetch(endpoint, body){
-  const token=localStorage.getItem('supa_access_token');
-  const headers={'Content-Type':'application/json','apikey':SUPA_ANON};
-  if(token)headers['Authorization']='Bearer '+token;
-  const url=SUPA_URL+'/auth/v1/'+endpoint;
-  const r=await fetch(url,{method:'POST',headers,body:JSON.stringify(body)});
+  // Usar proxy de Vercel para evitar bloqueos CORS en iOS
+  let action='login';
+  if(endpoint.includes('signup'))action='signup';
+  else if(endpoint.includes('recover'))action='recover';
+
+  const payload={...body, action};
+  const r=await fetch(API_BASE+'/api/auth-login',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  });
   let d;
-  try{d=await r.json();}catch(e){d={error_description:'Error de conexión'};}
+  try{d=await r.json();}catch(e){d={error:'Error de conexión'};}
   if(!r.ok){
-    const msg=d.error_description||d.error||d.msg||d.message||'Error '+r.status;
-    throw new Error(msg);
+    throw new Error(d.error||'Error '+r.status);
   }
   return d;
 }
@@ -882,25 +887,18 @@ async function cargarUsuarioDesdeServer(email){
 }
 
 async function verificarSesion(){
-  const token=localStorage.getItem('supa_access_token');
   const savedUser=localStorage.getItem('ier_user');
+  const token=localStorage.getItem('supa_access_token');
   if(token&&savedUser){
     try{
-      // Verificar que el token sigue válido
-      const r=await fetch(SUPA_URL+'/auth/v1/user',{
-        headers:{'apikey':SUPA_ANON,'Authorization':'Bearer '+token}
-      });
-      if(r.ok){
-        usuarioActual=JSON.parse(savedUser);
-        document.getElementById('kst').textContent=usuarioActual.email;
-        mostrarPlanInfo(usuarioActual);
-        checkGenBtn();
-        document.getElementById('authScreen').style.display='none';
-        return;
-      }
+      usuarioActual=JSON.parse(savedUser);
+      document.getElementById('kst').textContent=usuarioActual.email;
+      mostrarPlanInfo(usuarioActual);
+      checkGenBtn();
+      document.getElementById('authScreen').style.display='none';
+      return;
     }catch(e){}
   }
-  // Token inválido o no existe — mostrar pantalla de auth
   localStorage.removeItem('supa_access_token');
   localStorage.removeItem('supa_refresh_token');
   localStorage.removeItem('ier_user');
