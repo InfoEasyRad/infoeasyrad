@@ -1,41 +1,48 @@
 // /api/transcribe.js — Transcribe audio usando OpenAI Whisper (key server-side)
-const { createClient } = require('@supabase/supabase-js');
+const { IncomingForm } = require('formidable');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Usuario-Id');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
   try {
-    // Leer el body como buffer
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
-    const buffer = Buffer.concat(chunks);
-
-    // Detectar el content-type del audio
-    const contentType = req.headers['content-type'] || 'audio/webm';
-
-    // Construir el multipart/form-data manualmente
-    const boundary = '----FormBoundary' + Math.random().toString(36).slice(2);
+    // Parsear el FormData con formidable
+    const form = new IncomingForm({ keepExtensions: true });
     
-    // Determinar extensión del archivo
-    let ext = 'webm';
-    if (contentType.includes('mp4')) ext = 'mp4';
-    else if (contentType.includes('mpeg')) ext = 'mp3';
-    else if (contentType.includes('ogg')) ext = 'ogg';
-    else if (contentType.includes('wav')) ext = 'wav';
-    
-    const filename = `audio.${ext}`;
+    const { fields, files } = await new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve({ fields, files });
+      });
+    });
 
-    // Construir el body multipart manualmente
+    const audioFile = files.file?.[0] || files.file;
+    if (!audioFile) throw new Error('No se recibió archivo de audio');
+
+    const filepath = audioFile.filepath || audioFile.path;
+    const originalName = audioFile.originalFilename || audioFile.name || 'audio.webm';
+    const mimeType = audioFile.mimetype || audioFile.type || 'audio/webm';
+
+    // Leer el archivo
+    const audioBuffer = fs.readFileSync(filepath);
+
+    // Construir multipart manualmente para OpenAI
+    const boundary = '----FormBoundary' + Date.now().toString(36);
+    const ext = path.extname(originalName) || '.webm';
+    const filename = `audio${ext}`;
+
     const part1 = Buffer.from(
       `--${boundary}\r\n` +
       `Content-Disposition: form-data; name="file"; filename="${filename}"\r\n` +
-      `Content-Type: ${contentType}\r\n\r\n`
+      `Content-Type: ${mimeType}\r\n\r\n`
     );
-    const part2 = Buffer.from(`\r\n--${boundary}\r\n` +
+    const part2 = Buffer.from(
+      `\r\n--${boundary}\r\n` +
       `Content-Disposition: form-data; name="model"\r\n\r\nwhisper-1\r\n` +
       `--${boundary}\r\n` +
       `Content-Disposition: form-data; name="language"\r\n\r\nes\r\n` +
@@ -44,7 +51,7 @@ module.exports = async function handler(req, res) {
       `--${boundary}--\r\n`
     );
 
-    const multipartBody = Buffer.concat([part1, buffer, part2]);
+    const multipartBody = Buffer.concat([part1, audioBuffer, part2]);
 
     const whisperRes = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       method: 'POST',
