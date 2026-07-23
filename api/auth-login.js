@@ -11,6 +11,9 @@ module.exports = async function handler(req, res) {
 
   const SUPA_URL = process.env.SUPABASE_URL;
   const SUPA_ANON = process.env.SUPABASE_ANON_KEY;
+  
+  console.log('SUPA_URL:', SUPA_URL ? 'OK' : 'MISSING');
+  console.log('SUPA_ANON:', SUPA_ANON ? 'OK' : 'MISSING');
 
   try {
     let endpoint, body;
@@ -39,8 +42,13 @@ module.exports = async function handler(req, res) {
 
     const d = await r.json();
 
+    console.log('Supabase response status:', r.status);
+    console.log('Supabase response:', JSON.stringify(d));
+    
     if (!r.ok) {
-      return res.status(r.status).json({ error: d.error_description || d.error || d.message || 'Error de autenticación' });
+      const errMsg = d.error_description || d.error || d.message || d.msg || 'Error de autenticación';
+      console.error('Auth error:', errMsg);
+      return res.status(r.status).json({ error: errMsg });
     }
 
     return res.status(200).json(d);
