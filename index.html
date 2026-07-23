@@ -687,7 +687,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
   <div class="slabel">Transcripción</div>
   <div class="card">
     <textarea id="tbox" style="min-height:100px" placeholder="La transcripción aparecerá aquí, o escribí/pegá el dictado directamente..."></textarea>
-    <button class="gbtn" id="gbtn" onclick="doGenerate()" disabled>📄 Generar informe CCTA</button>
+    <button class="gbtn" id="gbtn" onclick="doGenerate()" disabled>📄 Generar informe</button>
     <div class="alert" id="ga"></div>
   </div>
 
@@ -748,7 +748,7 @@ function saveMedNombre(){
 })();
 
 const SUBTITULOS={
-  'CCTA':'Informes radiológicos por voz · CCTA',
+  'CCTA':'Informes radiológicos por voz',
   'Rayos X':'Radiología simple',
   'Ultrasonido':'Ultrasonido diagnóstico',
   'Tomografía computada':'Tomografía computada',
@@ -1120,7 +1120,7 @@ async function doGenerate(){
     }
     alert2('ga','Informe generado ✓','ok');
   }catch(e){alert2('ga','Error: '+e.message,'err');}
-  finally{btn.disabled=false;btn.innerHTML='📄 Generar informe CCTA';}
+  finally{btn.disabled=false;btn.innerHTML='📄 Generar informe';}
 }
 function doRegenerate(){
   const informe=document.getElementById('reportEdit').value.trim();
