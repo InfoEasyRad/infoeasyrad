@@ -713,7 +713,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
       <input type="file" id="finput" accept="audio/*" style="display:none" onchange="onFileSelect(this)"/>
       <div class="finfo" id="finfo"><span class="chk">✓</span><span id="fname"></span></div>
     </div>
-    <button class="gbtn" id="tbtn" onclick="doTranscribe()" disabled>✨ Transcribir con Whisper</button>
+    <button class="gbtn" id="tbtn" onclick="doTranscribe()" disabled>🎙 Transcribir audio</button>
     <div class="alert" id="ta"></div>
   </div>
 
@@ -1184,7 +1184,7 @@ async function doTranscribe(){
     const td=await r.json();
     document.getElementById('tbox').value=td.texto.trim();checkGenBtn();alert2('ta','Transcripción lista ✓','ok');
   }catch(e){alert2('ta','Error: '+e.message,'err');}
-  finally{btn.disabled=false;btn.innerHTML='✨ Transcribir con Whisper';}
+  finally{btn.disabled=false;btn.innerHTML='🎙 Transcribir audio';}
 }
 function normalizeCadRads(t){
   return t.replace(/\bcad[-\s]?r[ao]d[sz]?\s*([0-5][abAB]?)\b/gi,'CAD-RADS $1')
