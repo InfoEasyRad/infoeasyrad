@@ -6,8 +6,8 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const { email, password, action } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email y contraseña requeridos' });
+  const { email, password, action, refresh_token } = req.body;
+  if ((!action || action === 'login') && (!email || !password)) return res.status(400).json({ error: 'Email y contraseña requeridos' });
 
   const SUPA_URL = process.env.SUPABASE_URL;
   const SUPA_ANON = process.env.SUPABASE_ANON_KEY;
@@ -24,6 +24,9 @@ module.exports = async function handler(req, res) {
     } else if (action === 'recover') {
       endpoint = '/auth/v1/recover';
       body = { email };
+    } else if (action === 'refresh') {
+      endpoint = '/auth/v1/token?grant_type=refresh_token';
+      body = { refresh_token: req.body.refresh_token };
     } else {
       // login por defecto
       endpoint = '/auth/v1/token?grant_type=password';
