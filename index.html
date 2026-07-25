@@ -611,8 +611,8 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     </div>
     <!-- Selector subtipo Ultrasonido -->
     <div class="subtipo-panel" id="subtipoPanel">
-      <div class="subtipo-label">Tipo de ultrasonido</div>
-      <div class="subtipo-grid">
+      <div class="subtipo-label" id="subtipoPanelLabel">Tipo de ultrasonido</div>
+      <div class="subtipo-grid" id="subtipoPanelGrid">
         <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')">🫁 Abdominal</button>
         <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')">🦋 Tiroideo</button>
         <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')">🤰 Obstétrico</button>
@@ -780,15 +780,35 @@ const SUBTITULOS={
 
 function selectModalidad(mod){
   modalidadActual=mod;
-  // Mostrar selector de subtipo solo para Ultrasonido
+  // Mostrar selector de subtipo para Ultrasonido y TC
   const panel=document.getElementById('subtipoPanel');
+  const label=document.getElementById('subtipoPanelLabel');
+  const grid=document.getElementById('subtipoPanelGrid');
+  subtipoActual=null;
+  document.querySelectorAll('.subtipo-btn').forEach(b=>b.classList.remove('active'));
+
   if(mod==='Ultrasonido'){
+    label.textContent='Tipo de ultrasonido';
+    grid.innerHTML=`
+      <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')">🫁 Abdominal</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')">🦋 Tiroideo</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')">🤰 Obstétrico</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Renal')">🫘 Renal</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')">⭕ Pélvico</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')">💪 Partes blandas</button>`;
     panel.classList.add('show');
-    subtipoActual=null;
-    document.querySelectorAll('.subtipo-btn').forEach(b=>b.classList.remove('active'));
+  } else if(mod==='Tomografía computada'){
+    label.textContent='Tipo de tomografía';
+    grid.innerHTML=`
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Tórax')">🫁 Tórax</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Abdomen-Pelvis')">🫃 Abdomen-Pelvis</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Cerebro')">🧠 Cerebro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Columna')">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Cuello')">🔵 Cuello</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Angio')">🩸 Angio-TC</button>`;
+    panel.classList.add('show');
   } else {
     panel.classList.remove('show');
-    subtipoActual=null;
   }
   document.querySelectorAll('.modbtn').forEach(b=>b.classList.toggle('active',b.dataset.mod===mod));
   // subtítulo fijo
@@ -1149,8 +1169,8 @@ async function doGenerate(){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         usuario_id:usuarioActual.id,
-        system_prompt:modalidadActual==='Ultrasonido'?buildPromptUS(pac,subtipoActual):buildSystemPrompt(pac),
-        transcripcion:modalidadActual==='Ultrasonido'?'Estructurá este dictado como informe de ultrasonido '+(subtipoActual||'abdominal')+' formal:\n\n'+txt:'Estructurá este dictado como informe CCTA formal:\n\n'+txt,
+        system_prompt:modalidadActual==='Ultrasonido'?buildPromptUS(pac,subtipoActual):modalidadActual==='Tomografía computada'?buildPromptTC(pac,subtipoActual):buildSystemPrompt(pac),
+        transcripcion:modalidadActual==='Ultrasonido'?'Estructurá este dictado como informe de ultrasonido '+(subtipoActual||'abdominal')+' formal:\n\n'+txt:modalidadActual==='Tomografía computada'?'Estructurá este dictado como informe de '+(subtipoActual||'TC abdomen-pelvis')+' formal:\n\n'+txt:'Estructurá este dictado como informe CCTA formal:\n\n'+txt,
         modalidad:modalidadActual||'CCTA'
       })
     });
@@ -1437,6 +1457,29 @@ async function doUploadDrive(){
       btn.disabled=false;
     }
   });
+}
+
+// ── SUBTIPO TOMOGRAFÍA COMPUTADA ───────────────────────────
+function buildPromptTC(pac, subtipo){
+  const cab=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+
+  const prompts={
+    'TC Tórax': 'Eres un radiólogo especialista en TC de tórax. Estructurás dictados como informes formales de tomografía computada de tórax en español médico formal, siguiendo las guías RadReport RSNA, ACR Lung-RADS y Fleischner Society.\n\nREGLAS: Tipo oración en todo el texto. Nódulos pulmonares seguir guías Fleischner/Lung-RADS. Conclusiones numeradas. Autocorregir errores.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de tórax\n\nTécnica:\nSe obtuvieron imágenes axiales de cuerpo completo desde ápices pulmonares hasta bases, con reconstrucciones multiplanares en ventanas de pulmón, mediastino y ósea. [Con/Sin] contraste intravenoso.\n\nHallazgos:\n\nPulmones y vías aéreas:\n[Parénquima, nódulos, consolidaciones, vidrio despulido, derrame pleural, neumotórax]\n\nMediastino e hilio:\n[Adenopatías por criterio de tamaño, estructuras vasculares, tráquea, bronquios principales]\n\nCorazón y pericardio:\n[Tamaño cardíaco, calcificaciones coronarias, derrame pericárdico]\n\nPared torácica y estructuras óseas:\n[Costillas, vértebras, esternón, partes blandas]\n\nHallazgos incidentales abdominales superiores:\n[Hígado, bazo, riñones en cortes incluidos]\n\nImpresión:\n1. [Conclusiones numeradas + categoría Lung-RADS si aplica]'+firma,
+
+    'TC Abdomen-Pelvis': 'Eres un radiólogo especialista en TC de abdomen y pelvis. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA, LI-RADS para hígado y criterios AJR.\n\nREGLAS: Tipo oración. Lesiones hepáticas usar LI-RADS si contexto oncológico. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de abdomen y pelvis\n\nTécnica:\nSe obtuvieron imágenes axiales desde las bases pulmonares hasta la sínfisis del pubis. [Con/Sin] contraste intravenoso en fase [portal/arterial/tardía]. Reconstrucciones multiplanares.\n\nHallazgos:\n\nHígado: [tamaño, parénquima, lesiones focales, vías biliares intrahepáticas]\nVesícula y vías biliares: [colelitiasis, pared, colédoco]\nPáncreas: [parénquima, conducto de Wirsung, lesiones]\nBazo: [tamaño, lesiones]\nGlándulas suprarrenales: [tamaño, nódulos]\nRiñones: [tamaño, parénquima, lesiones, hidronefrosis, uréteres]\nVejiga: [pared, lesiones, contenido]\nÓrganos reproductores: [útero/ovarios o próstata si visualizados]\nLinfoadenopatías: [retroperitoneal, mesentérica, ilíaca]\nVascular: [aorta, vena cava, vasos mesentéricos]\nÓseo: [vértebras, pelvis, lesiones]\nPeritoneo y líquido libre: [ascitis, implantes]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'TC Cerebro': 'Eres un radiólogo especialista en neurorradiología. Estructurás dictados como informes formales de TC de cráneo en español médico formal, siguiendo las guías RadReport RSNA y ASNR.\n\nREGLAS: Tipo oración. Describir sistemáticamente parénquima, ventrículos, cisternas, línea media, hueso y partes blandas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de cráneo [sin/con contraste]\n\nTécnica:\nSe obtuvieron imágenes axiales del cráneo desde la base hasta el vértex, revisadas en ventanas de parénquima, subdural y ósea.\n\nHallazgos:\n\nParénquima cerebral: [densidad, lesiones, edema, hemorragia]\nVentrículos y cisternas: [tamaño, morfología, hidrocefalia]\nLínea media: [desplazamiento]\nCerebelo y tronco del encéfalo: [lesiones, densidad]\nEspacio subaracnoideo: [hemorragia, ensanchamiento]\nHueso y base de cráneo: [fracturas, lesiones líticas/blásticas]\nSenos paranasales y mastoide: [opacificación, lesiones]\nPartes blandas extracraneales: [hematoma, edema]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'TC Columna': 'Eres un radiólogo especialista en TC de columna vertebral. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA y SSR.\n\nREGLAS: Tipo oración. Describir nivel por nivel los discos, forámenes y canal raquídeo. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de columna [cervical/torácica/lumbar] [sin/con contraste]\n\nTécnica:\nSe obtuvieron imágenes axiales y reconstrucciones sagitales y coronales de la columna [región] en ventanas de parénquima y ósea.\n\nHallazgos:\n\nAlineación: [lordosis/cifosis normal o alterada, escoliosis]\nCuerpos vertebrales: [altura, densidad, lesiones, fracturas, nivel por nivel]\nDiscos intervertebrales: [altura, hidratación, herniaciones por nivel]\nCanal raquídeo: [amplitud, estenosis]\nForámenes neurales: [permeabilidad, compresión radicular]\nArticulaciones facetarias: [artrosis, derrame]\nPartes blandas paravertebrales: [masas, hematoma]\n\nImpresión:\n1. [Conclusiones numeradas por nivel]'+firma,
+
+    'TC Cuello': 'Eres un radiólogo especialista en TC de cuello. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA y el template de cuello RadShare.\n\nREGLAS: Tipo oración. Describir sistemáticamente suprahioideo, infrahioideo, tiroides, ganglios y vasos. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de cuello [con/sin] contraste intravenoso\n\nTécnica:\nImágenes axiales desde la base del cráneo hasta los ápices pulmonares, con reconstrucciones multiplanares en ventana de tejidos blandos y ósea.\n\nHallazgos:\n\nRegión suprahioidea:\nNasofaringe y orofaringe: [masas, engrosamiento]\nEspacios parafaríngeo y masticador: [lesiones]\nCavidad oral y piso de boca: [lesiones]\n\nRegión infrahioidea:\nHipofaringe y pliegues ariepiglóticos: [lesiones]\nGlándulas salivales: [parótidas, submandibulares]\n\nTiroides: [tamaño, nódulos, calcificaciones]\nGanglios linfáticos: [cadenas, adenopatías por tamaño o morfología]\nVasos: [carótidas, yugulares — permeabilidad]\nHueso: [mandíbula, columna cervical — lesiones]\nÁpices pulmonares: [incluidos en el estudio]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'TC Angio': 'Eres un radiólogo especialista en angiotomografía computada. Estructurás dictados como informes formales de Angio-TC en español médico formal, siguiendo las guías RadReport RSNA, SIR y SVS.\n\nREGLAS: Tipo oración. Describir calibre, permeabilidad, estenosis (NASCET si carotídea), disección, aneurismas con medidas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Angiotomografía computada — [región vascular]\n\nTécnica:\nEstudio con contraste intravenoso en fase arterial [y/o venosa], con reconstrucciones MIP, VR y MPR del eje vascular.\n\nHallazgos:\n\nCalidad técnica: [opacificación del contraste, artefactos]\nEje aórtico: [aorta ascendente, cayado, aorta torácica, aorta abdominal — calibre, calcificaciones, disección, aneurisma]\nVasos viscerales: [tronco celíaco, mesentérica superior/inferior, renales — permeabilidad]\nEje ilíaco y femoral: [ilíacas, femorales — permeabilidad, estenosis, oclusión]\n[Vasos específicos según región estudiada]\nHallazgos incidentales: [parénquima en cortes incluidos]\n\nImpresión:\n1. [Conclusiones numeradas con medidas y grado de estenosis si aplica]'+firma
+  };
+
+  const sub=subtipo||'TC Abdomen-Pelvis';
+  return prompts[sub]||prompts['TC Abdomen-Pelvis'];
 }
 
 // ── SUBTIPO ULTRASONIDO ────────────────────────────────────
