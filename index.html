@@ -784,8 +784,10 @@ function selectModalidad(mod){
   const panel=document.getElementById('subtipoPanel');
   const label=document.getElementById('subtipoPanelLabel');
   const grid=document.getElementById('subtipoPanelGrid');
+  // Resetear subtipo y limpiar grid antes de cambiar
   subtipoActual=null;
-  document.querySelectorAll('.subtipo-btn').forEach(b=>b.classList.remove('active'));
+  grid.innerHTML='';
+  panel.classList.remove('show');
 
   if(mod==='Ultrasonido'){
     label.textContent='Tipo de ultrasonido';
@@ -807,8 +809,6 @@ function selectModalidad(mod){
       <button class="subtipo-btn" onclick="selectSubtipo('TC Cuello')">🔵 Cuello</button>
       <button class="subtipo-btn" onclick="selectSubtipo('TC Angio')">🩸 Angio-TC</button>`;
     panel.classList.add('show');
-  } else {
-    panel.classList.remove('show');
   }
   document.querySelectorAll('.modbtn').forEach(b=>b.classList.toggle('active',b.dataset.mod===mod));
   // subtítulo fijo
