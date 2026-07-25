@@ -616,12 +616,12 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <div class="subtipo-panel" id="subtipoPanel">
       <div class="subtipo-label" id="subtipoPanelLabel">Tipo de ultrasonido</div>
       <div class="subtipo-grid" id="subtipoPanelGrid">
-        <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')">🫁 Abdominal</button>
-        <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')">🦋 Tiroideo</button>
-        <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')">🤰 Obstétrico</button>
-        <button class="subtipo-btn" onclick="selectSubtipo('Renal')">🫘 Renal</button>
-        <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')">⭕ Pélvico</button>
-        <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')">💪 Partes blandas</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')" data-sub="Abdominal">🫁 Abdominal</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')" data-sub="Tiroideo">🦋 Tiroideo</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')" data-sub="Obstétrico">🤰 Obstétrico</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Renal')" data-sub="Renal">🫘 Renal</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')" data-sub="Pélvico">⭕ Pélvico</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')" data-sub="Partes blandas">💪 Partes blandas</button>
       </div>
     </div>
     <div class="dropzone" id="dzRef" style="margin-top:10px"
@@ -795,52 +795,52 @@ function selectModalidad(mod){
   if(mod==='Ultrasonido'){
     label.textContent='Tipo de ultrasonido';
     grid.innerHTML=`
-      <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')">🫁 Abdominal</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')">🦋 Tiroideo</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')">🤰 Obstétrico</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('Renal')">🫘 Renal</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')">⭕ Pélvico</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')">💪 Partes blandas</button>`;
+      <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')" data-sub="Abdominal">🫁 Abdominal</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')" data-sub="Tiroideo">🦋 Tiroideo</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')" data-sub="Obstétrico">🤰 Obstétrico</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Renal')" data-sub="Renal">🫘 Renal</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')" data-sub="Pélvico">⭕ Pélvico</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')" data-sub="Partes blandas">💪 Partes blandas</button>`;
     panel.classList.add('show');
   } else if(mod==='Tomografía computada'){
     label.textContent='Tipo de tomografía';
     grid.innerHTML=`
-      <button class="subtipo-btn" onclick="selectSubtipo('TC Tórax')">🫁 Tórax</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('TC Abdomen-Pelvis')">🫃 Abdomen-Pelvis</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('TC Cerebro')">🧠 Cerebro</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('TC Columna')">🦴 Columna</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('TC Cuello')">🔵 Cuello</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('TC Angio')">🩸 Angio-TC</button>`;
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Tórax')" data-sub="TC Tórax">🫁 Tórax</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Abdomen-Pelvis')" data-sub="TC Abdomen-Pelvis">🫃 Abdomen-Pelvis</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Cerebro')" data-sub="TC Cerebro">🧠 Cerebro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Columna')" data-sub="TC Columna">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Cuello')" data-sub="TC Cuello">🔵 Cuello</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Angio')" data-sub="TC Angio">🩸 Angio-TC</button>`;
     panel.classList.add('show');
   } else if(mod==='Resonancia magnética'){
     label.textContent='Tipo de resonancia';
     grid.innerHTML=`
-      <button class="subtipo-btn" onclick="selectSubtipo('RM Cerebro')">🧠 Cerebro</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RM Columna')">🦴 Columna</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RM Rodilla')">🦵 Rodilla</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RM Hombro')">💪 Hombro</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RM Abdomen')">🫁 Abdomen</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RM Pelvis')">⭕ Pelvis</button>`;
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Cerebro')" data-sub="RM Cerebro">🧠 Cerebro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Columna')" data-sub="RM Columna">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Rodilla')" data-sub="RM Rodilla">🦵 Rodilla</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Hombro')" data-sub="RM Hombro">💪 Hombro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Abdomen')" data-sub="RM Abdomen">🫁 Abdomen</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Pelvis')" data-sub="RM Pelvis">⭕ Pelvis</button>`;
     panel.classList.add('show');
   } else if(mod==='Rayos X'){
     label.textContent='Tipo de radiografía';
     grid.innerHTML=`
-      <button class="subtipo-btn" onclick="selectSubtipo('RX Tórax')">🫁 Tórax</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RX Abdomen')">🫃 Abdomen</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RX Columna')">🦴 Columna</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RX Extremidades')">🦵 Extremidades</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RX Pelvis')">⭕ Pelvis/Cadera</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('RX Cráneo')">💀 Cráneo/Senos</button>`;
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Tórax')" data-sub="RX Tórax">🫁 Tórax</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Abdomen')" data-sub="RX Abdomen">🫃 Abdomen</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Columna')" data-sub="RX Columna">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Extremidades')" data-sub="RX Extremidades">🦵 Extremidades</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Pelvis')" data-sub="RX Pelvis">⭕ Pelvis/Cadera</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Cráneo')" data-sub="RX Cráneo">💀 Cráneo/Senos</button>`;
     panel.classList.add('show');
   } else if(mod==='Fluoroscopía'){
     label.textContent='Tipo de fluoroscopía';
     grid.innerHTML=`
-      <button class="subtipo-btn" onclick="selectSubtipo('FL Esófago-Estómago')">🫁 Esófago-Estómago</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('FL Colon')">🫃 Colon por enema</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('FL Cistouretrograma')">💧 Cistouretrograma</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('FL Histerosalpingo')">⭕ Histerosalpingo</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('FL Articulación')">🦵 Articulografía</button>
-      <button class="subtipo-btn" onclick="selectSubtipo('FL Mielografía')">🦴 Mielografía</button>`;
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Esófago-Estómago')" data-sub="FL Esófago-Estómago">🫁 Esófago-Estómago</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Colon')" data-sub="FL Colon">🫃 Colon por enema</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Cistouretrograma')" data-sub="FL Cistouretrograma">💧 Cistouretrograma</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Histerosalpingo')" data-sub="FL Histerosalpingo">⭕ Histerosalpingo</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Articulación')" data-sub="FL Articulación">🦵 Articulografía</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Mielografía')" data-sub="FL Mielografía">🦴 Mielografía</button>`;
     panel.classList.add('show');
   }
   document.querySelectorAll('.modbtn').forEach(b=>b.classList.toggle('active',b.dataset.mod===mod));
@@ -1608,7 +1608,7 @@ function buildPromptTC(pac, subtipo){
 function selectSubtipo(sub){
   subtipoActual=sub;
   document.querySelectorAll('.subtipo-btn').forEach(b=>{
-    b.classList.toggle('active', b.textContent.includes(sub));
+    b.classList.toggle('active', b.dataset.sub===sub);
   });
 }
 
