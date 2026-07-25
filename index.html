@@ -304,6 +304,15 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 .plan-pro{background:var(--amber-light);color:var(--amber)}
 .plan-ilimitado{background:#F5F0FF;color:#6D28D9}
 .plan-counter{color:var(--ink-3);font-size:11.5px}
+/* Selector de subtipo US */
+.subtipo-panel{display:none;margin-top:10px;padding:10px;background:var(--surface);border-radius:10px;border:1px solid var(--border)}
+.subtipo-panel.show{display:block}
+.subtipo-label{font-size:10.5px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.subtipo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.subtipo-btn{padding:8px 6px;font-size:12px;font-weight:500;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:var(--ink-2);font-family:inherit;text-align:center;transition:all 0.15s}
+.subtipo-btn:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.subtipo-btn.active{background:var(--green);color:#fff;border-color:var(--green);font-weight:600}
+@media(max-width:480px){.subtipo-grid{grid-template-columns:1fr 1fr}}
 
 /* ── PANTALLA AUTH ─────────────────────────────────────────── */
 .auth-screen{
@@ -600,6 +609,18 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
       <button class="modbtn" data-mod="Fluoroscopía" onclick="selectModalidad('Fluoroscopía')"><span class="modicon">📽️</span>Fluoroscopía</button>
       <button class="modbtn" data-mod="Otro" onclick="selectModalidad('Otro')"><span class="modicon">📋</span>Otro</button>
     </div>
+    <!-- Selector subtipo Ultrasonido -->
+    <div class="subtipo-panel" id="subtipoPanel">
+      <div class="subtipo-label">Tipo de ultrasonido</div>
+      <div class="subtipo-grid">
+        <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')">🫁 Abdominal</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')">🦋 Tiroideo</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')">🤰 Obstétrico</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Renal')">🫘 Renal</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')">⭕ Pélvico</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')">💪 Partes blandas</button>
+      </div>
+    </div>
     <div class="dropzone" id="dzRef" style="margin-top:10px"
       onclick="document.getElementById('finputRef').click()"
       ondragover="event.preventDefault();this.classList.add('over')"
@@ -720,7 +741,7 @@ const IMG_H=2109767;
 
 let mrInforme=null,chunksInforme=[],rintInforme=null,rsecsInforme=0,afile=null,tab='mic';
 let mrPac=null,chunksPac=[],rintPac=null;
-let modalidadActual=null,refFile=null;
+let modalidadActual=null,subtipoActual=null,refFile=null;
 
 // Helper: nombre del médico
 function getMedNombre(){
@@ -759,6 +780,16 @@ const SUBTITULOS={
 
 function selectModalidad(mod){
   modalidadActual=mod;
+  // Mostrar selector de subtipo solo para Ultrasonido
+  const panel=document.getElementById('subtipoPanel');
+  if(mod==='Ultrasonido'){
+    panel.classList.add('show');
+    subtipoActual=null;
+    document.querySelectorAll('.subtipo-btn').forEach(b=>b.classList.remove('active'));
+  } else {
+    panel.classList.remove('show');
+    subtipoActual=null;
+  }
   document.querySelectorAll('.modbtn').forEach(b=>b.classList.toggle('active',b.dataset.mod===mod));
   // subtítulo fijo
 }
@@ -1082,6 +1113,28 @@ function getPacienteData(){
   if(fechaRaw){const [y,m,d]=fechaRaw.split('-');const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];fecha=parseInt(d)+' de '+meses[parseInt(m)-1]+' de '+y;}
   return{nombre,edad,exp,local,fecha};
 }
+function buildPromptUS(pac, subtipo){
+  const cabecera=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+
+  const prompts={
+    'Abdominal': 'Eres un radiólogo especialista en ultrasonido abdominal. Estructurás dictados como informes formales de ultrasonido abdominal en español médico formal, siguiendo las guías RadReport de la RSNA.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido de abdomen\n\nTécnica:\nAbdomen explorado con transductor de ultrasonido en modalidad de escala de grises y técnica Doppler color limitada.\n\nHallazgos:\n\nHígado: [ecotextura, ecogenicidad, masas focales]\nVesícula biliar: [colelitiasis, pared, Murphy sonográfico]\nVías biliares: [dilatación, colédoco en cm]\nPáncreas: [visualización, alteraciones]\nRiñón derecho: [tamaño, parénquima, masas, cálculos, hidronefrosis]\nRiñón izquierdo: [tamaño, parénquima, masas, cálculos, hidronefrosis]\nBazo: [tamaño, ecogenicidad]\nAorta y VCI: [calibre]\nLíquido libre: [ascitis, derrames]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'Tiroideo': 'Eres un radiólogo especialista en ultrasonido tiroideo. Estructurás dictados como informes formales de ultrasonido tiroideo en español médico formal, aplicando la clasificación ACR TI-RADS según las guías RSNA/ACR.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido de tiroides\n\nTécnica:\nUltrasonido tiroideo con transductor de alta frecuencia en escala de grises y Doppler color.\n\nHallazgos:\n\nLóbulo derecho: [dimensiones cm, ecogenicidad, nódulos]\nLóbulo izquierdo: [dimensiones cm, ecogenicidad, nódulos]\nIstmo: [grosor cm, nódulos]\nNódulos (si presentes):\n  - Composición: [sólido/quístico/espongiforme/mixto]\n  - Ecogenicidad: [hiper/iso/hipoecoico/muy hipoecoico]\n  - Forma: [más ancho que alto / más alto que ancho]\n  - Márgenes: [lisos/irregulares/espiculados/extratiroideos]\n  - Focos ecogénicos: [ninguno/macrocalcificaciones/periférico/puntiformes]\n  - Puntuación ACR TI-RADS: TR[1-5]\nGanglios cervicales: [adenopatías]\n\nImpresión:\n1. [Conclusiones con categoría TI-RADS y recomendación]'+firma,
+
+    'Obstétrico': 'Eres un radiólogo especialista en ultrasonido obstétrico. Estructurás dictados como informes formales de ultrasonido obstétrico en español médico formal, siguiendo el léxico RSNA 2024 para primer trimestre y guías ISUOG.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido obstétrico\n\nTécnica:\nUltrasonido obstétrico transabdominal [y/o transvaginal].\n\nHallazgos:\n\nNúmero de fetos: [único/gemelar]\nPresentación: [cefálica/pélvica/transversa]\nFrecuencia cardíaca fetal: [__] lpm\nBiometría fetal:\n  - DBP: [__] mm\n  - CC: [__] mm\n  - CA: [__] mm\n  - LF: [__] mm\n  - Peso fetal estimado: [__] g (percentil [__])\nPlacenta: [localización, grado, previa]\nLíquido amniótico: ILA [__] cm — [normal/polihidramnios/oligohidramnios]\nCuello uterino: longitud [__] cm, cerrado.\nAnexos maternos: [masas]\n\nImpresión:\n1. [Embarazo + semanas + concordancia biométrica]'+firma,
+
+    'Renal': 'Eres un radiólogo especialista en ultrasonido renal. Estructurás dictados como informes formales de ultrasonido renal y de vías urinarias en español médico formal, siguiendo las guías RadReport RSNA.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido renal y de vías urinarias\n\nTécnica:\nUltrasonido renal bilateral con vejiga en escala de grises y Doppler.\n\nHallazgos:\n\nRiñón derecho: [dimensiones, parénquima, masas, cálculos, hidronefrosis, índice de resistencia]\nRiñón izquierdo: [dimensiones, parénquima, masas, cálculos, hidronefrosis, índice de resistencia]\nVejiga: [repleta/vacía, paredes, lesiones, volumen]\nResiduo postmiccional: [__] cc\nUréteres: [dilatación]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'Pélvico': 'Eres un radiólogo especialista en ultrasonido pélvico ginecológico. Estructurás dictados como informes formales de ultrasonido pélvico en español médico formal, siguiendo las guías RadReport RSNA y ISUOG.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido pélvico\n\nTécnica:\nUltrasonido pélvico transabdominal [y/o transvaginal].\n\nHallazgos:\n\nÚtero: [posición, dimensiones, miometrio, endometrio en mm]\nOvario derecho: [dimensiones, quistes, masas]\nOvario izquierdo: [dimensiones, quistes, masas]\nFondo de saco de Douglas: [líquido libre]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'Partes blandas': 'Eres un radiólogo especialista en ultrasonido musculoesquelético y de partes blandas. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA y ESSR.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido de partes blandas — [región]\n\nTécnica:\nUltrasonido con transductor de alta resolución en escala de grises y Doppler color de [región anatómica].\n\nHallazgos:\n\nTejidos blandos: [colecciones, masas, engrosamiento]\nTendones: [fibras, integridad, tendinosis, ruptura]\nBursas: [bursitis]\nArticulación: [derrame articular]\nDoppler: [hipervascularidad]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma
+  };
+
+  const sub=subtipo||'Abdominal';
+  return prompts[sub]||prompts['Abdominal'];
+}
+
 function buildSystemPrompt(pac){
   return 'Eres un radiólogo especialista en imagen cardiovascular. Estructurás dictados médicos como informes formales de CCTA en español médico formal.\n\nREGLAS:\n1. Tipo oración en todo el texto, excepto siglas médicas (CAD-RADS, DA, CD, TPI, DP, Cx, OM, DER, DLP, EAC, ACI, HRP, S.L.) siempre en mayúsculas.\n2. Incisos no mencionados: completar con valores normales.\n3. Conclusiones numeradas 1. 2. 3. — nunca guiones.\n4. CAD-RADS siempre con interpretación entre paréntesis: CAD-RADS 0 (ausencia de EAC) · 1 (mínima no obstructiva, 1-24%) · 2 (leve no obstructiva, 25-49%) · 3 (estenosis moderada, 50-69%) · 4A (estenosis grave, 70-99%) · 4B (TCI >50% o 3 vasos >70%) · 5 (oclusión total).\n5. Autocorregir errores.\n6. Score de calcio sin dato: 0 UA.\n7. Ramo intermedio sin dato: Ausente.\n\nPLANTILLA:\n\n'+pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\nUnidad de imagen cardiovascular y torácica\nModalidad de tomografía computada\nAngiotomografía de arterias coronarias\n\nMotivo de envío:\n[contenido]\n\nMétodo de estudio:\nEl estudio fue practicado en un tomógrafo multidetector de 512 cortes. Se realizó estudio en fase simple para cálculo del índice de calcio y post contraste no iónico (vol. 70 ml) en fase arterial con protocolo prospectivo de baja radiación y reconstrucción con algoritmo de Deep Learning de acuerdo al protocolo (DER [valor] mSv, DLP [valor] mGy·cm) del centro de diagnóstico por imagen, CT Scanner Lomas Altas. El paciente fue premedicado con 5 mg de isosorbide S.L. para vasodilatación coronaria. Incidentes: ninguno.\n\nCalidad del estudio:\n[contenido]\n\nHallazgos:\n\na) Score de calcio:\n[UA + riesgo + percentil si se mencionó]\n\nb) Arterias coronarias:\nExiste dominancia [derecha/izquierda/codominancia]. El origen de las coronarias es normal.\n- Coronaria derecha: [contenido]\n- Tronco principal izquierdo: [contenido]\n- Descendente anterior: [contenido]\n- Circunfleja: [contenido]\n- Ramo intermedio: [contenido]\n\nc) Evaluación funcional:\n[sin dato: "No valorable por la naturaleza prospectiva del estudio. Las cavidades cardiacas son de tamaño normal."]\n\nd) Evaluación pericárdica y vascular:\n[sin dato: "Pericardio de grosor normal y sin derrame. Aorta y arteria pulmonar principal de calibre normal."]\n\ne) Válvula aórtica:\n[sin dato: "Trivalva de morfología normal."]\n\nf) Hallazgos incidentales:\n[sin dato: "Ninguno."]\n\nConclusiones:\n1. Índice de calcio de [valor] UA (riesgo [bajo/intermedio/alto], percentil [X] de acuerdo a género y edad).\n2. Arterias coronarias epicárdicas [sin/con lesiones], corresponde a categoría CAD-RADS [X] ([interpretación])[modificadores].\n3. [Adicional si aplica]\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo · Imagen cardiovascular';
 }
@@ -1096,8 +1149,8 @@ async function doGenerate(){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         usuario_id:usuarioActual.id,
-        system_prompt:buildSystemPrompt(pac),
-        transcripcion:'Estructurá este dictado como informe CCTA formal:\n\n'+txt,
+        system_prompt:modalidadActual==='Ultrasonido'?buildPromptUS(pac,subtipoActual):buildSystemPrompt(pac),
+        transcripcion:modalidadActual==='Ultrasonido'?'Estructurá este dictado como informe de ultrasonido '+(subtipoActual||'abdominal')+' formal:\n\n'+txt:'Estructurá este dictado como informe CCTA formal:\n\n'+txt,
         modalidad:modalidadActual||'CCTA'
       })
     });
@@ -1383,6 +1436,14 @@ async function doUploadDrive(){
       btn.innerHTML=btnHtmlOriginal;
       btn.disabled=false;
     }
+  });
+}
+
+// ── SUBTIPO ULTRASONIDO ────────────────────────────────────
+function selectSubtipo(sub){
+  subtipoActual=sub;
+  document.querySelectorAll('.subtipo-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent.includes(sub));
   });
 }
 
