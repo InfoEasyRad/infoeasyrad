@@ -760,7 +760,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <div class="alert" id="ra"></div>
   </div>
 
-  <div class="footer">InfoEasyRad · <span id="footerNombre">Dr. Carlos Maldonado</span> · Imagen cardiovascular</div>
+  <div class="footer">InfoEasyRad · <span id="footerNombre">Informes radiológicos por voz</span></div>
 </div>
 <script>
 const DRIVE_FOLDER_ID='1izuTeUIa14917BD6TkytzX1JT4p2icg1';
@@ -772,14 +772,14 @@ let modalidadActual=null,subtipoActual=null,refFile=null;
 
 // Helper: nombre del médico
 function getMedNombre(){
-  return localStorage.getItem('med_nombre')||'Dr. Carlos Maldonado';
+  return localStorage.getItem('med_nombre')||'Dr(a). Nombre Apellido';
 }
 function saveMedNombre(){
   const val=document.getElementById('medNombre').value.trim();
   if(val) localStorage.setItem('med_nombre',val);
   else localStorage.removeItem('med_nombre');
-  document.getElementById('selloNombrePreview').textContent=val||'Dr. Carlos Maldonado';
-  document.getElementById('footerNombre').textContent=val||'Dr. Carlos Maldonado';
+  document.getElementById('selloNombrePreview').textContent=val||'Dr(a). Nombre Apellido';
+  document.getElementById('footerNombre').textContent=val||'Informes radiológicos por voz';
 }
 
 // ===== Sello configurable =====
@@ -1346,7 +1346,7 @@ function buildPromptUS(pac, subtipo){
 }
 
 function buildSystemPrompt(pac){
-  return 'Eres un radiólogo especialista en imagen cardiovascular. Estructurás dictados médicos como informes formales de CCTA en español médico formal.\n\nREGLAS:\n1. Tipo oración en todo el texto, excepto siglas médicas (CAD-RADS, DA, CD, TPI, DP, Cx, OM, DER, DLP, EAC, ACI, HRP, S.L.) siempre en mayúsculas.\n2. Incisos no mencionados: completar con valores normales.\n3. Conclusiones numeradas 1. 2. 3. — nunca guiones.\n4. CAD-RADS siempre con interpretación entre paréntesis: CAD-RADS 0 (ausencia de EAC) · 1 (mínima no obstructiva, 1-24%) · 2 (leve no obstructiva, 25-49%) · 3 (estenosis moderada, 50-69%) · 4A (estenosis grave, 70-99%) · 4B (TCI >50% o 3 vasos >70%) · 5 (oclusión total).\n5. Autocorregir errores.\n6. Score de calcio sin dato: 0 UA.\n7. Ramo intermedio sin dato: Ausente.\n\nPLANTILLA:\n\n'+pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\nUnidad de imagen cardiovascular y torácica\nModalidad de tomografía computada\nAngiotomografía de arterias coronarias\n\nMotivo de envío:\n[contenido]\n\nMétodo de estudio:\nEl estudio fue practicado en un tomógrafo multidetector de 512 cortes. Se realizó estudio en fase simple para cálculo del índice de calcio y post contraste no iónico (vol. 70 ml) en fase arterial con protocolo prospectivo de baja radiación y reconstrucción con algoritmo de Deep Learning de acuerdo al protocolo (DER [valor] mSv, DLP [valor] mGy·cm) del centro de diagnóstico por imagen, CT Scanner Lomas Altas. El paciente fue premedicado con 5 mg de isosorbide S.L. para vasodilatación coronaria. Incidentes: ninguno.\n\nCalidad del estudio:\n[contenido]\n\nHallazgos:\n\na) Score de calcio:\n[UA + riesgo + percentil si se mencionó]\n\nb) Arterias coronarias:\nExiste dominancia [derecha/izquierda/codominancia]. El origen de las coronarias es normal.\n- Coronaria derecha: [contenido]\n- Tronco principal izquierdo: [contenido]\n- Descendente anterior: [contenido]\n- Circunfleja: [contenido]\n- Ramo intermedio: [contenido]\n\nc) Evaluación funcional:\n[sin dato: "No valorable por la naturaleza prospectiva del estudio. Las cavidades cardiacas son de tamaño normal."]\n\nd) Evaluación pericárdica y vascular:\n[sin dato: "Pericardio de grosor normal y sin derrame. Aorta y arteria pulmonar principal de calibre normal."]\n\ne) Válvula aórtica:\n[sin dato: "Trivalva de morfología normal."]\n\nf) Hallazgos incidentales:\n[sin dato: "Ninguno."]\n\nConclusiones:\n1. Índice de calcio de [valor] UA (riesgo [bajo/intermedio/alto], percentil [X] de acuerdo a género y edad).\n2. Arterias coronarias epicárdicas [sin/con lesiones], corresponde a categoría CAD-RADS [X] ([interpretación])[modificadores].\n3. [Adicional si aplica]\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo · Imagen cardiovascular';
+  return 'Eres un radiólogo especialista en imagen cardiovascular. Estructurás dictados médicos como informes formales de CCTA en español médico formal.\n\nREGLAS:\n1. Tipo oración en todo el texto, excepto siglas médicas (CAD-RADS, DA, CD, TPI, DP, Cx, OM, DER, DLP, EAC, ACI, HRP, S.L.) siempre en mayúsculas.\n2. Incisos no mencionados: completar con valores normales.\n3. Conclusiones numeradas 1. 2. 3. — nunca guiones.\n4. CAD-RADS siempre con interpretación entre paréntesis: CAD-RADS 0 (ausencia de EAC) · 1 (mínima no obstructiva, 1-24%) · 2 (leve no obstructiva, 25-49%) · 3 (estenosis moderada, 50-69%) · 4A (estenosis grave, 70-99%) · 4B (TCI >50% o 3 vasos >70%) · 5 (oclusión total).\n5. Autocorregir errores.\n6. Score de calcio sin dato: 0 UA.\n7. Ramo intermedio sin dato: Ausente.\n\nPLANTILLA:\n\n'+pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\nUnidad de imagen cardiovascular y torácica\nModalidad de tomografía computada\nAngiotomografía de arterias coronarias\n\nMotivo de envío:\n[contenido]\n\nMétodo de estudio:\nEl estudio fue practicado en un tomógrafo multidetector de 512 cortes. Se realizó estudio en fase simple para cálculo del índice de calcio y post contraste no iónico (vol. 70 ml) en fase arterial con protocolo prospectivo de baja radiación y reconstrucción con algoritmo de Deep Learning de acuerdo al protocolo (DER [valor] mSv, DLP [valor] mGy·cm) del centro de diagnóstico por imagen, CT Scanner Lomas Altas. El paciente fue premedicado con 5 mg de isosorbide S.L. para vasodilatación coronaria. Incidentes: ninguno.\n\nCalidad del estudio:\n[contenido]\n\nHallazgos:\n\na) Score de calcio:\n[UA + riesgo + percentil si se mencionó]\n\nb) Arterias coronarias:\nExiste dominancia [derecha/izquierda/codominancia]. El origen de las coronarias es normal.\n- Coronaria derecha: [contenido]\n- Tronco principal izquierdo: [contenido]\n- Descendente anterior: [contenido]\n- Circunfleja: [contenido]\n- Ramo intermedio: [contenido]\n\nc) Evaluación funcional:\n[sin dato: "No valorable por la naturaleza prospectiva del estudio. Las cavidades cardiacas son de tamaño normal."]\n\nd) Evaluación pericárdica y vascular:\n[sin dato: "Pericardio de grosor normal y sin derrame. Aorta y arteria pulmonar principal de calibre normal."]\n\ne) Válvula aórtica:\n[sin dato: "Trivalva de morfología normal."]\n\nf) Hallazgos incidentales:\n[sin dato: "Ninguno."]\n\nConclusiones:\n1. Índice de calcio de [valor] UA (riesgo [bajo/intermedio/alto], percentil [X] de acuerdo a género y edad).\n2. Arterias coronarias epicárdicas [sin/con lesiones], corresponde a categoría CAD-RADS [X] ([interpretación])[modificadores].\n3. [Adicional si aplica]\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
 }
 async function doGenerate(){
   if(!usuarioActual){alert2('ga','Iniciá sesión primero','warn');return;}
@@ -1483,10 +1483,10 @@ function buildDocx(texto){
     const atent='<w:p><w:pPr><w:spacing w:before="200" w:after="80"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>'+esc(lines[atentIdx].trim())+'</w:t></w:r></w:p>';
     const resta=lines.slice(atentIdx+1).filter(l=>l.trim());
     const nomLine=resta.find(l=>/^Dr\./.test(l.trim()))||getMedNombre();
-    const cargoLine=resta.find(l=>/^Radiol/.test(l.trim()))||'Radiologo - Imagen cardiovascular';
+    const cargoLine=resta.find(l=>/^Radiol/.test(l.trim()))||'Radiólogo';
     bodyXml=antes+'\n'+atent+'\n'+imgXml(nomLine.trim(),cargoLine.trim());
   }else{
-    bodyXml=processLines(lines)+'\n'+imgXml(getMedNombre(),'Radiologo - Imagen cardiovascular');
+    bodyXml=processLines(lines)+'\n'+imgXml(getMedNombre(),'Radiólogo');
   }
   const docXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
