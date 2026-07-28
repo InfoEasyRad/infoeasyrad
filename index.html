@@ -695,6 +695,24 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Se menciona en el método de estudio de los informes</span></div>
   </div>
 
+  <div class="slabel">Guardado de informes</div>
+  <div class="card">
+    <div class="srow" style="display:flex;align-items:center;justify-content:space-between">
+      <span class="stext">Subir a Drive automáticamente al generar</span>
+      <input type="checkbox" id="autoDrive" style="width:20px;height:20px;accent-color:#0f6e56" onchange="localStorage.setItem('auto_drive',this.checked?'1':'0')"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Los informes se guardan en la carpeta "InfoEasyRad" de tu Google Drive. En iPhone, el botón Word guarda además en Archivos › InfoEasyRad.</span></div>
+  </div>
+
+  <div class="slabel" id="bioLabel" style="display:none">Seguridad</div>
+  <div class="card" id="bioCard" style="display:none">
+    <div class="srow" style="display:flex;align-items:center;justify-content:space-between">
+      <span class="stext">Bloquear con Face ID / Touch ID</span>
+      <input type="checkbox" id="bioLock" style="width:20px;height:20px;accent-color:#0f6e56" onchange="toggleBioLock(this.checked)"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Al abrir la app se pedirá tu biometría para acceder</span></div>
+  </div>
+
   <div class="slabel">Sello y firma</div>
   <div class="card">
     <div id="selloCfgPreview" style="display:none;text-align:center;margin-bottom:10px">
@@ -769,9 +787,16 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
   </div>
 
   <div class="footer">InfoEasyRad · <span id="footerNombre">Informes radiológicos por voz</span></div>
+
+<div id="bioOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#0d1b16;color:#fff;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px">
+  <div style="font-size:44px">🔒</div>
+  <div style="font-size:17px;font-weight:600">InfoEasyRad bloqueado</div>
+  <div style="font-size:13px;color:#9fb8ae">Usá Face ID o Touch ID para acceder</div>
+  <button onclick="bioUnlock()" style="margin-top:8px;padding:12px 28px;border-radius:10px;border:none;background:#0f6e56;color:#fff;font-size:15px;font-weight:600">Desbloquear</button>
+</div>
 </div>
 <script>
-const DRIVE_FOLDER_ID='1izuTeUIa14917BD6TkytzX1JT4p2icg1';
+// Carpeta de Drive del usuario: se busca/crea automáticamente ('InfoEasyRad')
 // Sello configurable por el usuario (localStorage: sello_b64, sello_w, sello_h)
 
 let mrInforme=null,chunksInforme=[],rintInforme=null,rsecsInforme=0,afile=null,tab='mic';
@@ -797,6 +822,52 @@ function saveCentroNombre(){
   const val=document.getElementById('centroNombre').value.trim();
   if(val) localStorage.setItem('centro_nombre',val);
   else localStorage.removeItem('centro_nombre');
+}
+
+// ===== Biometría (Face ID / Touch ID vía Capacitor) =====
+function getBioPlugin(){
+  return (window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.NativeBiometric)||null;
+}
+async function bioAvailable(){
+  const p=getBioPlugin();if(!p)return false;
+  try{const r=await p.isAvailable();return !!(r&&r.isAvailable);}catch(e){return false;}
+}
+function toggleBioLock(on){
+  localStorage.setItem('bio_lock',on?'1':'0');
+}
+async function bioUnlock(){
+  const p=getBioPlugin();
+  if(!p){document.getElementById('bioOverlay').style.display='none';return;}
+  try{
+    await p.verifyIdentity({reason:'Desbloquear InfoEasyRad',title:'InfoEasyRad',subtitle:'',description:''});
+    document.getElementById('bioOverlay').style.display='none';
+  }catch(e){/* usuario canceló o falló — sigue bloqueado */}
+}
+async function initBio(){
+  if(await bioAvailable()){
+    document.getElementById('bioLabel').style.display='';
+    document.getElementById('bioCard').style.display='';
+    document.getElementById('bioLock').checked=localStorage.getItem('bio_lock')==='1';
+    if(localStorage.getItem('bio_lock')==='1'){
+      document.getElementById('bioOverlay').style.display='flex';
+      bioUnlock(); // intento automático al abrir
+    }
+  }
+}
+
+// ===== Guardado en el dispositivo (Archivos de iOS vía Capacitor Filesystem) =====
+async function saveBlobToDevice(blob,filename){
+  const FS=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Filesystem;
+  if(!FS)return false;
+  const b64=await new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result.split(',')[1]);
+    r.onerror=()=>rej(new Error('read'));
+    r.readAsDataURL(blob);
+  });
+  try{await FS.mkdir({path:'InfoEasyRad',directory:'DOCUMENTS',recursive:true});}catch(e){/* ya existe */}
+  await FS.writeFile({path:'InfoEasyRad/'+filename,data:b64,directory:'DOCUMENTS'});
+  return true;
 }
 
 // ===== Sello configurable =====
@@ -912,6 +983,8 @@ function clearSello(){
   }
   const savedCentro=localStorage.getItem('centro_nombre');
   if(savedCentro)document.getElementById('centroNombre').value=savedCentro;
+  document.getElementById('autoDrive').checked=localStorage.getItem('auto_drive')==='1';
+  initBio();
   // Cargar sello guardado
   updateSelloUI();
   // Verificar sesión activa
@@ -1404,6 +1477,7 @@ async function doGenerate(){
       mostrarPlanInfo(usuarioActual);
     }
     alert2('ga','Informe generado ✓','ok');
+    if(localStorage.getItem('auto_drive')==='1'){setTimeout(doUploadDrive,400);}
   }catch(e){alert2('ga','Error: '+e.message,'err');}
   finally{btn.disabled=false;btn.innerHTML='📄 Generar informe';}
 }
@@ -1565,10 +1639,17 @@ async function doDownloadDocx(){
   try{
     const zip=buildDocx(txt);
     const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
     const modSlug=(modalidadActual||'Informe').replace(/\s+/g,'_');
-    a.download=modSlug+'_'+nombre+'_'+new Date().toISOString().slice(0,10)+'.docx';a.click();
-    alert2('ra','Word descargado ✓','ok');
+    const nombreArchivo=modSlug+'_'+nombre+'_'+new Date().toISOString().slice(0,10)+'.docx';
+    let enDispositivo=false;
+    try{enDispositivo=await saveBlobToDevice(blob,nombreArchivo);}catch(e){enDispositivo=false;}
+    if(enDispositivo){
+      alert2('ra','Guardado en Archivos › InfoEasyRad ✓','ok');
+    }else{
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+      a.download=nombreArchivo;a.click();
+      alert2('ra','Word descargado ✓','ok');
+    }
   }catch(e){alert2('ra','Error Word: '+e.message,'err');}
   finally{btn.innerHTML='📝 Word';btn.disabled=false;}
 }
@@ -1606,6 +1687,36 @@ function getGoogleToken(callback){
   client.requestAccessToken();
 }
 
+async function getOrCreateDriveFolder(){
+  // Cache del ID de carpeta (se valida contra Drive por si el usuario la borró)
+  const cached=localStorage.getItem('drive_folder_id');
+  if(cached){
+    try{
+      const r=await fetch('https://www.googleapis.com/drive/v3/files/'+cached+'?fields=id,trashed',{
+        headers:{'Authorization':'Bearer '+googleAccessToken}});
+      if(r.ok){const d=await r.json();if(!d.trashed)return cached;}
+    }catch(e){}
+    localStorage.removeItem('drive_folder_id');
+  }
+  // Buscar carpeta existente creada por la app
+  const q=encodeURIComponent("name='InfoEasyRad' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+  const rs=await fetch('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id)',{
+    headers:{'Authorization':'Bearer '+googleAccessToken}});
+  if(rs.ok){
+    const d=await rs.json();
+    if(d.files&&d.files.length){localStorage.setItem('drive_folder_id',d.files[0].id);return d.files[0].id;}
+  }
+  // Crear la carpeta
+  const rc=await fetch('https://www.googleapis.com/drive/v3/files',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
+    body:JSON.stringify({name:'InfoEasyRad',mimeType:'application/vnd.google-apps.folder'})});
+  if(!rc.ok)throw new Error('No se pudo crear la carpeta en Drive');
+  const dc=await rc.json();
+  localStorage.setItem('drive_folder_id',dc.id);
+  return dc.id;
+}
+
 async function doUploadDrive(){
   const txt=document.getElementById('reportEdit').value.trim();
   if(!txt){alert2('ra','No hay informe para subir','warn');return;}
@@ -1628,8 +1739,10 @@ async function doUploadDrive(){
 
       // Subir a Drive como multipart
       const boundary='-------InfoEasyRadBoundary';
+      const folderId=await getOrCreateDriveFolder();
       const meta=JSON.stringify({
         name:nombreArchivo,
+        parents:[folderId],
         mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
 
@@ -1661,17 +1774,13 @@ async function doUploadDrive(){
       }
       const d=await r.json();
       const fileId=d.id;
-      // Hacer público para que el link funcione
-      await fetch('https://www.googleapis.com/drive/v3/files/'+fileId+'/permissions',{
-        method:'POST',
-        headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
-        body:JSON.stringify({role:'reader',type:'anyone'})
-      });
+      // Nota: el archivo queda PRIVADO en el Drive del usuario (datos de pacientes).
+      // El link funciona para el dueño de la cuenta; compartirlo requiere hacerlo desde Drive.
       const link='https://drive.google.com/file/d/'+fileId+'/view';
       const lnk=document.createElement('div');
       lnk.id='driveLink';
       lnk.style.cssText='margin-top:10px;font-size:12px;padding:10px 14px;background:#e6f9f2;border-radius:8px;border:1px solid #9fe1cb;line-height:1.7';
-      lnk.innerHTML='✓ Subido a Drive: <a href="'+link+'" target="_blank" style="color:#0f6e56;font-weight:600">'+nombreArchivo+'</a>';
+      lnk.innerHTML='✓ Guardado en Drive › carpeta InfoEasyRad: <a href="'+link+'" target="_blank" style="color:#0f6e56;font-weight:600">'+nombreArchivo+'</a>';
       document.getElementById('ra').insertAdjacentElement('afterend',lnk);
       alert2('ra','Subido a Drive ✓','ok');
     }catch(e){
