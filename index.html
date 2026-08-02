@@ -1249,11 +1249,11 @@ function doLogout(){
 
 function mostrarPlanInfo(u){
   const pi=document.getElementById('planInfo');
-  const LIMITES={trial:null,gratis:5,starter:50,pro:200,ilimitado:null};
+  const LIMITES={trial:null,gratis:5,basico:50,pro:200,clinica:null,starter:50,ilimitado:null};
   const limite=LIMITES[u.plan];
   const restantes=limite===null?'∞':Math.max(0,limite-(u.informes_mes||0));
-  const planNombre={trial:'Trial (1 mes gratis)',gratis:'Gratis',starter:'Starter',pro:'Pro',ilimitado:'Ilimitado'};
-  const clasePlan={'trial':'plan-trial','gratis':'plan-gratis','starter':'plan-starter','pro':'plan-pro','ilimitado':'plan-ilimitado'};
+  const planNombre={trial:'Trial (1 mes gratis)',gratis:'Gratis',basico:'Básico',pro:'Pro',clinica:'Clínica',starter:'Starter',ilimitado:'Ilimitado'};
+  const clasePlan={'trial':'plan-trial','gratis':'plan-gratis','basico':'plan-starter','pro':'plan-pro','clinica':'plan-ilimitado','starter':'plan-starter','ilimitado':'plan-ilimitado'};
   pi.style.display='block';
   pi.innerHTML='<span class="plan-badge '+clasePlan[u.plan]+'">'+planNombre[u.plan]+'</span><span class="plan-counter">'+
     (u.informes_mes||0)+(limite?'/'+limite:'')+' informes · '+restantes+' restantes</span>';
