@@ -22,30 +22,29 @@ module.exports = async function handler(req, res) {
   for await (const chunk of req) chunks.push(chunk);
   const rawBody = Buffer.concat(chunks).toString('utf8');
 
+  const Stripe = require('stripe');
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
   const sig = req.headers['stripe-signature'];
   let event;
   try {
-    const Stripe = require('stripe');
-    const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
     event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (e) {
     console.error('Firma Stripe inválida:', e.message);
     return res.status(400).json({ error: 'Firma inválida' });
   }
 
-  const Stripe = require('stripe');
-  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
-        const email = session.customer_details?.email;
+        const email = session.customer_details?.email || session.customer_email;
+        if (!email) { console.error('checkout.session.completed sin email', session.id); break; }
         const customerId = session.customer;
         const subscriptionId = session.subscription;
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
         const priceId = subscription.items.data[0]?.price?.id;
-        const plan = PRICE_A_PLAN[priceId] || 'starter';
+        const plan = PRICE_A_PLAN[priceId] || 'basico';
         await supabase.from('usuarios').update({
           plan, stripe_customer_id: customerId,
           stripe_subscription_id: subscriptionId,
