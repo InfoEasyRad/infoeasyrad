@@ -537,7 +537,6 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <div class="auth-logo">IR</div>
     <div class="auth-title">InfoEasyRad</div>
     <div class="auth-sub">Sistema de informes radiológicos por voz</div>
-    <div id="authDiag" style="font-size:10px;color:#8aa;margin:4px 0;word-break:break-all"></div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
       <button class="auth-tab" id="tabReg" onclick="switchAuthTab('registro')">Registrarse</button>
@@ -595,6 +594,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <div><div class="ttl">InfoEasyRad</div><div class="sub">Informes radiológicos por voz</div></div>
     <span class="badge">v11</span>
     <button class="hist-btn" onclick="openHistorial()">📋 Historial</button>
+    <button class="hist-btn" onclick="confirmLogout()" title="Cerrar sesión">⏻ Salir</button>
   </div>
 
 <!-- Modal historial -->
@@ -1237,6 +1237,9 @@ async function verificarSesion(){
   document.getElementById('authScreen').style.display='flex';
 }
 
+function confirmLogout(){
+  if(confirm('¿Cerrar sesión? Tendrás que ingresar tu contraseña de nuevo la próxima vez.'))doLogout();
+}
 function doLogout(){
   usuarioActual=null;
   localStorage.removeItem('supa_access_token');
