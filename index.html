@@ -975,24 +975,6 @@ function clearSello(){
 
 let usuarioActual=null;
 
-// Inicialización
-(function(){
-  // Cargar nombre del médico guardado
-  const savedMed=localStorage.getItem('med_nombre');
-  if(savedMed){
-    document.getElementById('medNombre').value=savedMed;
-    document.getElementById('selloNombrePreview').textContent=savedMed;
-    document.getElementById('footerNombre').textContent=savedMed;
-  }
-  const savedCentro=localStorage.getItem('centro_nombre');
-  if(savedCentro)document.getElementById('centroNombre').value=savedCentro;
-  document.getElementById('autoDrive').checked=localStorage.getItem('auto_drive')==='1';
-  initBio();
-  // Cargar sello guardado
-  updateSelloUI();
-  // Verificar sesión activa
-  verificarSesion();
-})();
 
 const SUBTITULOS={
   'CCTA':'Informes radiológicos por voz',
@@ -2077,6 +2059,27 @@ function clearAllHistorial(){
   localStorage.removeItem(HIST_KEY);
   renderHistorial();
 }
+
+// ===== Inicialización (al final: todas las constantes ya declaradas) =====
+// Inicialización
+(function(){
+  // Cargar nombre del médico guardado
+  const savedMed=localStorage.getItem('med_nombre');
+  if(savedMed){
+    document.getElementById('medNombre').value=savedMed;
+    document.getElementById('selloNombrePreview').textContent=savedMed;
+    document.getElementById('footerNombre').textContent=savedMed;
+  }
+  const savedCentro=localStorage.getItem('centro_nombre');
+  if(savedCentro)document.getElementById('centroNombre').value=savedCentro;
+  document.getElementById('autoDrive').checked=localStorage.getItem('auto_drive')==='1';
+  initBio();
+  // Cargar sello guardado
+  updateSelloUI();
+  // Verificar sesión activa
+  verificarSesion();
+})();
+
 </script>
 </body>
 </html>
