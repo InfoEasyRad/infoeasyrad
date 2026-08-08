@@ -8,30 +8,44 @@ const supabase = createClient(
 
 const LIMITES = { trial: null, gratis: 5, basico: 50, pro: 200, clinica: null, starter: 50, ilimitado: null };
 
+// Verifica el access token de Supabase y devuelve el usuario autenticado (o null)
+async function verificarToken(req) {
+  const h = req.headers['authorization'] || '';
+  const token = h.startsWith('Bearer ') ? h.slice(7) : null;
+  if (!token) return null;
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data || !data.user) return null;
+  return data.user;
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const { usuario_id, system_prompt, transcripcion, modalidad } = req.body;
-  if (!usuario_id || !system_prompt || !transcripcion) {
-    return res.status(400).json({ error: 'Faltan parámetros: usuario_id, system_prompt, transcripcion' });
+  const { system_prompt, transcripcion, modalidad } = req.body;
+  if (!system_prompt || !transcripcion) {
+    return res.status(400).json({ error: 'Faltan parámetros: system_prompt, transcripcion' });
   }
 
   try {
+    // Identidad derivada del token, nunca del body
+    const authUser = await verificarToken(req);
+    if (!authUser) return res.status(401).json({ error: 'no_autorizado', mensaje: 'Sesión inválida o expirada' });
+
     const { data: usuario, error: errUser } = await supabase
       .from('usuarios')
       .select('*')
-      .eq('id', usuario_id)
+      .eq('email', authUser.email.toLowerCase())
       .single();
 
     if (errUser) throw new Error('Usuario no encontrado');
 
     const mesActual = new Date().toISOString().slice(0, 7);
     if (usuario.mes_actual !== mesActual) {
-      await supabase.from('usuarios').update({ informes_mes: 0, mes_actual: mesActual }).eq('id', usuario_id);
+      await supabase.from('usuarios').update({ informes_mes: 0, mes_actual: mesActual }).eq('id', usuario.id);
       usuario.informes_mes = 0;
     }
 
@@ -62,8 +76,8 @@ module.exports = async function handler(req, res) {
     const openaiData = await openaiRes.json();
     const informe = openaiData.choices[0].message.content;
 
-    await supabase.from('usuarios').update({ informes_mes: usuario.informes_mes + 1 }).eq('id', usuario_id);
-    await supabase.from('informes').insert({ usuario_id, modalidad: modalidad || 'CCTA' });
+    await supabase.from('usuarios').update({ informes_mes: usuario.informes_mes + 1 }).eq('id', usuario.id);
+    await supabase.from('informes').insert({ usuario_id: usuario.id, modalidad: modalidad || 'CCTA' });
 
     return res.status(200).json({
       informe,
