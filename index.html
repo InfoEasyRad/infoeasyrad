@@ -716,7 +716,11 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
       <span class="stext">Subir a Drive automáticamente al generar</span>
       <input type="checkbox" id="autoDrive" style="width:20px;height:20px;accent-color:#0f6e56" onchange="localStorage.setItem('auto_drive',this.checked?'1':'0')"/>
     </div>
-    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Los informes se guardan en la carpeta "InfoEasyRad" de tu Google Drive. En iPhone, el botón Word guarda además en Archivos › InfoEasyRad.</span></div>
+    <div class="srow" style="display:flex;align-items:center;justify-content:space-between">
+      <span class="stext">Historial en la nube (todos tus dispositivos)</span>
+      <input type="checkbox" id="histCloud" style="width:20px;height:20px;accent-color:#0f6e56" onchange="localStorage.setItem('hist_cloud',this.checked?'1':'0')"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Drive: carpeta "InfoEasyRad" automática. iPhone: el botón Word guarda en Archivos › InfoEasyRad. Nube: historial en tu cuenta, accesible desde cualquier dispositivo.</span></div>
   </div>
 
   <div class="slabel" id="bioLabel" style="display:none">Seguridad</div>
@@ -837,6 +841,32 @@ function saveCentroNombre(){
   const val=document.getElementById('centroNombre').value.trim();
   if(val) localStorage.setItem('centro_nombre',val);
   else localStorage.removeItem('centro_nombre');
+}
+
+// fetch autenticado: adjunta el access token y reintenta una vez tras refresh si expira
+async function authFetch(path,opts,reintento){
+  opts=opts||{};if(reintento===undefined)reintento=true;
+  const t=localStorage.getItem('supa_access_token');
+  opts.headers=Object.assign({},opts.headers||{},t?{'Authorization':'Bearer '+t}:{});
+  const r=await fetch(API_BASE+path,opts);
+  if(r.status===401&&reintento){
+    const rt=localStorage.getItem('supa_refresh_token');
+    if(rt){
+      try{
+        const rr=await fetch(API_BASE+'/api/auth-login',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'refresh',refresh_token:rt})});
+        if(rr.ok){
+          const d=await rr.json();
+          if(d.access_token){
+            localStorage.setItem('supa_access_token',d.access_token);
+            localStorage.setItem('supa_refresh_token',d.refresh_token||rt);
+            return authFetch(path,opts,false);
+          }
+        }
+      }catch(e){}
+    }
+  }
+  return r;
 }
 
 function getCctaEquipo(){return localStorage.getItem('ccta_equipo')||'';}
@@ -1321,7 +1351,7 @@ async function transcribePaciente(audioFile){
   const btn=document.getElementById('pacMicBtn');btn.textContent='⏳ Procesando...';btn.disabled=true;
   try{
     const fd=new FormData();fd.append('file',audioFile);
-    const r=await fetch(API_BASE+'/api/transcribe',{method:'POST',body:fd});
+    const r=await authFetch('/api/transcribe',{method:'POST',body:fd});
     if(!r.ok)throw new Error('Error transcripción '+r.status);
     const td=await r.json();
     const txt=td.texto;
@@ -1336,7 +1366,7 @@ REGLAS DE EXTRACCIÓN:
 - localidad: Ciudad, municipio o región. Ej: "Tegucigalpa", "San Pedro Sula", "México". Puede venir como "de Tegucigalpa", "localidad Tegucigalpa", "vive en...".
 
 Si un dato no se menciona o no se puede determinar con seguridad, dejá la cadena vacía "".`;
-    const r2=await fetch(API_BASE+'/api/generate',{
+    const r2=await authFetch('/api/generate',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         usuario_id:usuarioActual.id,
@@ -1418,7 +1448,7 @@ async function doTranscribe(){
   const btn=document.getElementById('tbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Transcribiendo...';
   try{
     const fd=new FormData();fd.append('file',afile);
-    const r=await fetch(API_BASE+'/api/transcribe',{method:'POST',body:fd});
+    const r=await authFetch('/api/transcribe',{method:'POST',body:fd});
     if(!r.ok){let m='Error '+r.status;try{const j=await r.json();m=j.error?.message||m;}catch(x){}throw new Error(m);}
     const td=await r.json();
     document.getElementById('tbox').value=td.texto.trim();checkGenBtn();alert2('ta','Transcripción lista ✓','ok');
@@ -1475,7 +1505,7 @@ async function doGenerate(){
   const txt=normalizeCadRads(rawTxt);const pac=getPacienteData();
   const btn=document.getElementById('gbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generando informe...';
   try{
-    const r=await fetch(API_BASE+'/api/generate',{
+    const r=await authFetch('/api/generate',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         usuario_id:usuarioActual.id,
@@ -1520,7 +1550,7 @@ async function _regen(informe,instruccion){
   if(!usuarioActual){alert2('ra','Iniciá sesión primero','warn');return;}
   document.getElementById('reportEdit').disabled=true;alert2('ra','Aplicando corrección...','warn');
   try{
-    const r=await fetch(API_BASE+'/api/generate',{
+    const r=await authFetch('/api/generate',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         usuario_id:usuarioActual.id,
@@ -2010,6 +2040,11 @@ async function suscribirse(plan){
 const HIST_KEY='inf_historial';
 const HIST_MAX=20;
 
+function fmtFecha(iso){
+  return new Date(iso).toLocaleString('es',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function histCloudOn(){return localStorage.getItem('hist_cloud')!=='0'&&!!usuarioActual;}
+
 function saveToHistorial(texto,pac){
   const hist=getHistorial();
   const entry={
@@ -2022,6 +2057,31 @@ function saveToHistorial(texto,pac){
   hist.unshift(entry);
   if(hist.length>HIST_MAX)hist.length=HIST_MAX;
   localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+  if(histCloudOn()){
+    authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'save',modalidad:entry.modalidad,nombre_paciente:entry.nombre,texto})
+    }).then(r=>{
+      if(r&&r.ok){
+        const h=getHistorial();
+        const it=h.find(x=>String(x.id)===String(entry.id));
+        if(it){it.sync=1;localStorage.setItem(HIST_KEY,JSON.stringify(h));}
+      }
+    }).catch(()=>{});
+  }
+}
+
+async function migrarHistorialSiHaceFalta(){
+  if(!histCloudOn()||localStorage.getItem('hist_migrado')==='1')return;
+  const hist=getHistorial();
+  const pendientes=hist.filter(e=>e.sync!==1).slice().reverse();
+  for(const e of pendientes){
+    try{
+      const r=await authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'save',modalidad:e.modalidad,nombre_paciente:e.nombre,texto:e.texto})});
+      if(!r.ok)return; // columnas aún no creadas o sin permiso: reintenta la próxima vez
+    }catch(err){return;}
+  }
+  localStorage.setItem('hist_migrado','1');
 }
 
 function getHistorial(){
@@ -2042,20 +2102,36 @@ function closeHistorialIfOutside(e){
   if(e.target===document.getElementById('histOverlay'))closeHistorial();
 }
 
-function renderHistorial(){
-  const hist=getHistorial();
+async function renderHistorial(){
   const cont=document.getElementById('histContent');
+  let hist=getHistorial();
+  if(histCloudOn()){
+    cont.innerHTML='<div class="hist-empty">Cargando historial...</div>';
+    try{
+      await migrarHistorialSiHaceFalta();
+      const r=await authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'list'})});
+      if(r.ok){
+        const d=await r.json();
+        const nube=(d.informes||[]).map(i=>({id:i.id,fecha:fmtFecha(i.created_at),nombre:i.nombre_paciente||'Sin nombre',modalidad:i.modalidad||'CCTA',texto:i.texto}));
+        if(nube.length||localStorage.getItem('hist_migrado')==='1'){
+          hist=nube;
+          localStorage.setItem(HIST_KEY,JSON.stringify(hist.slice(0,HIST_MAX)));
+        }
+      }
+    }catch(e){/* sin conexión: usa cache local */}
+  }
   if(hist.length===0){
     cont.innerHTML='<div class="hist-empty">📭 No hay informes guardados todavía.<br>Los informes generados se guardan automáticamente.</div>';
     return;
   }
   cont.innerHTML='<div class="hist-list">'+hist.map(e=>`
-    <div class="hist-item" data-id="${e.id}" onclick="loadFromHistorial(${e.id})">
+    <div class="hist-item" data-id="${e.id}" onclick="loadFromHistorial('${e.id}')">
       <div class="hist-item-header">
         <span class="hist-item-name">${escH(e.nombre)}</span>
         <div style="display:flex;align-items:center;gap:6px">
           <span class="hist-item-mod">${escH(e.modalidad)}</span>
-          <button class="hist-del" onclick="deleteHistItem(event,${e.id})" title="Eliminar">✕</button>
+          <button class="hist-del" onclick="deleteHistItem(event,'${e.id}')" title="Eliminar">✕</button>
         </div>
       </div>
       <div class="hist-item-meta">${escH(e.fecha)}</div>
@@ -2067,7 +2143,7 @@ function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 
 function loadFromHistorial(id){
   const hist=getHistorial();
-  const entry=hist.find(e=>e.id===id);
+  const entry=hist.find(e=>String(e.id)===String(id));
   if(!entry)return;
   document.getElementById('reportEdit').value=entry.texto;
   document.getElementById('rout').classList.add('show');
@@ -2078,14 +2154,23 @@ function loadFromHistorial(id){
 function deleteHistItem(ev,id){
   ev.stopPropagation();
   let hist=getHistorial();
-  hist=hist.filter(e=>e.id!==id);
+  hist=hist.filter(e=>String(e.id)!==String(id));
   localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+  if(histCloudOn()&&!/^[0-9]{13}$/.test(String(id))){
+    authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'delete',informe_id:id})}).catch(()=>{});
+  }
   renderHistorial();
 }
 
 function clearAllHistorial(){
-  if(!confirm('¿Borrar todo el historial?'))return;
+  if(!confirm('¿Borrar todo el historial? Esto incluye la copia en la nube.'))return;
   localStorage.removeItem(HIST_KEY);
+  localStorage.removeItem('hist_migrado');
+  if(histCloudOn()){
+    authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'clear'})}).catch(()=>{});
+  }
   renderHistorial();
 }
 
@@ -2105,6 +2190,7 @@ function clearAllHistorial(){
   document.getElementById('cctaContraste').value=localStorage.getItem('ccta_contraste')||'';
   document.getElementById('cctaPremed').value=localStorage.getItem('ccta_premed')||'';
   document.getElementById('autoDrive').checked=localStorage.getItem('auto_drive')==='1';
+  document.getElementById('histCloud').checked=localStorage.getItem('hist_cloud')!=='0';
   initBio();
   // Cargar sello guardado
   updateSelloUI();
