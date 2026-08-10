@@ -535,7 +535,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
         <div class="plan-price"><sup>$</sup><span id="precioBasico">19</span></div>
         <div class="plan-price-period" id="periodoBasico">por mes</div>
         <ul class="plan-features">
-          <li>50 informes por mes</li>
+          <li>60 informes por mes</li>
           <li>Todas las modalidades</li>
           <li>Descarga Word y TXT</li>
           <li>Subida a Google Drive</li>
@@ -550,7 +550,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
         <div class="plan-price"><sup>$</sup><span id="precioPro">39</span></div>
         <div class="plan-price-period" id="periodoPro">por mes</div>
         <ul class="plan-features">
-          <li>200 informes por mes</li>
+          <li>300 informes por mes</li>
           <li>Todas las modalidades</li>
           <li>Descarga Word y TXT</li>
           <li>Subida a Google Drive</li>
@@ -670,8 +670,8 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <h2>Planes simples</h2>
     <p class="psub">Empezá con 1 mes gratis. Sin permanencia.</p>
     <div class="lp-pgrid">
-      <div class="lp-plan"><div><div class="pn">Básico</div><div class="pd">50 informes al mes</div></div><div class="pp">$19<small>/mes</small></div></div>
-      <div class="lp-plan destacado"><div><div class="pn">Pro</div><div class="pd">200 informes al mes</div></div><div class="pp">$39<small>/mes</small></div></div>
+      <div class="lp-plan"><div><div class="pn">Básico</div><div class="pd">60 informes al mes</div></div><div class="pp">$19<small>/mes</small></div></div>
+      <div class="lp-plan destacado"><div><div class="pn">Pro</div><div class="pd">300 informes al mes</div></div><div class="pp">$39<small>/mes</small></div></div>
       <div class="lp-plan"><div><div class="pn">Clínica</div><div class="pd">Informes ilimitados</div></div><div class="pp">$79<small>/mes</small></div></div>
     </div>
     <div style="text-align:center;margin-top:14px"><button class="lp-cta" onclick="lpGoRegistro()">Crear cuenta gratis</button></div>
@@ -1407,7 +1407,7 @@ function doLogout(){
 
 function mostrarPlanInfo(u){
   const pi=document.getElementById('planInfo');
-  const LIMITES={trial:null,gratis:5,basico:50,pro:200,clinica:null,starter:50,ilimitado:null};
+  const LIMITES={trial:null,gratis:5,basico:60,pro:300,clinica:null,starter:60,ilimitado:null};
   const limite=LIMITES[u.plan];
   const restantes=limite===null?'∞':Math.max(0,limite-(u.informes_mes||0));
   const planNombre={trial:'Trial (1 mes gratis)',gratis:'Gratis',basico:'Básico',pro:'Pro',clinica:'Clínica',starter:'Starter',ilimitado:'Ilimitado'};
