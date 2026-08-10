@@ -35,15 +35,18 @@ ul li{font-size:14px;color:#3d4550;margin-bottom:0.4rem}
       <p>InfoEasyRad — Radiology Reports</p>
     </div>
   </div>
-  <div class="updated">Última actualización: 23 de julio de 2026</div>
+  <div class="updated">Última actualización: 9 de agosto de 2026</div>
 
   <h2>1. Introducción</h2>
   <p>InfoEasyRad ("nosotros", "nuestro" o "la App") es un servicio de generación de informes radiológicos por voz desarrollado para profesionales de la salud. Esta Política de Privacidad describe cómo recopilamos, usamos y protegemos tu información cuando usás nuestra aplicación.</p>
 
   <h2>2. Información que recopilamos</h2>
   <p><strong>2.1 Información de cuenta</strong><br>Al registrarte recopilamos: nombre completo, dirección de correo electrónico y contraseña (almacenada de forma encriptada).</p>
-  <p><strong>2.2 Datos de uso</strong><br>Registramos el número de informes generados por mes para gestionar tu plan de suscripción. No almacenamos el contenido de los informes en nuestros servidores.</p>
-  <p><strong>2.3 Grabaciones de voz</strong><br>Las grabaciones de voz se envían de forma segura a OpenAI Whisper para transcripción y a OpenAI GPT-4 para generación del informe. No almacenamos las grabaciones de audio. OpenAI procesa estos datos según su propia política de privacidad.</p>
+  <p><strong>2.2 Datos de uso</strong><br>Registramos el número de informes generados por mes para gestionar tu plan de suscripción.</p>
+  <p><strong>2.3 Historial de informes en la nube</strong><br>Si tenés activada la función "Historial en la nube" (activada por defecto, podés desactivarla en Configuración), almacenamos el contenido de tus informes generados —incluyendo el nombre del paciente si lo dictaste— en nuestros servidores (Supabase) asociados exclusivamente a tu cuenta, para que puedas acceder a tu historial desde cualquier dispositivo. Podés eliminar informes individuales o todo el historial desde la app en cualquier momento, y la eliminación se aplica también a nuestros servidores. Si desactivás la función, los informes nuevos se guardan únicamente en tu dispositivo.</p>
+  <p><strong>2.4 Archivos en tu Google Drive</strong><br>Si usás la función de guardado en Google Drive, los informes se suben como archivos privados a una carpeta "InfoEasyRad" dentro de tu propia cuenta de Google. Esos archivos te pertenecen, residen en tu cuenta de Google y no conservamos copias de ellos. El acceso se realiza con tu autorización mediante el protocolo OAuth de Google y podés revocarlo en cualquier momento desde la configuración de tu cuenta de Google.</p>
+  <p><strong>2.5 Grabaciones de voz</strong><br>Las grabaciones de voz se envían de forma segura a OpenAI Whisper para transcripción y a OpenAI GPT-4 para generación del informe. No almacenamos las grabaciones de audio. OpenAI procesa estos datos según su propia política de privacidad.</p>
+  <p><strong>2.6 Datos biométricos</strong><br>Si activás el bloqueo con Face ID o Touch ID, la verificación biométrica la realiza tu dispositivo (Apple iOS) de forma local. La App nunca recibe, transmite ni almacena tus datos biométricos; únicamente recibe del sistema operativo la confirmación de que la verificación fue exitosa.</p>
 
   <h2>3. Cómo usamos tu información</h2>
   <ul>
@@ -58,7 +61,7 @@ ul li{font-size:14px;color:#3d4550;margin-bottom:0.4rem}
   <p>No vendemos ni alquilamos tu información personal. Compartimos datos únicamente con:</p>
   <ul>
     <li><strong>OpenAI</strong> — para transcripción de voz y generación de informes</li>
-    <li><strong>Supabase</strong> — para autenticación y almacenamiento de datos de cuenta</li>
+    <li><strong>Supabase</strong> — para autenticación, datos de cuenta y, si está activado, el historial de informes en la nube</li>
     <li><strong>Stripe</strong> — para procesamiento de pagos</li>
     <li><strong>Vercel</strong> — para hospedaje del servicio</li>
   </ul>
@@ -68,8 +71,8 @@ ul li{font-size:14px;color:#3d4550;margin-bottom:0.4rem}
   <p>Implementamos medidas de seguridad estándar de la industria, incluyendo transmisión de datos encriptada mediante HTTPS/TLS y contraseñas almacenadas con hash bcrypt. Sin embargo, ningún sistema es 100% seguro.</p>
 
   <h2>6. Datos de pacientes</h2>
-  <p>InfoEasyRad es una herramienta de asistencia para profesionales de la salud. El usuario es responsable de manejar los datos de sus pacientes de acuerdo con las leyes de privacidad médica aplicables en su jurisdicción. No incluyas información de identificación personal de pacientes innecesaria en los dictados.</p>
-
+  <p>InfoEasyRad es una herramienta de asistencia para profesionales de la salud. El usuario es responsable de manejar los datos de sus pacientes de acuerdo con las leyes de privacidad médica aplicables en su jurisdicción, y de contar con las autorizaciones necesarias para procesarlos.</p>
+  <p>Cuando la función "Historial en la nube" está activada, los informes —que pueden incluir datos de pacientes— se almacenan cifrados en tránsito (HTTPS/TLS) y protegidos por autenticación, accesibles únicamente desde tu cuenta. Recomendamos no incluir información de identificación personal de pacientes que no sea necesaria en los dictados, y utilizar el número de expediente en lugar de datos sensibles adicionales cuando sea posible.</p>
   <h2>7. Tus derechos</h2>
   <p>Tenés derecho a:</p>
   <ul>
