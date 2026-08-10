@@ -320,7 +320,8 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 /* ── PANTALLA AUTH ─────────────────────────────────────────── */
 .auth-screen{
   position:fixed;inset:0;background:var(--surface);
-  display:flex;align-items:center;justify-content:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
   z-index:200;padding:1.5rem;
   padding-top:calc(env(safe-area-inset-top) + 1.5rem);
 }
@@ -459,6 +460,54 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
   .abtn{font-size:10px;padding:9px 2px}
   .header{gap:7px}
 }
+
+/* ===== Landing (solo visible sin sesión) ===== */
+.lp{width:100%;max-width:560px;margin:0 auto}
+.lp-hero{text-align:center;padding:2.2rem 0 1.6rem}
+.lp-eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0f6e56;background:rgba(15,110,86,.08);border:1px solid rgba(15,110,86,.25);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+.lp-h1{font-size:clamp(26px,6vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.12;color:#0d1b16}
+.lp-h1 em{font-style:normal;color:#0f6e56}
+.lp-sub{font-size:15px;color:#5b6b64;margin:12px auto 18px;max-width:420px;line-height:1.55}
+.lp-cta{display:inline-block;background:linear-gradient(135deg,#0f6e56,#1d8a6e);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:12px;padding:13px 30px;cursor:pointer;box-shadow:0 6px 18px rgba(15,110,86,.28)}
+.lp-cta:active{transform:translateY(1px)}
+.lp-cta-note{display:block;font-size:12px;color:#8aa39a;margin-top:8px}
+.lp-demo{background:#fff;border:1px solid #e3eae6;border-radius:16px;box-shadow:0 10px 30px rgba(13,27,22,.07);overflow:hidden;margin:1.6rem 0 0;text-align:left}
+.lp-demo-voz{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px dashed #e3eae6;background:#f7faf9}
+.lp-demo-voz .mic{font-size:16px}
+.lp-wave{display:flex;align-items:center;gap:3px;height:18px}
+.lp-wave span{width:3px;border-radius:2px;background:#0f6e56;height:6px;animation:lpwave 1.1s ease-in-out infinite}
+.lp-wave span:nth-child(2){animation-delay:.1s}.lp-wave span:nth-child(3){animation-delay:.2s}
+.lp-wave span:nth-child(4){animation-delay:.3s}.lp-wave span:nth-child(5){animation-delay:.4s}
+.lp-wave span:nth-child(6){animation-delay:.5s}.lp-wave span:nth-child(7){animation-delay:.6s}
+@keyframes lpwave{0%,100%{height:5px}50%{height:16px}}
+.lp-demo-voz .vtxt{font-size:12px;color:#5b6b64}
+.lp-informe{font-family:Georgia,'Times New Roman',serif;padding:16px 20px 18px;font-size:13px;line-height:1.65;color:#22312b}
+.lp-informe .tit{font-weight:700;color:#1D5C3A}
+.lp-informe p{opacity:0;transform:translateY(4px);animation:lpline .5s ease forwards;margin:0 0 6px}
+.lp-informe p:nth-child(1){animation-delay:.4s}.lp-informe p:nth-child(2){animation-delay:1.1s}
+.lp-informe p:nth-child(3){animation-delay:1.8s}.lp-informe p:nth-child(4){animation-delay:2.5s}
+.lp-informe p:nth-child(5){animation-delay:3.2s}
+@keyframes lpline{to{opacity:1;transform:none}}
+.lp-informe .sello-mini{color:#1D5C3A;font-weight:700}
+.lp-feats{display:grid;grid-template-columns:1fr;gap:12px;margin:1rem 0 2rem}
+.lp-feat{background:#fff;border:1px solid #e3eae6;border-radius:14px;padding:16px 18px}
+.lp-feat .fi{font-size:20px}
+.lp-feat h3{font-size:14px;font-weight:700;color:#0d1b16;margin:6px 0 4px}
+.lp-feat p{font-size:13px;color:#5b6b64;line-height:1.5;margin:0}
+.lp-precios{margin:0 0 2rem}
+.lp-precios h2,.lp-feats-wrap h2{font-size:18px;font-weight:800;color:#0d1b16;text-align:center;margin:1.6rem 0 4px}
+.lp-precios .psub{font-size:12.5px;color:#8aa39a;text-align:center;margin-bottom:14px}
+.lp-pgrid{display:grid;grid-template-columns:1fr;gap:10px}
+.lp-plan{background:#fff;border:1px solid #e3eae6;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lp-plan.destacado{border-color:#0f6e56;box-shadow:0 6px 18px rgba(15,110,86,.12)}
+.lp-plan .pn{font-size:14px;font-weight:700;color:#0d1b16}
+.lp-plan .pd{font-size:12px;color:#5b6b64}
+.lp-plan .pp{font-size:18px;font-weight:800;color:#0f6e56;white-space:nowrap}
+.lp-plan .pp small{font-size:11px;font-weight:600;color:#8aa39a}
+.lp-footer{text-align:center;font-size:11.5px;color:#8aa39a;padding:0 0 2.5rem}
+.lp-footer a{color:#0f6e56;text-decoration:none}
+@media(min-width:520px){.lp-feats{grid-template-columns:repeat(3,1fr)}}
+@media(prefers-reduced-motion:reduce){.lp-wave span,.lp-informe p{animation:none;opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -533,7 +582,28 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 
 <!-- ── PANTALLA DE AUTH ─────────────────────────────────── -->
 <div class="auth-screen" id="authScreen">
-  <div class="auth-box">
+  <div class="lp lp-hero">
+    <span class="lp-eyebrow">Para radiólogos</span>
+    <div class="lp-h1">Dictá el estudio.<br><em>El informe se redacta solo.</em></div>
+    <p class="lp-sub">Informes radiológicos estructurados en segundos, con tus plantillas, tu sello y tu firma. Listos en Word.</p>
+    <button class="lp-cta" onclick="lpGoRegistro()">Probá gratis 1 mes</button>
+    <span class="lp-cta-note">Sin tarjeta · Cancelás cuando quieras</span>
+    <div class="lp-demo" aria-hidden="true">
+      <div class="lp-demo-voz">
+        <span class="mic">🎙️</span>
+        <div class="lp-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <span class="vtxt">"...índice de calcio cero, coronarias sin lesiones..."</span>
+      </div>
+      <div class="lp-informe">
+        <p class="tit">Angiotomografía de arterias coronarias</p>
+        <p><strong>Hallazgos:</strong> índice de calcio de 0 UA. Arterias coronarias epicárdicas de origen y trayecto normal, sin lesiones.</p>
+        <p><strong>Conclusiones:</strong></p>
+        <p>1. Corresponde a categoría CAD-RADS 0 (ausencia de EAC).</p>
+        <p class="sello-mini">Dr(a). — sello y firma incluidos automáticamente</p>
+      </div>
+    </div>
+  </div>
+  <div class="auth-box" id="authBox">
     <div class="auth-logo">IR</div>
     <div class="auth-title">InfoEasyRad</div>
     <div class="auth-sub">Sistema de informes radiológicos por voz</div>
@@ -585,6 +655,31 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
         <a href="/privacy" target="_blank" style="color:#0A7B5C;text-decoration:none;font-weight:500">Política de Privacidad</a>
       </p>
     </div>
+  </div>
+
+  <div class="lp lp-feats-wrap">
+    <h2>Hecho para el flujo real de un radiólogo</h2>
+    <div class="lp-feats">
+      <div class="lp-feat"><span class="fi">🩻</span><h3>30 plantillas estructuradas</h3><p>US, TC, RM, RX y fluoroscopía — 6 subtipos por modalidad, basadas en guías RSNA/ACR.</p></div>
+      <div class="lp-feat"><span class="fi">✒️</span><h3>Tu informe, tu identidad</h3><p>Sello, firma, centro y protocolo configurables. El Word sale listo para entregar.</p></div>
+      <div class="lp-feat"><span class="fi">☁️</span><h3>Tu historial, en todas partes</h3><p>Historial en la nube y carpeta automática en tu Google Drive. Face ID en iPhone.</p></div>
+    </div>
+  </div>
+
+  <div class="lp lp-precios">
+    <h2>Planes simples</h2>
+    <p class="psub">Empezá con 1 mes gratis. Sin permanencia.</p>
+    <div class="lp-pgrid">
+      <div class="lp-plan"><div><div class="pn">Básico</div><div class="pd">50 informes al mes</div></div><div class="pp">$19<small>/mes</small></div></div>
+      <div class="lp-plan destacado"><div><div class="pn">Pro</div><div class="pd">200 informes al mes</div></div><div class="pp">$39<small>/mes</small></div></div>
+      <div class="lp-plan"><div><div class="pn">Clínica</div><div class="pd">Informes ilimitados</div></div><div class="pp">$79<small>/mes</small></div></div>
+    </div>
+    <div style="text-align:center;margin-top:14px"><button class="lp-cta" onclick="lpGoRegistro()">Crear cuenta gratis</button></div>
+  </div>
+
+  <div class="lp lp-footer">
+    <a href="/terms" target="_blank">Términos y Condiciones</a> · <a href="/privacy" target="_blank">Política de Privacidad</a><br>
+    © 2026 InfoEasyRad
   </div>
 </div>
 
@@ -1157,6 +1252,11 @@ async function supaAuthFetch(endpoint, body){
 }
 
 // ── PANTALLA AUTH ───────────────────────────────────────────
+function lpGoRegistro(){
+  switchAuthTab('registro');
+  const b=document.getElementById('authBox');
+  if(b)b.scrollIntoView({behavior:'smooth',block:'center'});
+}
 function switchAuthTab(tab){
   document.getElementById('formLogin').style.display=tab==='login'?'block':'none';
   document.getElementById('formReg').style.display=tab==='registro'?'block':'none';
