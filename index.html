@@ -508,6 +508,27 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 .lp-footer a{color:#0f6e56;text-decoration:none}
 @media(min-width:520px){.lp-feats{grid-template-columns:repeat(3,1fr)}}
 @media(prefers-reduced-motion:reduce){.lp-wave span,.lp-informe p{animation:none;opacity:1;transform:none}}
+
+/* ===== Hub de herramientas (tras iniciar sesión) ===== */
+.hub-wrap{width:100%;max-width:640px;margin:0 auto;text-align:center}
+.hub-head{margin-bottom:26px}
+.hub-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:560px){.hub-grid{grid-template-columns:1fr 1fr}}
+.hub-card{
+  all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:26px 20px 24px;transition:border-color .15s,transform .15s,box-shadow .15s;
+}
+.hub-card:hover,.hub-card:focus-visible{border-color:var(--green);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.hub-card:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.hub-ico{font-size:30px;margin-bottom:10px}
+.hub-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.hub-desc{font-size:13px;color:var(--ink-3);line-height:1.5}
+.hub-soon{opacity:.55;cursor:default}
+.hub-soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
+.hub-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-4);background:var(--surface);border-radius:999px;padding:3px 10px;margin-top:8px}
+.tool-back{all:unset;cursor:pointer;font-size:13px;color:var(--green);display:inline-flex;align-items:center;gap:5px;margin-bottom:10px}
+.tool-back:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -683,6 +704,28 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
   </div>
 </div>
 
+<div class="auth-screen" id="hubScreen" style="display:none">
+  <div class="hub-wrap">
+    <div class="hub-head">
+      <div class="auth-logo" style="margin:0 auto 14px">IR</div>
+      <div class="auth-title">¿Qué querés hacer?</div>
+      <div class="auth-sub">Elegí una herramienta para continuar</div>
+    </div>
+    <div class="hub-grid">
+      <button type="button" class="hub-card" onclick="abrirInfoEasy()">
+        <span class="hub-ico">🎙️</span>
+        <span class="hub-name">InfoEasyRad</span>
+        <span class="hub-desc">Informá tus estudios fácilmente: dictás y el informe se redacta solo.</span>
+      </button>
+      <button type="button" class="hub-card" onclick="abrirTavi()">
+        <span class="hub-ico">🫀</span>
+        <span class="hub-name">Formulario TAVI</span>
+        <span class="hub-desc">Reporte estructurado de TC pre-TAVI, con mediciones y cálculos automáticos.</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="app">
   <div class="header">
     <div class="logo">IR</div>
@@ -690,6 +733,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <span class="badge">v11</span>
     <button class="hist-btn" onclick="openHistorial()">📋 Historial</button>
     <button class="hist-btn" onclick="confirmLogout()" title="Cerrar sesión">⏻ Salir</button>
+    <button class="hist-btn" onclick="mostrarHub()" title="Cambiar de herramienta">🧰 Herramientas</button>
   </div>
 
 <!-- Modal historial -->
@@ -1252,6 +1296,19 @@ async function supaAuthFetch(endpoint, body){
 }
 
 // ── PANTALLA AUTH ───────────────────────────────────────────
+function mostrarHub(){
+  const a=document.getElementById('authScreen');const h=document.getElementById('hubScreen');
+  if(a)a.style.display='none';
+  if(h){h.style.display='flex';window.scrollTo(0,0);}
+}
+function abrirInfoEasy(){
+  const h=document.getElementById('hubScreen');
+  if(h)h.style.display='none';
+}
+function abrirTavi(){
+  const email=(usuarioActual&&usuarioActual.email)||localStorage.getItem('ier_email_saved')||'';
+  window.location.href='/tavi'+(email?('?u='+encodeURIComponent(email)):'');
+}
 function lpGoRegistro(){
   switchAuthTab('registro');
   const b=document.getElementById('authBox');
@@ -1277,7 +1334,7 @@ async function doAuthLogin(){
     localStorage.setItem('supa_refresh_token',d.refresh_token);
     localStorage.setItem('ier_email_saved', email.toLowerCase().trim());
     await cargarUsuarioDesdeServer(email);
-    document.getElementById('authScreen').style.display='none';
+    mostrarHub();
   }catch(e){
     showAuthAlert('loginAlert',e.message==='Invalid login credentials'?'Email o contraseña incorrectos':e.message,'err');
   }finally{btn.disabled=false;btn.textContent='Iniciar sesión';}
@@ -1345,7 +1402,7 @@ async function verificarSesion(){
       document.getElementById('kst').textContent=usuarioActual.email;
       mostrarPlanInfo(usuarioActual);
       checkGenBtn();
-      document.getElementById('authScreen').style.display='none';
+      mostrarHub();
       // Renovar token en segundo plano (expira en ~1h); si falla, la sesión visual sigue
       if(refreshToken){
         fetch(API_BASE+'/api/auth-login',{method:'POST',headers:{'Content-Type':'application/json'},
@@ -1377,7 +1434,7 @@ async function verificarSesion(){
           localStorage.setItem('supa_refresh_token',d.refresh_token||refreshToken);
           const email=savedUser?JSON.parse(savedUser).email:localStorage.getItem('ier_email_saved');
           if(email){try{await cargarUsuarioDesdeServer(email);}catch(e){diag.push('carga-err: '+e.message);}}
-          document.getElementById('authScreen').style.display='none';
+          mostrarHub();
           return;
         }
       }
@@ -1390,6 +1447,7 @@ async function verificarSesion(){
   const dg=document.getElementById('authDiag');
   if(dg)dg.textContent='🔧 '+diag.join(' | ');
   console.log('verificarSesion diag:',diag);
+  const h=document.getElementById('hubScreen');if(h)h.style.display='none';
   document.getElementById('authScreen').style.display='flex';
 }
 
@@ -1402,6 +1460,7 @@ function doLogout(){
   localStorage.removeItem('supa_refresh_token');
   localStorage.removeItem('ier_user');
   document.getElementById('gbtn').disabled=true;
+  const h=document.getElementById('hubScreen');if(h)h.style.display='none';
   document.getElementById('authScreen').style.display='flex';
 }
 
