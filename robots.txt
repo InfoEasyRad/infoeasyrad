@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /tavi
+Disallow: /api/
+
+Sitemap: https://infoeasyrad.vercel.app/sitemap.xml
