@@ -3,4 +3,4 @@ Allow: /
 Disallow: /tavi
 Disallow: /api/
 
-Sitemap: https://infoeasyrad.vercel.app/sitemap.xml
+Sitemap: https://infoeasyrad.com/sitemap.xml
