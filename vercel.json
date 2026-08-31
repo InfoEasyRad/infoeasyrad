@@ -2,6 +2,25 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/tavi", "destination": "/tavi.html" }
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/tavi",
+      "destination": "/tavi.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/cardiometro",
+      "destination": "/cardiometro.html"
+    }
   ]
 }
