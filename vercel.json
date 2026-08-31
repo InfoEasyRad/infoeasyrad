@@ -1,14 +1,3 @@
 {
-  "version": 2,
-  "cleanUrls": false,
-  "rewrites": [
-    {
-      "source": "^/tavi$",
-      "destination": "/api/tavi"
-    },
-    {
-      "source": "^/$",
-      "destination": "/api"
-    }
-  ]
+  "version": 2
 }
