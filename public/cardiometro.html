@@ -1,0 +1,1437 @@
+<title>Cardiómetro RM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F3F5F7;
+    --surface:#FFFFFF;
+    --surface-2:#EAEEF1;
+    --border:#DBE1E7;
+    --border-soft:#E7EBEF;
+    --ink:#16212C;
+    --muted:#5A6675;
+    --muted-2:#8592A1;
+    --accent:#1E5F70;
+    --accent-ink:#0E3D49;
+    --accent-soft:#E2EEF0;
+    --accent-soft-2:#D2E4E7;
+    --good:#1D7A54;
+    --good-soft:#E4F4EC;
+    --good-border:#BFE3D0;
+    --warn:#9C6B0B;
+    --warn-soft:#FBF1DC;
+    --warn-border:#F0DBA6;
+    --bad:#AE3D2B;
+    --bad-soft:#FBEAE6;
+    --bad-border:#EFC5BA;
+    --shadow:0 1px 2px rgba(20,30,40,.06), 0 6px 20px -8px rgba(20,30,40,.12);
+    --radius:10px;
+    --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans:"IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono:"IBM Plex Mono", "SF Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F151B;
+      --surface:#161F27;
+      --surface-2:#1C2733;
+      --border:#2B3944;
+      --border-soft:#243039;
+      --ink:#E7ECF0;
+      --muted:#9AA8B4;
+      --muted-2:#7B8B98;
+      --accent:#5CB8CC;
+      --accent-ink:#BEE7F0;
+      --accent-soft:#17313A;
+      --accent-soft-2:#1B3B46;
+      --good:#49C48D;
+      --good-soft:#12301F;
+      --good-border:#1F5138;
+      --warn:#E3AC4C;
+      --warn-soft:#332609;
+      --warn-border:#5A4514;
+      --bad:#E17862;
+      --bad-soft:#37170F;
+      --bad-border:#5E2C1E;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px -10px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F151B;
+    --surface:#161F27;
+    --surface-2:#1C2733;
+    --border:#2B3944;
+    --border-soft:#243039;
+    --ink:#E7ECF0;
+    --muted:#9AA8B4;
+    --muted-2:#7B8B98;
+    --accent:#5CB8CC;
+    --accent-ink:#BEE7F0;
+    --accent-soft:#17313A;
+    --accent-soft-2:#1B3B46;
+    --good:#49C48D;
+    --good-soft:#12301F;
+    --good-border:#1F5138;
+    --warn:#E3AC4C;
+    --warn-soft:#332609;
+    --warn-border:#5A4514;
+    --bad:#E17862;
+    --bad-soft:#37170F;
+    --bad-border:#5E2C1E;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px -10px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:14.5px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:var(--serif); text-wrap:balance; margin:0;}
+  input, select, textarea, button{font-family:inherit; font-size:inherit; color:inherit;}
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+  .mono{font-family:var(--mono); font-variant-numeric:tabular-nums;}
+  .app{max-width:1180px; margin:0 auto; padding:0 20px 80px;}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:14px 20px;
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:10px; margin-right:auto;}
+  .brand svg{flex:none;}
+  .brand-text h1{font-size:19px; font-weight:700; letter-spacing:.2px;}
+  .brand-text p{margin:1px 0 0; font-size:11.5px; color:var(--muted); letter-spacing:.3px;}
+  .tabs{display:flex; gap:4px; background:var(--surface-2); padding:4px; border-radius:999px; border:1px solid var(--border-soft);}
+  .tab-btn{
+    appearance:none; border:none; background:transparent; cursor:pointer;
+    padding:8px 16px; border-radius:999px; font-weight:600; font-size:13px; color:var(--muted);
+    transition:background .15s, color .15s;
+  }
+  .tab-btn[aria-selected="true"]{background:var(--accent); color:#fff;}
+  .btn{
+    appearance:none; border:1px solid var(--border); background:var(--surface); color:var(--ink);
+    padding:8px 14px; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px; transition:border-color .15s, background .15s;
+  }
+  .btn:hover{border-color:var(--accent);}
+  .btn-primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn-primary:hover{background:var(--accent-ink); border-color:var(--accent-ink);}
+  .btn-ghost{background:transparent; border-color:transparent; color:var(--muted);}
+  .btn-ghost:hover{color:var(--bad); border-color:var(--bad-border); background:var(--bad-soft);}
+  .btn-sm{padding:5px 10px; font-size:12px;}
+
+  /* ---------- summary strip ---------- */
+  .summary{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    margin:18px 0 6px; padding:12px 16px; background:var(--surface); border:1px solid var(--border-soft);
+    border-radius:var(--radius); box-shadow:var(--shadow);
+  }
+  .summary .stat{display:flex; flex-direction:column; gap:1px; padding-right:16px; border-right:1px solid var(--border-soft);}
+  .summary .stat:last-of-type{border-right:none;}
+  .summary .stat b{font-family:var(--mono); font-size:19px; line-height:1;}
+  .summary .stat span{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px;}
+  .summary .stat.ok b{color:var(--good);}
+  .summary .stat.bad b{color:var(--bad);}
+  .summary .chips{display:flex; gap:6px; flex-wrap:wrap; flex:1;}
+  .chip{
+    font-size:11.5px; padding:4px 9px; border-radius:999px; background:var(--bad-soft); color:var(--bad);
+    border:1px solid var(--bad-border); font-weight:600; white-space:nowrap;
+  }
+  .summary-empty{color:var(--muted-2); font-size:12.5px; font-style:italic;}
+
+  /* ---------- layout ---------- */
+  .layout{display:grid; grid-template-columns:290px 1fr; gap:20px; margin-top:18px; align-items:start;}
+  @media (max-width:880px){.layout{grid-template-columns:1fr;}}
+
+  .card{
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:18px;
+  }
+  .card + .card{margin-top:16px;}
+  .card h2{font-size:14px; margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+  .sidebar{position:sticky; top:76px;}
+
+  .field{display:flex; flex-direction:column; gap:5px; margin-bottom:12px;}
+  .field label{font-size:11.5px; color:var(--muted); font-weight:600; letter-spacing:.2px;}
+  .field input, .field select, .field textarea{
+    border:1px solid var(--border); background:var(--bg); color:var(--ink);
+    border-radius:7px; padding:8px 10px; width:100%;
+  }
+  .field textarea{resize:vertical; min-height:52px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .sex-toggle{display:flex; border:1px solid var(--border); border-radius:7px; overflow:hidden;}
+  .sex-toggle button{flex:1; border:none; background:var(--bg); padding:8px 0; font-weight:600; cursor:pointer; color:var(--muted);}
+  .sex-toggle button.active{background:var(--accent); color:#fff;}
+  .bsa-readout{
+    display:flex; justify-content:space-between; align-items:baseline; padding:10px 12px;
+    background:var(--accent-soft); border:1px solid var(--accent-soft-2); border-radius:7px; margin-top:2px;
+  }
+  .bsa-readout span{font-size:11px; color:var(--accent-ink); text-transform:uppercase; letter-spacing:.4px; font-weight:700;}
+  .bsa-readout b{font-family:var(--mono); font-size:16px;}
+
+  /* ---------- accordions / sections ---------- */
+  .section-list{display:flex; flex-direction:column; gap:12px;}
+  details.section{
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  details.section > summary{
+    list-style:none; cursor:pointer; padding:14px 18px; display:flex; align-items:center; gap:12px;
+  }
+  details.section > summary::-webkit-details-marker{display:none;}
+  .sec-chevron{
+    width:18px; height:18px; flex:none; color:var(--muted-2); transition:transform .18s;
+  }
+  details[open] > summary .sec-chevron{transform:rotate(90deg);}
+  .sec-title{font-family:var(--serif); font-weight:700; font-size:15.5px; margin-right:auto;}
+  .sec-sub{font-size:11.5px; color:var(--muted); font-weight:500; margin-left:2px;}
+  .sec-count{
+    font-family:var(--mono); font-size:11.5px; padding:3px 9px; border-radius:999px;
+    background:var(--surface-2); color:var(--muted); border:1px solid var(--border-soft);
+  }
+  .sec-count.has-bad{background:var(--bad-soft); color:var(--bad); border-color:var(--bad-border);}
+  .sec-count.has-ok{background:var(--good-soft); color:var(--good); border-color:var(--good-border);}
+  .sec-body{padding:4px 18px 18px;}
+  .group-title{
+    font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted-2); font-weight:700;
+    margin:16px 0 8px;
+  }
+  .group-title:first-child{margin-top:6px;}
+
+  .prow{
+    display:grid; grid-template-columns:1fr 128px 150px 108px; gap:12px; align-items:center;
+    padding:8px 0; border-top:1px solid var(--border-soft);
+  }
+  .prow:first-of-type{border-top:none;}
+  .prow-label{font-size:13px;}
+  .prow-label small{display:block; color:var(--muted-2); font-size:11px; margin-top:1px;}
+  .prow input[type="number"]{
+    border:1px solid var(--border); background:var(--bg); border-radius:7px; padding:7px 9px; width:100%;
+    font-family:var(--mono); text-align:right;
+  }
+  .prow .unit{font-size:11px; color:var(--muted); margin-left:5px;}
+  .prow .range{font-family:var(--mono); font-size:12px; color:var(--muted);}
+  .prow .range b{color:var(--ink); font-weight:600;}
+  .badge{
+    justify-self:start; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--muted); white-space:nowrap;
+  }
+  .badge.ok{background:var(--good-soft); color:var(--good); border-color:var(--good-border);}
+  .badge.bad{background:var(--bad-soft); color:var(--bad); border-color:var(--bad-border);}
+  .badge.warn{background:var(--warn-soft); color:var(--warn); border-color:var(--warn-border);}
+  .idx-row{
+    display:grid; grid-template-columns:1fr 128px 150px 108px; gap:12px; align-items:center;
+    padding:4px 0 8px; margin-top:-2px;
+  }
+  .idx-row .idx-label{font-size:11.5px; color:var(--muted-2); padding-left:14px;}
+  .idx-row .idx-val{font-family:var(--mono); font-size:12.5px; text-align:right; padding-right:9px; color:var(--muted);}
+
+  @media (max-width:700px){
+    .prow, .idx-row{grid-template-columns:1fr 92px; grid-template-areas:"label label" "input range" "badge badge"; row-gap:6px;}
+    .prow-label{grid-area:label;} .prow input{grid-area:input;} .prow .range{grid-area:range; text-align:right;}
+    .badge{grid-area:badge; justify-self:end;}
+  }
+
+  /* ---------- segment grid ---------- */
+  .seg-wrap{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:8px;}
+  @media (max-width:700px){.seg-wrap{grid-template-columns:1fr;}}
+  .seg-level h4{font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--accent-ink); margin:0 0 8px;}
+  .seg-item{display:grid; grid-template-columns:1fr 62px 34px; gap:6px; align-items:center; padding:4px 0;}
+  .seg-item label{font-size:11.5px; color:var(--muted);}
+  .seg-item input{border:1px solid var(--border); background:var(--bg); border-radius:6px; padding:5px 6px; font-family:var(--mono); text-align:right; width:100%;}
+  .seg-dot{width:10px; height:10px; border-radius:50%; background:var(--border); justify-self:center;}
+  .seg-dot.ok{background:var(--good);} .seg-dot.bad{background:var(--bad);}
+  .seg-note{font-size:11.5px; color:var(--muted); margin-top:10px;}
+
+  /* ---------- valve calculator ---------- */
+  .valve-select{margin-bottom:14px;}
+  .valve-fields{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:14px;}
+  .valve-result{
+    display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:9px;
+    background:var(--surface-2); border:1px solid var(--border-soft);
+  }
+  .valve-result .sev-badge{font-size:13px; padding:6px 14px;}
+  .valve-result p{margin:0; font-size:12.5px; color:var(--muted);}
+  .sev-normal{background:var(--good-soft); color:var(--good); border-color:var(--good-border);}
+  .sev-leve{background:var(--warn-soft); color:var(--warn); border-color:var(--warn-border);}
+  .sev-moderada{background:var(--warn-soft); color:var(--warn); border-color:var(--warn-border);}
+  .sev-severa, .sev-muysevera{background:var(--bad-soft); color:var(--bad); border-color:var(--bad-border);}
+  .valve-list{display:flex; flex-direction:column; gap:10px;}
+  .valve-entry{border-top:1px solid var(--border-soft); padding-top:10px;}
+  .valve-entry:first-child{border-top:none; padding-top:0;}
+
+  /* ---------- tissue section ---------- */
+  .tissue-block{border-top:1px solid var(--border-soft); padding:14px 0;}
+  .tissue-block:first-of-type{border-top:none; padding-top:6px;}
+  .tissue-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .tissue-head h4{font-size:13.5px; font-weight:700;}
+  .protocol-row{display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 10px;}
+  .protocol-row select{border:1px solid var(--border); background:var(--bg); border-radius:7px; padding:7px 9px; font-size:12.5px; min-width:170px;}
+  .tissue-note{font-size:11.5px; color:var(--muted-2); margin-top:4px;}
+
+  /* ---------- footer note ---------- */
+  .disclaimer{
+    margin-top:22px; padding:14px 16px; border-radius:var(--radius); background:var(--surface);
+    border:1px solid var(--border-soft); font-size:12px; color:var(--muted); line-height:1.6;
+  }
+  .disclaimer b{color:var(--ink);}
+  .source-note{margin-top:8px; text-align:center; font-size:11px; color:var(--muted-2); padding-bottom:10px;}
+
+  [hidden]{display:none !important;}
+
+  /* ---------- report ---------- */
+  #view-report{max-width:820px; margin:24px auto 60px;}
+  .report-sheet{
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:44px 48px;
+  }
+  .report-toolbar{display:flex; justify-content:flex-end; gap:8px; margin-bottom:14px;}
+  .report-head{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:20px;}
+  .report-head .mark{display:flex; align-items:center; gap:10px;}
+  .report-head h2{font-size:20px;}
+  .report-head p{margin:2px 0 0; font-size:11px; color:var(--muted); letter-spacing:.3px;}
+  .report-meta{text-align:right; font-size:11.5px; color:var(--muted);}
+  .report-meta b{color:var(--ink); font-family:var(--mono);}
+  .pt-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px 18px; margin-bottom:24px;}
+  .pt-grid div{display:flex; flex-direction:column; gap:2px;}
+  .pt-grid span{font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--muted-2); font-weight:700;}
+  .pt-grid b{font-family:var(--mono); font-size:13.5px;}
+  .rep-section{margin-bottom:22px;}
+  .rep-section h3{font-size:14px; border-bottom:1px solid var(--border); padding-bottom:6px; margin-bottom:8px;}
+  table.rep-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  table.rep-table th{
+    text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--muted);
+    padding:5px 8px; border-bottom:1px solid var(--border);
+  }
+  table.rep-table td{padding:6px 8px; border-bottom:1px solid var(--border-soft); font-family:var(--mono);}
+  table.rep-table td.lbl{font-family:var(--sans); }
+  table.rep-table tr.bad td{color:var(--bad);}
+  table.rep-table .status-pill{
+    font-family:var(--sans); font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px;
+    background:var(--good-soft); color:var(--good); border:1px solid var(--good-border);
+  }
+  tr.bad .status-pill{background:var(--bad-soft); color:var(--bad); border-color:var(--bad-border);}
+  .conclusion-box{
+    background:var(--surface-2); border:1px solid var(--border-soft); border-radius:8px; padding:14px 16px;
+    font-size:13px; line-height:1.7;
+  }
+  .conclusion-box ul{margin:6px 0 0; padding-left:18px;}
+  .report-empty{color:var(--muted-2); font-style:italic; padding:40px 0; text-align:center;}
+  .report-foot{margin-top:30px; padding-top:16px; border-top:1px solid var(--border); font-size:11px; color:var(--muted-2); display:flex; justify-content:space-between;}
+
+  @media print{
+    body{background:#fff;}
+    .topbar, .no-print{display:none !important;}
+    #view-capture{display:none !important;}
+    #view-report{display:block !important; max-width:none; margin:0;}
+    .report-sheet{box-shadow:none; border:none; padding:0;}
+    .app{max-width:none; padding:0;}
+  }
+</style>
+
+<div class="topbar no-print">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="15" cy="15" r="13" stroke="var(--accent)" stroke-width="2"/>
+        <circle cx="15" cy="15" r="7.5" stroke="var(--accent)" stroke-width="2"/>
+        <line x1="15" y1="2" x2="15" y2="7.5" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Cardiómetro RM</h1>
+        <p>Valores de referencia SCMR 2025 · resonancia cardiovascular</p>
+      </div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" id="tabbtn-capture" role="tab" aria-selected="true">Captura de datos</button>
+      <button class="tab-btn" id="tabbtn-report" role="tab" aria-selected="false">Informe</button>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="btnReset" title="Borrar todos los datos capturados">Nuevo paciente</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ===================== CAPTURE VIEW ===================== -->
+  <div id="view-capture">
+
+    <div class="summary" id="summaryBar"></div>
+
+    <div class="layout">
+      <!-- sidebar: patient data -->
+      <div class="sidebar">
+        <div class="card">
+          <h2>Datos del paciente</h2>
+          <div class="field">
+            <label for="p-name">Nombre</label>
+            <input type="text" id="p-name" placeholder="Nombre del paciente">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="p-id">Expediente</label>
+              <input type="text" id="p-id" placeholder="ID / folio">
+            </div>
+            <div class="field">
+              <label for="p-date">Fecha del estudio</label>
+              <input type="date" id="p-date">
+            </div>
+          </div>
+          <div class="field">
+            <label>Sexo</label>
+            <div class="sex-toggle">
+              <button type="button" data-sex="H" class="active">Hombre</button>
+              <button type="button" data-sex="M">Mujer</button>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="p-age">Edad (años)</label>
+              <input type="number" id="p-age" min="0" max="120" step="1">
+            </div>
+            <div class="field">
+              <label for="p-scanner">Equipo</label>
+              <select id="p-scanner">
+                <option value="1.5T">1.5 T</option>
+                <option value="3T">3 T</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="p-height">Talla (cm)</label>
+              <input type="number" id="p-height" min="0" step="0.1">
+            </div>
+            <div class="field">
+              <label for="p-weight">Peso (kg)</label>
+              <input type="number" id="p-weight" min="0" step="0.1">
+            </div>
+          </div>
+          <div class="bsa-readout">
+            <span>BSA (Mosteller)</span>
+            <b id="bsaOut" class="mono">—</b>
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label for="p-indication">Indicación clínica</label>
+            <textarea id="p-indication" placeholder="Motivo del estudio (opcional)"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- main: sections -->
+      <div>
+        <div class="section-list" id="sectionsContainer"></div>
+
+        <div class="disclaimer">
+          <b>Fuente y alcance.</b> Los rangos normales provienen de Kawel-Boehm N, Hetzel SJ, Ambale-Venkatesh B, et al.
+          "Society for Cardiovascular Magnetic Resonance reference values ('normal values') in cardiovascular magnetic
+          resonance: 2025 update." <i>J Cardiovasc Magn Reson</i> 2025;27:101853 — la revisión oficial de la SCMR.
+          Corresponden a población adulta general (voluntarios sanos, cohortes combinadas); no incorporan de forma
+          rutinaria estratificación por edad ni etnicidad salvo donde se indica explícitamente. Los parámetros de tejido
+          (T1/T2/T2*/ECV) dependen del campo magnético, fabricante y secuencia — usa siempre que sea posible los valores
+          normales propios de tu centro. Esta herramienta es un apoyo de referencia y no sustituye el juicio clínico.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== REPORT VIEW ===================== -->
+  <div id="view-report" hidden>
+    <div class="report-toolbar no-print">
+      <button class="btn" id="btnBackToCapture">← Volver a captura</button>
+      <button class="btn btn-primary" id="btnPrint">Imprimir / Guardar como PDF</button>
+    </div>
+    <div class="report-sheet" id="reportSheet"></div>
+  </div>
+
+  <div class="source-note no-print">Cardiómetro RM · herramienta de apoyo, no sustituye el criterio clínico</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   1. DATOS DE REFERENCIA (SCMR 2025 update)
+   ============================================================ */
+
+// ---- Estructura de secciones con parámetros simples de rango H/M ----
+const SECTIONS = [
+  {
+    id:'vi', title:'Ventrículo izquierdo', sub:'VI',
+    groups:[
+      { title:'Volumen, masa y función (adultos)', params:[
+        {id:'lvedv', label:'Volumen diastólico final (VDF-VI)', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[83,211],M:[72,164]}, rangeIdx:{H:[46,104],M:[46,91]}},
+        {id:'lvesv', label:'Volumen sistólico final (VSF-VI)', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[20,82],M:[17,60]}, rangeIdx:{H:[11,41],M:[11,34]}},
+        {id:'lvsv', label:'Volumen latido', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[53,142],M:[47,111]}, rangeIdx:{H:[30,69],M:[31,63]}},
+        {id:'lvef', label:'Fracción de eyección (FEVI)', unit:'%', range:{H:[53,79],M:[55,80]}},
+        {id:'lvm', label:'Masa miocárdica', unit:'g', idxUnit:'g/m²',
+          range:{H:[78,169],M:[52,123]}, rangeIdx:{H:[44,84],M:[35,69]}},
+        {id:'lvco', label:'Gasto cardiaco', unit:'L/min', range:{H:[2.6,8.3],M:[2.6,6.9]}},
+        {id:'lvci', label:'Índice cardiaco', unit:'L/min/m²', range:{H:[1.6,4.8],M:[2.6,3.6]},
+          note:'En mujeres, el límite reportado en la fuente es un rango intercuartílico (RIC 25–75%, n=100), más estrecho que un rango de referencia habitual — interpretar con cautela.'},
+        {id:'lvmedv', label:'Relación masa/VDF', unit:'g/mL', range:{H:[0.5,1.1],M:[0.4,1.0]}},
+      ]},
+      { title:'Diámetros', params:[
+        {id:'lved4c', label:'Diámetro diastólico, 4 cámaras', unit:'mm', range:{H:[39,59],M:[36,56]}},
+        {id:'lvedsax', label:'Diámetro diastólico, eje corto', unit:'mm', range:{H:[44,61],M:[40,56]}},
+        {id:'lves4c', label:'Diámetro sistólico, 4 cámaras', unit:'mm', range:{H:[26,38],M:[16,40]}},
+        {id:'lvessax', label:'Diámetro sistólico, eje corto', unit:'mm', range:{H:[28,40],M:[23,39]}},
+      ]},
+    ]
+  },
+  {
+    id:'vd', title:'Ventrículo derecho', sub:'VD',
+    groups:[
+      { title:'Volumen, masa y función (adultos)', params:[
+        {id:'rvedv', label:'Volumen diastólico final (VDF-VD)', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[107,237],M:[81,179]}, rangeIdx:{H:[49,117],M:[47,99]}},
+        {id:'rvesv', label:'Volumen sistólico final (VSF-VD)', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[30,113],M:[23,77]}, rangeIdx:{H:[12,56],M:[11,43]}},
+        {id:'rvsv', label:'Volumen latido', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[58,144],M:[48,112]}, rangeIdx:{H:[30,72],M:[29,64]}},
+        {id:'rvef', label:'Fracción de eyección (FEVD)', unit:'%', range:{H:[44,77],M:[49,77]}},
+        {id:'rvm', label:'Masa miocárdica', unit:'g', idxUnit:'g/m²',
+          range:{H:[19,81],M:[20,58]}, rangeIdx:{H:[10,41],M:[11,34]}},
+        {id:'rvco', label:'Gasto cardiaco', unit:'L/min', range:{H:[3.4,8.8],M:[2.9,7.2]}},
+      ]},
+    ]
+  },
+  {
+    id:'ai', title:'Aurícula izquierda', sub:'AI',
+    groups:[
+      { title:'Volumen y función (método biplano)', params:[
+        {id:'lamaxvol', label:'Volumen máximo', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[26,110],M:[26,94]}, rangeIdx:{H:[16,56],M:[18,54]}},
+        {id:'laminvol', label:'Volumen mínimo', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[2,55],M:[3,45]}, rangeIdx:{H:[2,28],M:[3,26]}},
+        {id:'laef', label:'Fracción de eyección', unit:'%', range:{H:[35,84],M:[39,83]}},
+      ]},
+      { title:'Área y diámetros', params:[
+        {id:'laarea4c', label:'Área máxima, 4 cámaras', unit:'cm²', range:{H:[13,29],M:[11,27]}},
+        {id:'ladiamlong4c', label:'Diámetro longitudinal, 4 cámaras', unit:'cm', range:{H:[4.3,7.1],M:[3.9,6.8]}},
+        {id:'ladiamtrans4c', label:'Diámetro transverso, 4 cámaras', unit:'cm', range:{H:[3.1,5.2],M:[3.0,5.1]}},
+        {id:'ladiamlong2c', label:'Diámetro longitudinal, 2 cámaras', unit:'cm', range:{H:[3.6,6.2],M:[3.2,6.0]}},
+        {id:'ladiamtrans2c', label:'Diámetro transverso, 2 cámaras', unit:'cm', range:{H:[3.3,5.6],M:[3.3,5.3]}},
+      ]},
+    ]
+  },
+  {
+    id:'ad', title:'Aurícula derecha', sub:'AD',
+    groups:[
+      { title:'Volumen y función (método monoplano 4C)', params:[
+        {id:'ramaxvol', label:'Volumen máximo', unit:'mL', idxUnit:'mL/m²',
+          range:{H:[14,125],M:[20,95]}, rangeIdx:{H:[11,64],M:[15,56]}},
+        {id:'raef', label:'Fracción de eyección', unit:'%', range:{H:[30,69],M:[35,72]}},
+      ]},
+      { title:'Área y diámetros', params:[
+        {id:'raarea4c', label:'Área máxima, 4 cámaras', unit:'cm²', range:{H:[11,31],M:[11,25]}},
+        {id:'radiamlong4c', label:'Diámetro longitudinal, 4 cámaras', unit:'cm', range:{H:[3.7,6.6],M:[3.6,6.3]}},
+        {id:'radiamtrans4c', label:'Diámetro transverso, 4 cámaras', unit:'cm', range:{H:[3.4,5.9],M:[2.8,5.5]}},
+      ]},
+    ]
+  },
+  {
+    id:'valv', title:'Válvulas — anillos', sub:'estructural',
+    groups:[
+      { title:'Diámetro de anillo valvular (diástole)', params:[
+        {id:'mvad', label:'Anillo mitral, 4 cámaras', unit:'cm', idxUnit:'cm/m²',
+          range:{H:[2.4,4.0],M:[2.1,3.7]}, rangeIdx:{H:[1.2,2.0],M:[1.4,2.2]}},
+        {id:'tvad', label:'Anillo tricuspídeo, 4 cámaras', unit:'cm', idxUnit:'cm/m²',
+          range:{H:[2.2,4.2],M:[2.1,3.7]}, rangeIdx:{H:[1.0,2.2],M:[1.3,2.1]}},
+      ]},
+    ]
+  },
+  {
+    id:'ao', title:'Aorta torácica', sub:'raíz y segmentos',
+    groups:[
+      { title:'Raíz aórtica (diástole, plano LVOT)', params:[
+        {id:'aoannulus', label:'Anillo aórtico', unit:'mm', idxUnit:'mm/m²', range:{H:[14,32],M:[14,26]}, rangeIdx:{H:[10,14],M:[10,14]}},
+        {id:'aosinus', label:'Seno de Valsalva', unit:'mm', idxUnit:'mm/m²', range:{H:[20,44],M:[18,38]}, rangeIdx:{H:[13,20],M:[13,20]}},
+        {id:'aosinusarea', label:'Área del seno de Valsalva', unit:'cm²', range:{H:[4.4,12.4],M:[3.9,9.1]}},
+        {id:'aostj', label:'Unión sinotubular', unit:'mm', idxUnit:'mm/m²', range:{H:[13,37],M:[13,32]}, rangeIdx:{H:[10,17],M:[10,17]}},
+      ]},
+      { title:'Aorta ascendente y descendente', params:[
+        {id:'aoasc', label:'Aorta ascendente', unit:'mm', range:{H:[27,41],M:[25,37]},
+          note:'Válido solo 45–84 años. Rango ampliado (mín-máx de las 4 décadas); en 45–54 años el percentil 95 real es más bajo (37 mm en hombres) — un valor cercano al límite superior combinado puede ya ser anormal para un paciente de esa edad.'},
+        {id:'aodesc', label:'Aorta descendente (luminal)', unit:'mm', range:{H:[17,21],M:[16,19]},
+          note:'Referencia en adultos jóvenes, 25–35 años'},
+      ]},
+    ]
+  },
+  {
+    id:'ap', title:'Arterias pulmonares', sub:'tronco y ramas',
+    groups:[
+      { title:'Diámetros (medición transversal)', params:[
+        {id:'mpasys', label:'Tronco pulmonar, diámetro sistólico', unit:'mm', range:{H:[22,33],M:[20,31]}},
+        {id:'mpadia', label:'Tronco pulmonar, diámetro diastólico', unit:'mm', range:{H:[18,28],M:[17,25]}},
+        {id:'rpasys', label:'Rama pulmonar derecha, diámetro sistólico', unit:'mm', range:{H:[14,26],M:[13,23]}},
+        {id:'lpasys', label:'Rama pulmonar izquierda, diámetro sistólico', unit:'mm', range:{H:[15,25],M:[14,23]}},
+      ]},
+    ]
+  },
+];
+
+// ---- Grosor parietal del VI, 16 segmentos (Tabla 45 SCMR) ----
+const SEGMENTS16 = [
+  {id:1, level:'Basal', name:'Anterior', H:[5,11], M:[4,9]},
+  {id:2, level:'Basal', name:'Anteroseptal', H:[6,12], M:[5,10]},
+  {id:3, level:'Basal', name:'Inferoseptal', H:[6,11], M:[5,9]},
+  {id:4, level:'Basal', name:'Inferior', H:[6,11], M:[4,9]},
+  {id:5, level:'Basal', name:'Inferolateral', H:[5,11], M:[4,9]},
+  {id:6, level:'Basal', name:'Anterolateral', H:[5,11], M:[4,9]},
+  {id:7, level:'Medio', name:'Anterior', H:[4,10], M:[4,8]},
+  {id:8, level:'Medio', name:'Anteroseptal', H:[5,10], M:[4,8]},
+  {id:9, level:'Medio', name:'Inferoseptal', H:[6,11], M:[4,9]},
+  {id:10, level:'Medio', name:'Inferior', H:[4,10], M:[4,8]},
+  {id:11, level:'Medio', name:'Inferolateral', H:[4,10], M:[3,8]},
+  {id:12, level:'Medio', name:'Anterolateral', H:[4,10], M:[3,8]},
+  {id:13, level:'Apical', name:'Anterior', H:[4,9], M:[2,10]},
+  {id:14, level:'Apical', name:'Septal', H:[4,10], M:[3,8]},
+  {id:15, level:'Apical', name:'Inferior', H:[4,9], M:[3,7]},
+  {id:16, level:'Apical', name:'Lateral', H:[4,9], M:[4,8]},
+];
+
+// ---- Estadificación de valvulopatías (Tabla 57, criterios adaptados de ecocardiografía) ----
+const SEV_RANK = {normal:0, leve:1, moderada:2, severa:3, muysevera:4};
+const SEV_LABEL = {normal:'No significativa', leve:'Leve', moderada:'Moderada', severa:'Severa', muysevera:'Muy severa'};
+function worse(a,b){ if(a==null) return b; if(b==null) return a; return SEV_RANK[b]>SEV_RANK[a]?b:a; }
+
+const VALVE_LESIONS = [
+  { id:'as', name:'Estenosis aórtica',
+    fields:[{id:'vmax', label:'Velocidad máxima', unit:'m/s'}, {id:'area', label:'Área valvular', unit:'cm²'}, {id:'areabsa', label:'Área/BSA', unit:'cm²/m²'}],
+    classify(v){
+      let s=null;
+      if(v.vmax!=null){ s=worse(s, v.vmax>=5?'muysevera': v.vmax>=4?'severa': v.vmax>=3.0?'moderada': v.vmax>=2.0?'leve':'normal'); }
+      if(v.area!=null && v.area<=1.0) s=worse(s,'severa');
+      if(v.areabsa!=null && v.areabsa<=0.6) s=worse(s,'severa');
+      return s;
+    }, help:'Leve 2.0–2.9 m/s · Moderada 3.0–3.9 m/s · Severa ≥4 m/s (área ≤1.0 cm² o área/BSA ≤0.6 cm²/m²)'},
+  { id:'ar', name:'Insuficiencia aórtica',
+    fields:[{id:'rvol', label:'Volumen regurgitante', unit:'mL/latido'}, {id:'rf', label:'Fracción regurgitante', unit:'%'}, {id:'eroa', label:'EROA', unit:'cm²'}],
+    classify(v){
+      let s=null;
+      if(v.rvol!=null) s=worse(s, v.rvol>=60?'severa': v.rvol>=30?'moderada':'leve');
+      if(v.rf!=null) s=worse(s, v.rf>=50?'severa': v.rf>=30?'moderada':'leve');
+      if(v.eroa!=null) s=worse(s, v.eroa>=0.30?'severa': v.eroa>=0.10?'moderada':'leve');
+      return s;
+    }, help:'Severa: Vol. regurgitante ≥60 mL, FR ≥50%, EROA ≥0.30 cm²'},
+  { id:'ms', name:'Estenosis mitral',
+    fields:[{id:'area', label:'Área valvular', unit:'cm²'}],
+    classify(v){ if(v.area==null) return null; return v.area<=1.0?'muysevera': v.area<=1.5?'severa':'normal'; },
+    help:'Normal >1.5 cm² · Severa ≤1.5 cm² · Muy severa ≤1.0 cm²'},
+  { id:'mr1', name:'Insuficiencia mitral primaria',
+    fields:[{id:'rvol', label:'Volumen regurgitante', unit:'mL'}, {id:'rf', label:'Fracción regurgitante', unit:'%'}, {id:'eroa', label:'EROA', unit:'cm²'}],
+    classify(v){
+      let s=null;
+      if(v.rvol!=null) s=worse(s, v.rvol>=60?'severa':'normal');
+      if(v.rf!=null) s=worse(s, v.rf>=50?'severa':'normal');
+      if(v.eroa!=null) s=worse(s, v.eroa>=0.40?'severa':'normal');
+      return s;
+    }, help:'Severa: Vol. regurgitante ≥60 mL, FR ≥50%, EROA ≥0.40 cm²'},
+  { id:'mr2', name:'Insuficiencia mitral secundaria',
+    fields:[{id:'rvol', label:'Volumen regurgitante', unit:'mL'}, {id:'rf', label:'Fracción regurgitante', unit:'%'}, {id:'eroa', label:'EROA', unit:'cm²'}],
+    classify(v){
+      let s=null;
+      if(v.rvol!=null) s=worse(s, v.rvol>=30?'severa':'normal');
+      if(v.rf!=null) s=worse(s, v.rf>=50?'severa':'normal');
+      if(v.eroa!=null) s=worse(s, v.eroa>=0.20?'severa':'normal');
+      return s;
+    }, help:'Severa: Vol. regurgitante ≥30 mL, FR ≥50%, EROA ≥0.20 cm²'},
+  { id:'ps', name:'Estenosis pulmonar',
+    fields:[{id:'vmax', label:'Velocidad pico', unit:'m/s'}],
+    classify(v){ if(v.vmax==null) return null; return v.vmax>4?'severa':'normal'; },
+    help:'Severa: velocidad pico >4 m/s'},
+  { id:'ts', name:'Estenosis tricuspídea',
+    fields:[{id:'area', label:'Área valvular', unit:'cm²'}],
+    classify(v){ if(v.area==null) return null; return v.area<=1.0?'severa':'normal'; },
+    help:'Severa: área ≤1.0 cm²'},
+];
+
+// ---- Parámetros de tejido / avanzados ----
+const TISSUE = {
+  t1: { label:'T1 nativo', unit:'ms',
+    options:[
+      {key:'1.5T-molli', field:'1.5T', name:'MOLLI (agregado, todos los fabricantes)', range:[879,1102]},
+      {key:'1.5T-shmolli', field:'1.5T', name:'ShMOLLI', range:[874,1034]},
+      {key:'1.5T-sasha', field:'1.5T', name:'SASHA', range:[1054,1234]},
+      {key:'3T-molli', field:'3T', name:'MOLLI (agregado)', range:[1011,1289]},
+      {key:'3T-shmolli', field:'3T', name:'ShMOLLI', range:[1035,1215]},
+      {key:'3T-sasha', field:'3T', name:'SASHA', range:[1408,1580]},
+    ]},
+  ecv: { label:'ECV (fracción de volumen extracelular)', unit:'%',
+    options:[
+      {key:'1.5T-molli', field:'1.5T', name:'MOLLI (agregado)', range:[15.9,39.5]},
+      {key:'1.5T-shmolli', field:'1.5T', name:'ShMOLLI', range:[22.4,34.4]},
+      {key:'1.5T-sasha', field:'1.5T', name:'SASHA', range:[18.3,29.9]},
+      {key:'3T-molli', field:'3T', name:'MOLLI', range:[22.5,32.1]},
+      {key:'3T-shmolli', field:'3T', name:'ShMOLLI', range:[19.6,29.6]},
+      {key:'3T-sasha', field:'3T', name:'SASHA', range:[16.2,23.4]},
+    ]},
+  t2: { label:'T2 miocárdico', unit:'ms',
+    options:[
+      {key:'1.5T-mefse', field:'1.5T', name:'MEFSE', range:[46,58]},
+      {key:'3T-grase', field:'3T', name:'GraSE', range:[37,53]},
+      {key:'3T-bssfp', field:'3T', name:'bSSFP T2-prep (RIC 25–75%, no es rango de referencia completo)', range:[40,43]},
+      {key:'3T-flash', field:'3T', name:'FLASH T2-prep', range:[36,43]},
+    ]},
+};
+
+// Umbrales según Tabla 100 SCMR: Normal es estrictamente ">20"/">12"; el valor límite (20.0 o 12.0 ms
+// exactos) cae ya en la banda de sobrecarga "10-20"/"5.5-12", igual que el límite inferior de esa banda.
+function classifyT2Star(field, v){
+  if(v==null || isNaN(v)) return null;
+  const thNormal = field==='3T' ? 12 : 20;
+  const thSevere = field==='3T' ? 5.5 : 10;
+  if(v>thNormal) return {label:'Normal', cls:'ok'};
+  if(v>=thSevere) return {label:'Sobrecarga de hierro', cls:'bad'};
+  return {label:'Sobrecarga severa', cls:'bad'};
+}
+
+const STRAIN_PARAMS = [
+  {id:'strain_lv_circ', label:'Strain circunferencial global VI', unit:'%', range:{H:[-23.1,-15.2],M:[-26.6,-16.7]}},
+  {id:'strain_lv_long', label:'Strain longitudinal global VI', unit:'%', range:{H:[-22.5,-11.6],M:[-26.0,-13.2]}},
+  {id:'strain_rv_circ', label:'Strain circunferencial global VD', unit:'%', range:{H:[-20.1,-4.5],M:[-22.4,-6.0]}},
+  {id:'strain_rv_long', label:'Strain longitudinal global VD', unit:'%', range:{H:[-32.2,-14.8],M:[-35.9,-15.4]}},
+  {id:'strain_la_reservoir', label:'Strain de AI — reservorio', unit:'%', range:{H:[20.9,55.7],M:[24.2,63.8]}},
+  {id:'strain_la_conduit', label:'Strain de AI — conducto', unit:'%', range:{H:[8.7,35.9],M:[10.7,42.7]}},
+  {id:'strain_la_booster', label:'Strain de AI — contráctil', unit:'%', range:{H:[8.4,23.6],M:[8.5,26.1]}},
+];
+
+const PERFUSION_PROTOCOLS = {
+  a:{ name:'Adenosina · deconvolución de Fermi (n=99)',
+      rest:{H:[0.50,1.42],M:[0.62,1.54]}, stress:{H:[1.35,4.23],M:[2.00,4.92]}, reserve:{H:[1.43,4.91],M:[1.43,4.91]} },
+  b:{ name:'Adenosina · cuantificación píxel a píxel (n=150)',
+      rest:{H:[0.34,0.82],M:[0.34,0.95]}, stress:{H:[1.05,3.21],M:[1.47,3.35]}, reserve:{H:[1.79,5.79],M:[1.67,5.67]} },
+};
+
+const TRIGLYCERIDE_RANGE = { '1.5T':[0.50,0.90], '3T':[0.20,0.70] };
+
+/* ============================================================
+   2. ESTADO
+   ============================================================ */
+const state = {
+  patient:{name:'', id:'', date:'', sex:'H', age:'', height:'', weight:'', bsa:null, scanner:'1.5T', indication:''},
+  values:{},           // id -> number
+  valveSelected:'as',
+  valveValues:{},      // lesionId -> {fieldId:number}
+  tissueProtocol:{t1:'1.5T-molli', ecv:'1.5T-molli', t2:'1.5T-mefse'},
+  perfusionProtocol:'a',
+};
+
+// registro plano de todos los parámetros de rango simple (para informe / resumen)
+const FLAT_PARAMS = [];
+SECTIONS.forEach(sec=>sec.groups.forEach(g=>g.params.forEach(p=>{
+  FLAT_PARAMS.push(Object.assign({section:sec.title}, p));
+})));
+
+function fmt(n){
+  if(n==null || isNaN(n)) return '—';
+  const r = Math.round(n*100)/100;
+  return Number.isInteger(r)? String(r) : String(r);
+}
+function rangeText(range){ return fmt(range[0])+'–'+fmt(range[1]); }
+
+function evalRange(value, range){
+  if(value==null || isNaN(value) || !range) return null;
+  return (value>=range[0] && value<=range[1]) ? 'ok' : 'bad';
+}
+
+/* ============================================================
+   3. RENDER — CAPTURA
+   ============================================================ */
+const sectionsContainer = document.getElementById('sectionsContainer');
+
+function paramRowHTML(p){
+  const range = p.range[state.patient.sex];
+  const hasIdx = !!p.rangeIdx;
+  let html = '<div class="prow" data-pid="'+p.id+'">'
+    + '<div class="prow-label">'+p.label+(p.note?'<small>'+p.note+'</small>':'')+'</div>'
+    + '<div><input type="number" step="any" inputmode="decimal" data-field="'+p.id+'" value="'+(state.values[p.id]??'')+'"> <span class="unit">'+p.unit+'</span></div>'
+    + '<div class="range">'+rangeText(range)+' <span class="unit">'+p.unit+'</span></div>'
+    + '<div class="badge" data-badge="'+p.id+'">—</div>'
+    + '</div>';
+  if(hasIdx){
+    html += '<div class="idx-row" data-idxrow="'+p.id+'">'
+      + '<div class="idx-label">↳ indexado a BSA</div>'
+      + '<div class="idx-val" data-idxval="'+p.id+'">—</div>'
+      + '<div class="range" data-idxrange="'+p.id+'"></div>'
+      + '<div class="badge" data-idxbadge="'+p.id+'">—</div>'
+      + '</div>';
+  }
+  return html;
+}
+
+function renderSections(){
+  let html = '';
+  SECTIONS.forEach(sec=>{
+    html += '<details class="section" data-secid="'+sec.id+'" open>'
+      + '<summary>'
+      + '<svg class="sec-chevron" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      + '<span class="sec-title">'+sec.title+'</span><span class="sec-sub">'+sec.sub+'</span>'
+      + '<span class="sec-count" data-seccount="'+sec.id+'">—</span>'
+      + '</summary><div class="sec-body">';
+    sec.groups.forEach(g=>{
+      html += '<div class="group-title">'+g.title+'</div>';
+      g.params.forEach(p=>{ html += paramRowHTML(p); });
+    });
+    if(sec.id==='vi'){ html += segmentBlockHTML(); }
+    if(sec.id==='valv'){ html += valveCalcHTML(); }
+    html += '</div></details>';
+  });
+  html += tissueSectionHTML();
+  sectionsContainer.innerHTML = html;
+  wireSectionInputs();
+  wireSegmentInputs();
+  wireValveCalc();
+  wireTissueInputs();
+  refreshAll();
+}
+
+function segmentBlockHTML(){
+  const levels = ['Basal','Medio','Apical'];
+  let html = '<div class="group-title">Grosor parietal por segmento, diástole (16 segmentos AHA)</div><div class="seg-wrap">';
+  levels.forEach(lv=>{
+    html += '<div class="seg-level"><h4>'+lv+'</h4>';
+    SEGMENTS16.filter(s=>s.level===lv).forEach(s=>{
+      html += '<div class="seg-item">'
+        + '<label>'+s.name+'</label>'
+        + '<input type="number" step="any" data-seg="'+s.id+'" value="'+(state.values['seg'+s.id]??'')+'">'
+        + '<span class="seg-dot" data-segdot="'+s.id+'"></span>'
+        + '</div>';
+    });
+    html += '</div>';
+  });
+  html += '</div><p class="seg-note">Valores en mm. Rango normal por segmento y sexo se evalúa individualmente al capturar el dato.</p>';
+  return html;
+}
+
+function valveCalcHTML(){
+  let html = '<div class="group-title">Calculadora de severidad valvular</div>'
+    + '<div class="valve-select"><select id="valveLesionSelect">';
+  VALVE_LESIONS.forEach(v=>{ html += '<option value="'+v.id+'"'+(v.id===state.valveSelected?' selected':'')+'>'+v.name+'</option>'; });
+  html += '</select></div><div id="valveFieldsWrap"></div>';
+  return html;
+}
+
+function renderValveFields(){
+  const wrap = document.getElementById('valveFieldsWrap');
+  if(!wrap) return;
+  const lesion = VALVE_LESIONS.find(v=>v.id===state.valveSelected);
+  const vals = state.valveValues[lesion.id] || {};
+  let html = '<div class="valve-fields">';
+  lesion.fields.forEach(f=>{
+    html += '<div class="field"><label>'+f.label+' ('+f.unit+')</label>'
+      + '<input type="number" step="any" data-valvefield="'+f.id+'" value="'+(vals[f.id]??'')+'"></div>';
+  });
+  html += '</div><p class="tissue-note">'+lesion.help+'</p><div class="valve-result" id="valveResult"></div>';
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('[data-valvefield]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      if(!state.valveValues[lesion.id]) state.valveValues[lesion.id] = {};
+      const v = inp.value===''? null: parseFloat(inp.value);
+      state.valveValues[lesion.id][inp.dataset.valvefield] = v;
+      updateValveResult();
+      refreshSummary();
+    });
+  });
+  updateValveResult();
+}
+
+function updateValveResult(){
+  const box = document.getElementById('valveResult');
+  if(!box) return;
+  const lesion = VALVE_LESIONS.find(v=>v.id===state.valveSelected);
+  const vals = state.valveValues[lesion.id] || {};
+  const anyVal = lesion.fields.some(f=>vals[f.id]!=null && !isNaN(vals[f.id]));
+  if(!anyVal){ box.innerHTML = '<span class="badge">Sin datos capturados</span><p>Ingresa al menos un parámetro para clasificar.</p>'; return; }
+  const sev = lesion.classify(vals) || 'normal';
+  box.innerHTML = '<span class="badge sev-badge sev-'+sev+'">'+SEV_LABEL[sev]+'</span>'
+    + '<p>Clasificación según los parámetros capturados para <b style="color:var(--ink)">'+lesion.name.toLowerCase()+'</b>.</p>';
+}
+
+function wireValveCalc(){
+  const sel = document.getElementById('valveLesionSelect');
+  if(!sel) return;
+  sel.addEventListener('change', ()=>{ state.valveSelected = sel.value; renderValveFields(); });
+  renderValveFields();
+}
+
+function tissueSectionHTML(){
+  let html = '<details class="section" data-secid="tejido" open><summary>'
+    + '<svg class="sec-chevron" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    + '<span class="sec-title">Caracterización tisular</span><span class="sec-sub">mapeo T1/T2/T2*, ECV, strain, perfusión, triglicéridos</span>'
+    + '<span class="sec-count" data-seccount="tejido">—</span></summary><div class="sec-body">';
+
+  // T1 / ECV / T2 con selector de protocolo
+  ['t1','ecv','t2'].forEach(key=>{
+    const t = TISSUE[key];
+    html += '<div class="tissue-block"><div class="tissue-head"><h4>'+t.label+'</h4></div>'
+      + '<div class="protocol-row"><select data-tissueproto="'+key+'"></select>'
+      + '<input type="number" step="any" data-tissueval="'+key+'" placeholder="Valor medido" value="'+(state.values['tis_'+key]??'')+'">'
+      + '<span class="unit">'+t.unit+'</span>'
+      + '<span class="badge" data-tissuebadge="'+key+'">—</span></div>'
+      + '<p class="tissue-note" data-tissuerange="'+key+'"></p></div>';
+  });
+
+  // T2*
+  html += '<div class="tissue-block"><div class="tissue-head"><h4>T2* miocárdico (sobrecarga de hierro)</h4></div>'
+    + '<div class="protocol-row"><input type="number" step="any" id="t2starVal" placeholder="Valor medido" value="'+(state.values['tis_t2star']??'')+'">'
+    + '<span class="unit">ms</span><span class="badge" id="t2starBadge">—</span></div>'
+    + '<p class="tissue-note">Umbrales según campo del equipo seleccionado ('+state.patient.scanner+').</p></div>';
+
+  // Strain
+  html += '<div class="tissue-block"><div class="tissue-head"><h4>Strain miocárdico global (feature-tracking, cvi42/bSSFP)</h4></div>';
+  STRAIN_PARAMS.forEach(p=>{ html += paramRowHTML(p); });
+  html += '</div>';
+
+  // Perfusión
+  html += '<div class="tissue-block"><div class="tissue-head"><h4>Perfusión miocárdica</h4></div>'
+    + '<div class="protocol-row"><select id="perfusionProtoSelect">'
+    + Object.entries(PERFUSION_PROTOCOLS).map(([k,v])=>'<option value="'+k+'"'+(k===state.perfusionProtocol?' selected':'')+'>'+v.name+'</option>').join('')
+    + '</select></div>'
+    + '<p class="tissue-note">La reserva de perfusión del protocolo "Fermi" no se reportó por sexo en la fuente; se usa el valor combinado (todos los sujetos) para ambos sexos.</p>';
+  ['rest','stress','reserve'].forEach(k=>{
+    const label = k==='rest'?'Flujo en reposo':k==='stress'?'Flujo en estrés':'Reserva de perfusión (ratio)';
+    const unit = k==='reserve'?'':'mL/min/g';
+    html += '<div class="prow" data-pid="perf_'+k+'">'
+      + '<div class="prow-label">'+label+'</div>'
+      + '<div><input type="number" step="any" data-perf="'+k+'" value="'+(state.values['perf_'+k]??'')+'"> <span class="unit">'+unit+'</span></div>'
+      + '<div class="range" data-perfrange="'+k+'"></div>'
+      + '<div class="badge" data-perfbadge="'+k+'">—</div></div>';
+  });
+  html += '</div>';
+
+  // Triglicéridos
+  html += '<div class="tissue-block"><div class="tissue-head"><h4>Triglicéridos miocárdicos (¹H-MRS)</h4></div>'
+    + '<div class="protocol-row"><input type="number" step="any" id="trigVal" placeholder="Valor medido" value="'+(state.values['tis_trig']??'')+'">'
+    + '<span class="unit">%</span><span class="badge" id="trigBadge">—</span></div>'
+    + '<p class="tissue-note">Referencia orientativa según campo ('+state.patient.scanner+'); alta variabilidad entre estudios — extremar cautela al comparar.</p></div>';
+
+  html += '</div></details>';
+  return html;
+}
+
+function wireTissueInputs(){
+  ['t1','ecv','t2'].forEach(key=>{
+    const sel = document.querySelector('[data-tissueproto="'+key+'"]');
+    const opts = TISSUE[key].options;
+    sel.innerHTML = opts.map(o=>'<option value="'+o.key+'"'+(o.key===state.tissueProtocol[key]?' selected':'')+'>'+o.field+' — '+o.name+'</option>').join('');
+    sel.addEventListener('change', ()=>{ state.tissueProtocol[key]=sel.value; refreshTissue(); });
+    const inp = document.querySelector('[data-tissueval="'+key+'"]');
+    inp.addEventListener('input', ()=>{
+      state.values['tis_'+key] = inp.value===''?null:parseFloat(inp.value);
+      refreshTissue(); refreshSummary();
+    });
+  });
+  const t2s = document.getElementById('t2starVal');
+  t2s.addEventListener('input', ()=>{ state.values['tis_t2star']= t2s.value===''?null:parseFloat(t2s.value); refreshTissue(); refreshSummary(); });
+
+  const perfSel = document.getElementById('perfusionProtoSelect');
+  perfSel.addEventListener('change', ()=>{ state.perfusionProtocol = perfSel.value; refreshTissue(); });
+  document.querySelectorAll('[data-perf]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      state.values['perf_'+inp.dataset.perf] = inp.value===''?null:parseFloat(inp.value);
+      refreshTissue(); refreshSummary();
+    });
+  });
+
+  const trig = document.getElementById('trigVal');
+  trig.addEventListener('input', ()=>{ state.values['tis_trig']= trig.value===''?null:parseFloat(trig.value); refreshTissue(); refreshSummary(); });
+
+  refreshTissue();
+}
+
+function refreshTissue(){
+  ['t1','ecv','t2'].forEach(key=>{
+    const opt = TISSUE[key].options.find(o=>o.key===state.tissueProtocol[key]);
+    const badge = document.querySelector('[data-tissuebadge="'+key+'"]');
+    const rangeEl = document.querySelector('[data-tissuerange="'+key+'"]');
+    const val = state.values['tis_'+key];
+    rangeEl.textContent = 'Rango normal ('+opt.name+', '+opt.field+'): '+rangeText(opt.range)+' '+TISSUE[key].unit;
+    setBadge(badge, evalRange(val, opt.range));
+  });
+  const t2starBadge = document.getElementById('t2starBadge');
+  const v = state.values['tis_t2star'];
+  const t2starTier = classifyT2Star(state.patient.scanner, v);
+  if(!t2starTier){ t2starBadge.className='badge'; t2starBadge.textContent='—'; }
+  else{
+    t2starBadge.className = 'badge '+t2starTier.cls;
+    t2starBadge.textContent = t2starTier.label;
+  }
+
+  const perf = PERFUSION_PROTOCOLS[state.perfusionProtocol];
+  ['rest','stress','reserve'].forEach(k=>{
+    const range = perf[k][state.patient.sex];
+    const rEl = document.querySelector('[data-perfrange="'+k+'"]');
+    const bEl = document.querySelector('[data-perfbadge="'+k+'"]');
+    rEl.textContent = rangeText(range);
+    setBadge(bEl, evalRange(state.values['perf_'+k], range));
+  });
+
+  const trigBadge = document.getElementById('trigBadge');
+  const trigRange = TRIGLYCERIDE_RANGE[state.patient.scanner] || TRIGLYCERIDE_RANGE['1.5T'];
+  setBadge(trigBadge, evalRange(state.values['tis_trig'], trigRange));
+}
+
+function setBadge(el, status){
+  if(!el) return;
+  el.classList.remove('ok','bad','warn');
+  if(status==='ok'){ el.classList.add('ok'); el.textContent='Normal'; }
+  else if(status==='bad'){ el.classList.add('bad'); el.textContent='Fuera de rango'; }
+  else { el.textContent='—'; }
+}
+
+function wireSectionInputs(){
+  sectionsContainer.querySelectorAll('input[data-field]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const id = inp.dataset.field;
+      state.values[id] = inp.value===''? null : parseFloat(inp.value);
+      refreshParam(id);
+      refreshSummary();
+    });
+  });
+}
+
+function findParamDef(id){ return FLAT_PARAMS.find(p=>p.id===id) || STRAIN_PARAMS.find(p=>p.id===id); }
+
+function refreshParam(id){
+  const p = findParamDef(id);
+  if(!p) return;
+  const value = state.values[id];
+  const range = p.range[state.patient.sex];
+  const badge = document.querySelector('[data-badge="'+id+'"]');
+  setBadge(badge, evalRange(value, range));
+  const rangeEl = document.querySelector('.prow[data-pid="'+id+'"] .range');
+  if(rangeEl) rangeEl.innerHTML = rangeText(range)+' <span class="unit">'+p.unit+'</span>';
+
+  if(p.rangeIdx){
+    const idxRange = p.rangeIdx[state.patient.sex];
+    const bsa = state.patient.bsa;
+    const idxVal = (value!=null && bsa) ? value/bsa : null;
+    const idxValEl = document.querySelector('[data-idxval="'+id+'"]');
+    const idxRangeEl = document.querySelector('[data-idxrange="'+id+'"]');
+    const idxBadgeEl = document.querySelector('[data-idxbadge="'+id+'"]');
+    if(idxValEl) idxValEl.textContent = idxVal!=null ? fmt(idxVal)+' '+p.idxUnit : (bsa? '—' : 'requiere talla/peso');
+    if(idxRangeEl) idxRangeEl.innerHTML = rangeText(idxRange)+' <span class="unit">'+p.idxUnit+'</span>';
+    setBadge(idxBadgeEl, evalRange(idxVal, idxRange));
+  }
+}
+
+function refreshAllParams(){
+  FLAT_PARAMS.forEach(p=>refreshParam(p.id));
+  STRAIN_PARAMS.forEach(p=>refreshParam(p.id));
+}
+
+function wireSegmentInputs(){
+  sectionsContainer.querySelectorAll('input[data-seg]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const segId = inp.dataset.seg;
+      state.values['seg'+segId] = inp.value===''? null : parseFloat(inp.value);
+      refreshSegment(segId);
+      refreshSummary();
+    });
+  });
+  SEGMENTS16.forEach(s=>refreshSegment(s.id));
+}
+function refreshSegment(segId){
+  const s = SEGMENTS16.find(x=>x.id==segId);
+  const val = state.values['seg'+segId];
+  const range = s[state.patient.sex];
+  const dot = document.querySelector('[data-segdot="'+segId+'"]');
+  const status = evalRange(val, range);
+  dot.className = 'seg-dot'+(status?(' '+status):'');
+  dot.title = status ? (status==='ok'?'Normal ':'Fuera de rango ')+'('+rangeText(range)+' mm)' : 'Sin dato';
+}
+
+/* ---- sección: sexo ---- */
+document.querySelectorAll('.sex-toggle button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.sex-toggle button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.patient.sex = btn.dataset.sex;
+    refreshAll();
+  });
+});
+
+/* ---- datos del paciente ---- */
+function bindPatientField(id, key, isNum){
+  const el = document.getElementById(id);
+  el.addEventListener('input', ()=>{
+    state.patient[key] = isNum? (el.value===''?'':parseFloat(el.value)) : el.value;
+    if(key==='height' || key==='weight') updateBSA();
+    if(key==='scanner') refreshTissue();
+    refreshSummary();
+  });
+}
+bindPatientField('p-name','name',false);
+bindPatientField('p-id','id',false);
+bindPatientField('p-date','date',false);
+bindPatientField('p-age','age',true);
+bindPatientField('p-height','height',true);
+bindPatientField('p-weight','weight',true);
+bindPatientField('p-indication','indication',false);
+document.getElementById('p-scanner').addEventListener('change', (e)=>{
+  state.patient.scanner = e.target.value;
+  refreshTissue();
+});
+
+function updateBSA(){
+  const h = state.patient.height, w = state.patient.weight;
+  const out = document.getElementById('bsaOut');
+  if(h && w && h>0 && w>0){
+    state.patient.bsa = Math.sqrt((h*w)/3600);
+    out.textContent = state.patient.bsa.toFixed(2)+' m²';
+  } else {
+    state.patient.bsa = null;
+    out.textContent = '—';
+  }
+  refreshAllParams();
+}
+
+/* ============================================================
+   4. RESUMEN
+   ============================================================ */
+function refreshSummary(){
+  let total=0, ok=0, bad=0;
+  const badChips = [];
+
+  FLAT_PARAMS.forEach(p=>{
+    const v = state.values[p.id];
+    if(v==null || isNaN(v)) return;
+    total++;
+    const st = evalRange(v, p.range[state.patient.sex]);
+    if(st==='ok') ok++; else if(st==='bad'){ bad++; badChips.push(p.label); }
+    if(p.rangeIdx && state.patient.bsa){
+      const idxVal = v/state.patient.bsa;
+      const stI = evalRange(idxVal, p.rangeIdx[state.patient.sex]);
+      total++;
+      if(stI==='ok') ok++; else if(stI==='bad'){ bad++; badChips.push(p.label+' (indexado)'); }
+    }
+  });
+  STRAIN_PARAMS.forEach(p=>{
+    const v = state.values[p.id];
+    if(v==null || isNaN(v)) return;
+    total++;
+    const st = evalRange(v, p.range[state.patient.sex]);
+    if(st==='ok') ok++; else if(st==='bad'){ bad++; badChips.push(p.label); }
+  });
+  SEGMENTS16.forEach(s=>{
+    const v = state.values['seg'+s.id];
+    if(v==null || isNaN(v)) return;
+    total++;
+    const st = evalRange(v, s[state.patient.sex]);
+    if(st==='ok') ok++; else if(st==='bad'){ bad++; badChips.push('Segmento '+s.id+' ('+s.level.toLowerCase()+' '+s.name.toLowerCase()+')'); }
+  });
+
+  // tissue
+  ['t1','ecv','t2'].forEach(key=>{
+    const v = state.values['tis_'+key];
+    if(v==null || isNaN(v)) return;
+    const opt = TISSUE[key].options.find(o=>o.key===state.tissueProtocol[key]);
+    total++;
+    const st = evalRange(v, opt.range);
+    if(st==='ok') ok++; else if(st==='bad'){ bad++; badChips.push(TISSUE[key].label); }
+  });
+  const t2star = state.values['tis_t2star'];
+  if(t2star!=null && !isNaN(t2star)){
+    total++;
+    const tier = classifyT2Star(state.patient.scanner, t2star);
+    if(tier.cls==='ok') ok++; else { bad++; badChips.push('T2* ('+tier.label+')'); }
+  }
+  const perf = PERFUSION_PROTOCOLS[state.perfusionProtocol];
+  ['rest','stress','reserve'].forEach(k=>{
+    const v = state.values['perf_'+k];
+    if(v==null || isNaN(v)) return;
+    total++;
+    const st = evalRange(v, perf[k][state.patient.sex]);
+    if(st==='ok') ok++; else if(st==='bad'){ bad++; badChips.push('Perfusión — '+k); }
+  });
+  const trig = state.values['tis_trig'];
+  if(trig!=null && !isNaN(trig)){
+    total++;
+    const st = evalRange(trig, TRIGLYCERIDE_RANGE[state.patient.scanner] || TRIGLYCERIDE_RANGE['1.5T']);
+    if(st==='ok') ok++; else { bad++; badChips.push('Triglicéridos miocárdicos'); }
+  }
+
+  // valve calc
+  let valveBad = [];
+  VALVE_LESIONS.forEach(lesion=>{
+    const vals = state.valveValues[lesion.id];
+    if(!vals) return;
+    const anyVal = lesion.fields.some(f=>vals[f.id]!=null && !isNaN(vals[f.id]));
+    if(!anyVal) return;
+    const sev = lesion.classify(vals) || 'normal';
+    if(sev!=='normal') valveBad.push(lesion.name+' — '+SEV_LABEL[sev]);
+  });
+
+  const bar = document.getElementById('summaryBar');
+  if(total===0 && valveBad.length===0){
+    bar.innerHTML = '<span class="summary-empty">Aún no se han capturado medidas. Ingresa los valores en las secciones de abajo — el estado (normal / fuera de rango) se calcula automáticamente.</span>';
+    updateSectionCounts();
+    return;
+  }
+  let chipsHTML = badChips.concat(valveBad).map(c=>'<span class="chip">'+c+'</span>').join('');
+  bar.innerHTML =
+    '<div class="stat"><b>'+total+'</b><span>Medidas capturadas</span></div>'
+    +'<div class="stat ok"><b>'+ok+'</b><span>Normales</span></div>'
+    +'<div class="stat bad"><b>'+(bad+valveBad.length)+'</b><span>Fuera de rango</span></div>'
+    +'<div class="chips">'+(chipsHTML || '<span class="summary-empty">Sin hallazgos fuera de rango</span>')+'</div>';
+
+  updateSectionCounts();
+}
+
+function updateSectionCounts(){
+  SECTIONS.forEach(sec=>{
+    let secTotal=0, secBad=0;
+    sec.groups.forEach(g=>g.params.forEach(p=>{
+      const v = state.values[p.id];
+      if(v==null || isNaN(v)) return;
+      secTotal++;
+      if(evalRange(v,p.range[state.patient.sex])==='bad') secBad++;
+      if(p.rangeIdx && state.patient.bsa){
+        const idxVal=v/state.patient.bsa; secTotal++;
+        if(evalRange(idxVal,p.rangeIdx[state.patient.sex])==='bad') secBad++;
+      }
+    }));
+    if(sec.id==='vi'){
+      SEGMENTS16.forEach(s=>{ const v=state.values['seg'+s.id]; if(v==null||isNaN(v))return; secTotal++; if(evalRange(v,s[state.patient.sex])==='bad') secBad++; });
+    }
+    if(sec.id==='valv'){
+      VALVE_LESIONS.forEach(lesion=>{
+        const vals = state.valveValues[lesion.id]; if(!vals) return;
+        const anyVal = lesion.fields.some(f=>vals[f.id]!=null && !isNaN(vals[f.id])); if(!anyVal) return;
+        secTotal++; if((lesion.classify(vals)||'normal')!=='normal') secBad++;
+      });
+    }
+    const el = document.querySelector('[data-seccount="'+sec.id+'"]');
+    if(el){
+      el.textContent = secTotal===0 ? 'sin datos' : secTotal+' capturados'+(secBad?' · '+secBad+' fuera de rango':'');
+      el.className = 'sec-count'+(secBad>0?' has-bad':secTotal>0?' has-ok':'');
+    }
+  });
+  // tejido
+  let tTotal=0, tBad=0;
+  ['t1','ecv','t2'].forEach(key=>{
+    const v=state.values['tis_'+key]; if(v==null||isNaN(v)) return;
+    tTotal++;
+    const opt = TISSUE[key].options.find(o=>o.key===state.tissueProtocol[key]);
+    if(evalRange(v,opt.range)==='bad') tBad++;
+  });
+  STRAIN_PARAMS.forEach(p=>{ const v=state.values[p.id]; if(v==null||isNaN(v))return; tTotal++; if(evalRange(v,p.range[state.patient.sex])==='bad') tBad++; });
+  const t2star = state.values['tis_t2star'];
+  if(t2star!=null && !isNaN(t2star)){
+    tTotal++;
+    const tier = classifyT2Star(state.patient.scanner, t2star);
+    if(tier.cls!=='ok') tBad++;
+  }
+  const perf = PERFUSION_PROTOCOLS[state.perfusionProtocol];
+  ['rest','stress','reserve'].forEach(k=>{ const v=state.values['perf_'+k]; if(v==null||isNaN(v))return; tTotal++; if(evalRange(v,perf[k][state.patient.sex])==='bad') tBad++; });
+  const trig = state.values['tis_trig'];
+  if(trig!=null && !isNaN(trig)){ tTotal++; if(evalRange(trig, TRIGLYCERIDE_RANGE[state.patient.scanner]||TRIGLYCERIDE_RANGE['1.5T'])==='bad') tBad++; }
+  const tEl = document.querySelector('[data-seccount="tejido"]');
+  if(tEl){
+    tEl.textContent = tTotal===0? 'sin datos' : tTotal+' capturados'+(tBad?' · '+tBad+' fuera de rango':'');
+    tEl.className = 'sec-count'+(tBad>0?' has-bad':tTotal>0?' has-ok':'');
+  }
+}
+
+function refreshAll(){
+  updateBSA();
+  refreshAllParams();
+  SEGMENTS16.forEach(s=>refreshSegment(s.id));
+  updateValveResult();
+  refreshTissue();
+  refreshSummary();
+}
+
+/* ============================================================
+   5. TABS
+   ============================================================ */
+const tabCapture = document.getElementById('tabbtn-capture');
+const tabReport = document.getElementById('tabbtn-report');
+const viewCapture = document.getElementById('view-capture');
+const viewReport = document.getElementById('view-report');
+
+function showCapture(){
+  viewCapture.hidden=false; viewReport.hidden=true;
+  tabCapture.setAttribute('aria-selected','true'); tabReport.setAttribute('aria-selected','false');
+}
+function showReport(){
+  viewCapture.hidden=true; viewReport.hidden=false;
+  tabCapture.setAttribute('aria-selected','false'); tabReport.setAttribute('aria-selected','true');
+  renderReport();
+}
+tabCapture.addEventListener('click', showCapture);
+tabReport.addEventListener('click', showReport);
+document.getElementById('btnBackToCapture').addEventListener('click', showCapture);
+document.getElementById('btnPrint').addEventListener('click', ()=>window.print());
+
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  if(!confirm('¿Borrar todos los datos capturados de este paciente?')) return;
+  state.patient = {name:'', id:'', date:'', sex:'H', age:'', height:'', weight:'', bsa:null, scanner:'1.5T', indication:''};
+  state.values = {}; state.valveValues = {}; state.valveSelected='as';
+  state.tissueProtocol = {t1:'1.5T-molli', ecv:'1.5T-molli', t2:'1.5T-mefse'};
+  state.perfusionProtocol='a';
+  document.getElementById('p-name').value=''; document.getElementById('p-id').value='';
+  document.getElementById('p-date').value=''; document.getElementById('p-age').value='';
+  document.getElementById('p-height').value=''; document.getElementById('p-weight').value='';
+  document.getElementById('p-indication').value=''; document.getElementById('p-scanner').value='1.5T';
+  document.querySelectorAll('.sex-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.sex==='H'));
+  renderSections();
+});
+
+/* ============================================================
+   6. INFORME
+   ============================================================ */
+function renderReport(){
+  const p = state.patient;
+  const sheet = document.getElementById('reportSheet');
+  const today = new Date().toLocaleDateString('es-MX', {year:'numeric', month:'long', day:'numeric'});
+
+  let rows = []; // {section, label, value, unit, range, status}
+  FLAT_PARAMS.forEach(pm=>{
+    const v = state.values[pm.id];
+    if(v==null || isNaN(v)) return;
+    const range = pm.range[p.sex];
+    rows.push({section:pm.section, label:pm.label, value:fmt(v)+' '+pm.unit, range:rangeText(range)+' '+pm.unit, status:evalRange(v,range)});
+    if(pm.rangeIdx && p.bsa){
+      const idxVal = v/p.bsa;
+      const idxRange = pm.rangeIdx[p.sex];
+      rows.push({section:pm.section, label:pm.label+' (indexado a BSA)', value:fmt(idxVal)+' '+pm.idxUnit, range:rangeText(idxRange)+' '+pm.idxUnit, status:evalRange(idxVal,idxRange)});
+    }
+  });
+
+  // segmentos: solo listar si hay alguno capturado
+  const segRows = [];
+  SEGMENTS16.forEach(s=>{
+    const v = state.values['seg'+s.id];
+    if(v==null || isNaN(v)) return;
+    segRows.push({section:'Ventrículo izquierdo', label:'Segmento '+s.id+' — '+s.level+' '+s.name, value:fmt(v)+' mm', range:rangeText(s[p.sex])+' mm', status:evalRange(v,s[p.sex])});
+  });
+
+  // tejido
+  const tissueRows = [];
+  ['t1','ecv','t2'].forEach(key=>{
+    const v = state.values['tis_'+key];
+    if(v==null || isNaN(v)) return;
+    const opt = TISSUE[key].options.find(o=>o.key===state.tissueProtocol[key]);
+    tissueRows.push({label:TISSUE[key].label+' ('+opt.name+', '+opt.field+')', value:fmt(v)+' '+TISSUE[key].unit, range:rangeText(opt.range)+' '+TISSUE[key].unit, status:evalRange(v,opt.range)});
+  });
+  const t2star = state.values['tis_t2star'];
+  if(t2star!=null && !isNaN(t2star)){
+    const tier = classifyT2Star(p.scanner, t2star);
+    tissueRows.push({label:'T2* miocárdico ('+p.scanner+')', value:fmt(t2star)+' ms', range:tier.label, status: tier.cls==='ok'?'ok':'bad'});
+  }
+  STRAIN_PARAMS.forEach(sp=>{
+    const v = state.values[sp.id]; if(v==null||isNaN(v)) return;
+    const range = sp.range[p.sex];
+    tissueRows.push({label:sp.label, value:fmt(v)+' '+sp.unit, range:rangeText(range)+' '+sp.unit, status:evalRange(v,range)});
+  });
+  const perf = PERFUSION_PROTOCOLS[state.perfusionProtocol];
+  ['rest','stress','reserve'].forEach(k=>{
+    const v = state.values['perf_'+k]; if(v==null||isNaN(v)) return;
+    const label = k==='rest'?'Flujo miocárdico en reposo':k==='stress'?'Flujo miocárdico en estrés':'Reserva de perfusión';
+    const range = perf[k][p.sex];
+    tissueRows.push({label:label, value:fmt(v)+(k==='reserve'?'':' mL/min/g'), range:rangeText(range)+(k==='reserve'?'':' mL/min/g'), status:evalRange(v,range)});
+  });
+  const trig = state.values['tis_trig'];
+  if(trig!=null && !isNaN(trig)){
+    const range = TRIGLYCERIDE_RANGE[p.scanner] || TRIGLYCERIDE_RANGE['1.5T'];
+    tissueRows.push({label:'Triglicéridos miocárdicos', value:fmt(trig)+' %', range:rangeText(range)+' %', status:evalRange(trig,range)});
+  }
+
+  // válvulas — calculadora de severidad
+  const valveRows = [];
+  VALVE_LESIONS.forEach(lesion=>{
+    const vals = state.valveValues[lesion.id]; if(!vals) return;
+    const anyVal = lesion.fields.some(f=>vals[f.id]!=null && !isNaN(vals[f.id])); if(!anyVal) return;
+    const sev = lesion.classify(vals) || 'normal';
+    const detail = lesion.fields.filter(f=>vals[f.id]!=null && !isNaN(vals[f.id])).map(f=>f.label+': '+fmt(vals[f.id])+' '+f.unit).join(' · ');
+    valveRows.push({label:lesion.name, detail:detail, sev:sev});
+  });
+
+  const hasAnything = rows.length || segRows.length || tissueRows.length || valveRows.length;
+
+  function section(title, list){
+    if(!list.length) return '';
+    return '<div class="rep-section"><h3>'+title+'</h3><table class="rep-table"><thead><tr><th>Parámetro</th><th>Valor</th><th>Rango normal</th><th>Estado</th></tr></thead><tbody>'
+      + list.map(r=>'<tr class="'+(r.status==='bad'?'bad':'')+'"><td class="lbl">'+r.label+'</td><td>'+r.value+'</td><td>'+r.range+'</td><td><span class="status-pill">'+(r.status==='bad'?'Fuera de rango':r.status==='ok'?'Normal':'—')+'</span></td></tr>').join('')
+      + '</tbody></table></div>';
+  }
+
+  const bySection = {};
+  rows.concat(segRows).forEach(r=>{ (bySection[r.section] = bySection[r.section]||[]).push(r); });
+
+  let bodyHTML = '';
+  ['Ventrículo izquierdo','Ventrículo derecho','Aurícula izquierda','Aurícula derecha','Válvulas — anillos','Aorta torácica','Arterias pulmonares'].forEach(secName=>{
+    if(bySection[secName]) bodyHTML += section(secName, bySection[secName]);
+  });
+  bodyHTML += section('Caracterización tisular', tissueRows);
+
+  if(valveRows.length){
+    bodyHTML += '<div class="rep-section"><h3>Severidad valvular (criterios adaptados de ecocardiografía)</h3>'
+      + valveRows.map(v=>'<div style="display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-bottom:1px solid var(--border-soft); font-size:12.5px;">'
+        + '<div><b>'+v.label+'</b><div style="color:var(--muted); font-size:11.5px;">'+(v.detail||'—')+'</div></div>'
+        + '<span class="status-pill" style="'+(v.sev!=='normal'?'background:var(--bad-soft);color:var(--bad);border-color:var(--bad-border);':'')+'">'+SEV_LABEL[v.sev]+'</span></div>').join('')
+      + '</div>';
+  }
+
+  // conclusión automática
+  const abnormal = rows.concat(segRows).filter(r=>r.status==='bad')
+    .concat(tissueRows.filter(r=>r.status==='bad'))
+    .map(r=>r.label+' ('+r.value+'; normal '+r.range+')');
+  const abnormalValves = valveRows.filter(v=>v.sev!=='normal').map(v=>v.label+' — '+SEV_LABEL[v.sev]);
+  const allAbnormal = abnormal.concat(abnormalValves);
+
+  let conclusion;
+  if(!hasAnything){
+    conclusion = '<p>Aún no se han capturado medidas para este estudio.</p>';
+  } else if(allAbnormal.length===0){
+    conclusion = '<p>Todos los parámetros capturados se encuentran <b>dentro de rangos normales</b> según los valores de referencia SCMR 2025.</p>';
+  } else {
+    conclusion = '<p>Se identifican <b>'+allAbnormal.length+' parámetro(s) fuera de rango normal</b>:</p><ul>'
+      + allAbnormal.map(a=>'<li>'+a+'</li>').join('') + '</ul>';
+  }
+
+  sheet.innerHTML =
+    '<div class="report-head">'
+    + '<div class="mark"><svg width="34" height="34" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="13" stroke="var(--accent)" stroke-width="2"/><circle cx="15" cy="15" r="7.5" stroke="var(--accent)" stroke-width="2"/><line x1="15" y1="2" x2="15" y2="7.5" stroke="var(--accent)" stroke-width="2"/></svg>'
+    + '<div><h2>Informe de resonancia magnética cardiaca</h2><p>Comparación contra valores de referencia SCMR 2025</p></div></div>'
+    + '<div class="report-meta">Generado: <b>'+today+'</b><br>Equipo: <b>'+p.scanner+'</b></div>'
+    + '</div>'
+    + '<div class="pt-grid">'
+    + '<div><span>Paciente</span><b>'+(p.name||'—')+'</b></div>'
+    + '<div><span>Expediente</span><b>'+(p.id||'—')+'</b></div>'
+    + '<div><span>Fecha de estudio</span><b>'+(p.date||'—')+'</b></div>'
+    + '<div><span>Sexo</span><b>'+(p.sex==='H'?'Hombre':'Mujer')+'</b></div>'
+    + '<div><span>Edad</span><b>'+(p.age||'—')+(p.age?' años':'')+'</b></div>'
+    + '<div><span>Talla / Peso</span><b>'+(p.height||'—')+' cm / '+(p.weight||'—')+' kg</b></div>'
+    + '<div><span>BSA (Mosteller)</span><b>'+(p.bsa? p.bsa.toFixed(2)+' m²':'—')+'</b></div>'
+    + '<div><span>Indicación</span><b style="font-family:var(--sans); font-weight:600;">'+(p.indication||'—')+'</b></div>'
+    + '</div>'
+    + (hasAnything? bodyHTML : '<div class="report-empty">No hay datos capturados todavía. Vuelve a la pestaña de captura para ingresar las medidas del estudio.</div>')
+    + '<div class="rep-section"><h3>Conclusión</h3><div class="conclusion-box">'+conclusion+'</div></div>'
+    + '<div class="report-foot"><span>Cardiómetro RM · valores de referencia SCMR 2025</span><span>Herramienta de apoyo — no sustituye el juicio clínico</span></div>';
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderSections();
+})();
+</script>
