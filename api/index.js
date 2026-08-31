@@ -1,0 +1,2398 @@
+module.exports = (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+  res.status(200).send(`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<title>InfoEasyRad — Informes radiológicos por voz</title>
+<meta name="description" content="Dictás el estudio y el informe se redacta solo. Informes radiológicos estructurados por voz, listos en Word, con tu sello y tu firma. Plantillas US, TC, RM, RX y fluoroscopía basadas en RSNA/ACR."/>
+<link rel="canonical" href="https://infoeasyrad.com/"/>
+
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="InfoEasyRad"/>
+<meta property="og:title" content="InfoEasyRad — Informes radiológicos por voz"/>
+<meta property="og:description" content="Dictás el estudio y el informe se redacta solo. Informes radiológicos estructurados por voz, listos en Word, con tu sello y tu firma."/>
+<meta property="og:url" content="https://infoeasyrad.com/"/>
+<meta property="og:image" content="https://infoeasyrad.com/assets/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="es_MX"/>
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="InfoEasyRad — Informes radiológicos por voz"/>
+<meta name="twitter:description" content="Dictás el estudio y el informe se redacta solo. Listos en Word, con tu sello y tu firma."/>
+<meta name="twitter:image" content="https://infoeasyrad.com/assets/og-image.png"/>
+
+<meta name="theme-color" content="#0A7B5C"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" href="/assets/favicon.ico" sizes="any"/>
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="InfoEasyRad"/>
+<meta name="robots" content="index, follow"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+/* ── TOKENS ───────────────────────────────────────────────── */
+:root{
+  --green:#0A7B5C;
+  --green-light:#E8F5F0;
+  --green-mid:#C3E8DC;
+  --blue:#1A4FBA;
+  --blue-light:#EBF0FB;
+  --ink:#0D1117;
+  --ink-2:#3D4550;
+  --ink-3:#6B7280;
+  --ink-4:#9CA3AF;
+  --surface:#F4F6F9;
+  --card:#FFFFFF;
+  --border:#E5E9EF;
+  --border-focus:#0A7B5C;
+  --red:#DC2626;
+  --red-light:#FEF2F2;
+  --amber:#D97706;
+  --amber-light:#FFFBEB;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+  --radius:14px;
+  --radius-sm:9px;
+}
+
+/* ── BASE ─────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--surface);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:2rem 1rem;
+  padding-top:calc(env(safe-area-inset-top) + 1.4rem);
+  padding-left:max(1rem,env(safe-area-inset-left));
+  padding-right:max(1rem,env(safe-area-inset-right));
+  padding-bottom:max(2rem,env(safe-area-inset-bottom));
+  color:var(--ink);
+}
+.app{width:100%;max-width:640px}
+
+/* ── HEADER ───────────────────────────────────────────────── */
+.header{
+  display:flex;align-items:center;gap:13px;
+  margin-bottom:2rem;
+  padding:0 2px;
+}
+.logo{
+  width:42px;height:42px;flex-shrink:0;
+  background:linear-gradient(135deg,#0A7B5C 0%,#1A4FBA 100%);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:14px;font-weight:700;
+  letter-spacing:-0.3px;
+  box-shadow:0 2px 8px rgba(10,123,92,0.30);
+}
+.ttl{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-0.3px}
+.sub{font-size:12px;color:var(--ink-3);margin-top:2px;font-weight:400}
+.badge{
+  margin-left:auto;font-size:10px;font-weight:600;
+  background:var(--green-light);color:var(--green);
+  padding:3px 9px;border-radius:20px;letter-spacing:0.02em;
+}
+
+/* ── SECCIÓN LABELS ───────────────────────────────────────── */
+.slabel{
+  font-size:10.5px;color:var(--ink-3);font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;
+  margin-bottom:7px;padding-left:1px;
+}
+
+/* ── CARDS ────────────────────────────────────────────────── */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.15rem 1.3rem;
+  margin-bottom:1.1rem;
+  box-shadow:var(--shadow);
+}
+
+/* ── GRIDS ────────────────────────────────────────────────── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+label{font-size:11px;color:var(--ink-3);font-weight:600;display:block;margin-bottom:4px}
+
+/* ── INPUTS ───────────────────────────────────────────────── */
+input[type=text],input[type=password],input[type=date],input[type=email]{
+  width:100%;padding:9px 11px;font-size:13.5px;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  outline:none;font-family:inherit;color:var(--ink);
+  background:#fff;transition:border-color 0.15s;
+}
+input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123,92,0.08)}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1}
+
+/* ── BOTONES SECUNDARIOS ──────────────────────────────────── */
+.sbtn{
+  padding:9px 16px;font-size:13px;font-weight:500;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:#fff;cursor:pointer;color:var(--ink-2);
+  white-space:nowrap;font-family:inherit;transition:all 0.15s;
+}
+.sbtn:hover{background:var(--surface);border-color:var(--ink-4)}
+
+/* ── BOTÓN MIC INLINE ─────────────────────────────────────── */
+.mic-inline{
+  padding:10px 14px;font-size:13px;font-weight:500;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:#fff;cursor:pointer;color:var(--ink-2);
+  font-family:inherit;margin-top:10px;width:100%;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all 0.15s;
+}
+.mic-inline:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.mic-inline.rec{background:var(--red-light);border-color:var(--red);color:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.2)}50%{box-shadow:0 0 0 6px rgba(220,38,38,0)}}
+
+/* ── STATUS ROW ───────────────────────────────────────────── */
+.srow{display:flex;align-items:center;gap:7px;margin-top:9px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0}
+.dot.ok{background:var(--green)}
+.dot.err{background:var(--red)}
+.stext{font-size:12px;color:var(--ink-3)}
+
+/* ── TABS ─────────────────────────────────────────────────── */
+.tabs{display:flex;gap:5px;margin-bottom:16px;background:var(--surface);border-radius:10px;padding:4px}
+.tab{
+  flex:1;padding:7px 12px;font-size:13px;font-weight:500;
+  border:none;border-radius:7px;cursor:pointer;
+  background:transparent;color:var(--ink-3);font-family:inherit;
+  transition:all 0.15s;
+}
+.tab.active{background:#fff;color:var(--green);font-weight:600;box-shadow:var(--shadow)}
+
+/* ── GRABACIÓN ────────────────────────────────────────────── */
+.reca{display:flex;flex-direction:column;align-items:center;gap:14px;padding:1.25rem 0}
+.rtime{font-size:24px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.rbtn{
+  width:68px;height:68px;border-radius:50%;
+  border:2px solid var(--border);background:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+  transition:all 0.15s;box-shadow:var(--shadow);
+}
+.rbtn:hover{border-color:var(--green);box-shadow:0 0 0 4px rgba(10,123,92,0.10)}
+.rbtn.rec{border-color:var(--red);background:var(--red-light);animation:pulse 1.2s infinite}
+.rstat{font-size:12.5px;color:var(--ink-3);text-align:center}
+
+/* ── DROPZONE ─────────────────────────────────────────────── */
+.dropzone{
+  border:2px dashed var(--border);border-radius:var(--radius-sm);
+  padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.15s;
+}
+.dropzone:hover,.dropzone.over{background:var(--green-light);border-color:var(--green)}
+.dropzone .icon{font-size:30px;margin-bottom:8px}
+.dropzone p{font-size:13px;color:var(--ink-3)}
+.dropzone small{font-size:11px;color:var(--ink-4)}
+.finfo{margin-top:8px;font-size:12px;color:var(--ink-2);display:none;align-items:center;gap:6px}
+.finfo.show{display:flex}
+.finfo .chk{color:var(--green)}
+
+/* ── BOTÓN GENERAR ────────────────────────────────────────── */
+.gbtn{
+  width:100%;padding:13px;font-size:14.5px;font-weight:600;
+  background:linear-gradient(135deg,var(--green) 0%,#0D9B73 100%);
+  color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:12px;font-family:inherit;
+  transition:opacity 0.15s;
+  box-shadow:0 2px 8px rgba(10,123,92,0.25);
+}
+.gbtn:hover{opacity:0.92}
+.gbtn:disabled{opacity:0.38;cursor:not-allowed;box-shadow:none}
+
+/* ── TEXTAREA ─────────────────────────────────────────────── */
+textarea{
+  width:100%;font-size:13px;line-height:1.65;
+  padding:10px 12px;border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);resize:vertical;
+  color:var(--ink);background:#fff;font-family:inherit;outline:none;
+  transition:border-color 0.15s;
+}
+textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123,92,0.08)}
+
+/* ── ALERTS ───────────────────────────────────────────────── */
+.alert{font-size:12.5px;padding:9px 13px;border-radius:var(--radius-sm);margin-top:9px;display:none;line-height:1.5}
+.alert.show{display:block}
+.alert.warn{background:var(--amber-light);color:#92610a;border:1px solid #FDE68A}
+.alert.ok{background:var(--green-light);color:#065F46;border:1px solid var(--green-mid)}
+.alert.err{background:var(--red-light);color:#991B1B;border:1px solid #FECACA}
+
+/* ── OUTPUT ───────────────────────────────────────────────── */
+.rout{display:none}.rout.show{display:block}
+.report-edit{
+  width:100%;min-height:320px;font-size:13px;line-height:2;
+  padding:1.5rem;border:1.5px solid var(--border);
+  border-radius:var(--radius);color:var(--ink);background:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  outline:none;resize:vertical;
+}
+.report-edit:focus{border-color:var(--border-focus)}
+.edit-hint{font-size:11px;color:var(--ink-4);margin-top:5px;text-align:right}
+.sello-preview{
+  display:flex;align-items:center;gap:12px;margin-top:12px;
+  padding:12px;background:var(--surface);
+  border-radius:var(--radius-sm);border:1px solid var(--border);
+}
+.sello-preview img{height:52px;opacity:0.85}
+.sello-preview span{font-size:11px;color:var(--ink-3);line-height:1.7}
+
+/* ── BOTONES DE ACCIÓN ────────────────────────────────────── */
+.arow{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.abtn{
+  flex:1;min-width:70px;padding:9px 4px;font-size:11.5px;font-weight:500;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:#fff;cursor:pointer;color:var(--ink-2);
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  font-family:inherit;transition:all 0.15s;
+}
+.abtn:hover{background:var(--surface);border-color:var(--ink-4)}
+.abtn.pri{background:var(--green);color:#fff;border-color:var(--green)}
+.abtn.pri:hover{opacity:0.9}
+.abtn.sec{background:var(--blue);color:#fff;border-color:var(--blue)}
+.abtn.sec:hover{opacity:0.9}
+.abtn.word{background:#2B579A;color:#fff;border-color:#2B579A}
+.abtn.word:hover{opacity:0.9}
+
+/* ── SPINNER ──────────────────────────────────────────────── */
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.hidden{display:none}
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+.footer{text-align:center;font-size:11px;color:var(--ink-4);margin-top:2rem;padding-bottom:2rem}
+
+/* ── TIP ──────────────────────────────────────────────────── */
+.tip{font-size:11.5px;color:var(--ink-4);margin-top:7px;font-style:italic;line-height:1.5}
+
+/* ── MODALIDADES ──────────────────────────────────────────── */
+.modgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modbtn{
+  padding:11px 8px;font-size:13px;font-weight:500;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:#fff;cursor:pointer;color:var(--ink-2);
+  font-family:inherit;text-align:center;transition:all 0.15s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  box-shadow:var(--shadow);
+}
+.modbtn:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.modbtn.active{
+  background:linear-gradient(135deg,var(--green) 0%,#0D9B73 100%);
+  color:#fff;border-color:var(--green);font-weight:600;
+  box-shadow:0 2px 8px rgba(10,123,92,0.25);
+}
+.modicon{font-size:16px;line-height:1}
+
+/* ── HISTORIAL ────────────────────────────────────────────── */
+.hist-btn{
+  padding:7px 13px;font-size:12px;font-weight:500;
+  border:1.5px solid var(--border);border-radius:20px;
+  background:#fff;cursor:pointer;color:var(--ink-3);
+  font-family:inherit;display:flex;align-items:center;gap:5px;
+  white-space:nowrap;transition:all 0.15s;box-shadow:var(--shadow);
+}
+.hist-btn:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.hist-overlay{display:none;position:fixed;inset:0;background:rgba(13,17,23,0.5);z-index:100;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(2px)}
+.hist-overlay.open{display:flex}
+.hist-panel{background:#fff;border-radius:18px;width:100%;max-width:640px;padding:1.5rem;position:relative;margin:auto;box-shadow:var(--shadow-md)}
+.hist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.hist-head h2{font-size:16px;font-weight:700;color:var(--ink)}
+.hist-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-4);line-height:1;padding:4px 6px;border-radius:6px}
+.hist-close:hover{background:var(--surface);color:var(--ink)}
+.hist-empty{text-align:center;padding:2rem 0;color:var(--ink-4);font-size:13px}
+.hist-list{display:flex;flex-direction:column;gap:8px}
+.hist-item{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;cursor:pointer;transition:all 0.15s}
+.hist-item:hover{border-color:var(--green);background:var(--green-light)}
+.hist-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.hist-item-name{font-size:13px;font-weight:600;color:var(--ink)}
+.hist-item-mod{font-size:11px;background:var(--green-light);color:var(--green);padding:2px 9px;border-radius:20px;font-weight:500}
+.hist-item-meta{font-size:11px;color:var(--ink-4)}
+.hist-item-preview{font-size:11px;color:var(--ink-3);margin-top:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5}
+.hist-del{background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:0 4px;line-height:1;flex-shrink:0}
+.hist-del:hover{color:var(--red)}
+.hist-actions{display:flex;gap:8px;margin-top:1rem;justify-content:flex-end}
+.hist-clear{font-size:12px;color:var(--ink-4);background:none;border:none;cursor:pointer;padding:6px 10px;border-radius:6px}
+.hist-clear:hover{color:var(--red);background:var(--red-light)}
+
+/* ── PLANES ───────────────────────────────────────────────── */
+.plan-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-right:6px}
+.plan-trial{background:var(--blue-light);color:var(--blue)}
+.plan-gratis{background:var(--surface);color:var(--ink-3);border:1px solid var(--border)}
+.plan-starter{background:var(--green-light);color:var(--green)}
+.plan-pro{background:var(--amber-light);color:var(--amber)}
+.plan-ilimitado{background:#F5F0FF;color:#6D28D9}
+.plan-counter{color:var(--ink-3);font-size:11.5px}
+/* Selector de subtipo US */
+.subtipo-panel{display:none;margin-top:10px;padding:10px;background:var(--surface);border-radius:10px;border:1px solid var(--border)}
+.subtipo-panel.show{display:block}
+.subtipo-label{font-size:10.5px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.subtipo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.subtipo-btn{padding:8px 6px;font-size:12px;font-weight:500;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;color:var(--ink-2);font-family:inherit;text-align:center;transition:all 0.15s}
+.subtipo-btn:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.subtipo-btn.active{background:var(--green);color:#fff;border-color:var(--green);font-weight:600}
+@media(max-width:480px){.subtipo-grid{grid-template-columns:1fr 1fr}}
+
+/* ── PANTALLA AUTH ─────────────────────────────────────────── */
+.auth-screen{
+  position:fixed;inset:0;background:var(--surface);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  z-index:200;padding:1.5rem;
+  padding-top:calc(env(safe-area-inset-top) + 1.5rem);
+}
+.auth-box{
+  width:100%;max-width:400px;
+  background:var(--card);border-radius:20px;
+  padding:2rem 1.75rem;
+  box-shadow:var(--shadow-md);
+  border:1px solid var(--border);
+}
+.auth-logo{
+  width:52px;height:52px;margin:0 auto 1.25rem;
+  background:linear-gradient(135deg,#0A7B5C 0%,#1A4FBA 100%);
+  border-radius:15px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;font-weight:700;letter-spacing:-0.3px;
+  box-shadow:0 4px 14px rgba(10,123,92,0.30);
+}
+.auth-title{font-size:22px;font-weight:700;color:var(--ink);text-align:center;letter-spacing:-0.4px;margin-bottom:4px}
+.auth-sub{font-size:13px;color:var(--ink-3);text-align:center;margin-bottom:1.75rem;line-height:1.5}
+.auth-tabs{display:flex;background:var(--surface);border-radius:10px;padding:3px;gap:3px;margin-bottom:1.5rem}
+.auth-tab{
+  flex:1;padding:8px;font-size:13px;font-weight:500;
+  border:none;border-radius:8px;cursor:pointer;
+  background:transparent;color:var(--ink-3);font-family:inherit;
+  transition:all 0.15s;
+}
+.auth-tab.active{background:#fff;color:var(--green);font-weight:600;box-shadow:var(--shadow)}
+.auth-field{margin-bottom:14px}
+.auth-field label{font-size:11.5px;font-weight:600;color:var(--ink-3);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.05em}
+.auth-field input{
+  width:100%;padding:11px 13px;font-size:14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  outline:none;font-family:inherit;color:var(--ink);background:#fff;
+  transition:border-color 0.15s;
+}
+.auth-field input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123,92,0.08)}
+.auth-btn{
+  width:100%;padding:13px;font-size:14.5px;font-weight:600;
+  background:linear-gradient(135deg,var(--green) 0%,#0D9B73 100%);
+  color:#fff;border:none;border-radius:10px;cursor:pointer;
+  font-family:inherit;margin-top:6px;
+  box-shadow:0 2px 8px rgba(10,123,92,0.25);
+  transition:opacity 0.15s;
+}
+.auth-btn:hover{opacity:0.92}
+.auth-btn:disabled{opacity:0.4;cursor:not-allowed}
+.auth-alert{font-size:12.5px;padding:10px 13px;border-radius:9px;margin-top:12px;display:none;line-height:1.5}
+.auth-alert.show{display:block}
+.auth-alert.ok{background:var(--green-light);color:#065F46;border:1px solid var(--green-mid)}
+.auth-alert.err{background:var(--red-light);color:#991B1B;border:1px solid #FECACA}
+.auth-alert.warn{background:var(--amber-light);color:#92610a;border:1px solid #FDE68A}
+.auth-forgot{font-size:12px;color:var(--ink-3);text-align:center;margin-top:14px}
+.auth-forgot a{color:var(--green);cursor:pointer;text-decoration:none;font-weight:500}
+.auth-forgot a:hover{text-decoration:underline}
+
+/* ── PANTALLA PRECIOS ─────────────────────────────────────── */
+.pricing-overlay{display:none;position:fixed;inset:0;background:rgba(13,17,23,0.55);z-index:150;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto;backdrop-filter:blur(3px)}
+.pricing-overlay.open{display:flex}
+.pricing-box{background:var(--card);border-radius:20px;width:100%;max-width:700px;padding:2rem 1.75rem;margin:auto;box-shadow:var(--shadow-md);border:1px solid var(--border)}
+.pricing-head{text-align:center;margin-bottom:1.75rem}
+.pricing-head h2{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-0.4px;margin-bottom:6px}
+.pricing-head p{font-size:13.5px;color:var(--ink-3);line-height:1.5}
+.pricing-toggle{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:1.75rem}
+.pricing-toggle span{font-size:13px;color:var(--ink-3);font-weight:500}
+.toggle-switch{width:44px;height:24px;background:var(--border);border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;border:none;padding:0}
+.toggle-switch.on{background:var(--green)}
+.toggle-knob{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle-switch.on .toggle-knob{left:23px}
+.badge-ahorro{background:var(--green-light);color:var(--green);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.plan-card{border:1.5px solid var(--border);border-radius:14px;padding:1.25rem 1.1rem;position:relative;transition:all 0.15s;background:#fff}
+.plan-card:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(10,123,92,0.10)}
+.plan-card.popular{border-color:var(--green);box-shadow:0 4px 16px rgba(10,123,92,0.12)}
+.plan-popular-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green),#0D9B73);color:#fff;font-size:10.5px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:13px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.plan-price{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-1px;line-height:1}
+.plan-price sup{font-size:15px;font-weight:600;vertical-align:top;margin-top:5px;margin-right:1px}
+.plan-price-period{font-size:12px;color:var(--ink-4);margin-top:4px;margin-bottom:12px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem}
+.plan-features li{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+.plan-features li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.plan-btn{width:100%;padding:10px;font-size:13px;font-weight:600;border:none;border-radius:9px;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.plan-btn-outline{background:#fff;border:1.5px solid var(--border);color:var(--ink-2)}
+.plan-btn-outline:hover{border-color:var(--green);color:var(--green)}
+.plan-btn-fill{background:linear-gradient(135deg,var(--green),#0D9B73);color:#fff;box-shadow:0 2px 8px rgba(10,123,92,0.25)}
+.plan-btn-fill:hover{opacity:0.92}
+.plan-btn:disabled{opacity:0.4;cursor:not-allowed}
+.pricing-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-4);padding:4px 6px;border-radius:6px}
+.pricing-close:hover{background:var(--surface);color:var(--ink)}
+.pricing-footer{text-align:center;font-size:12px;color:var(--ink-4);margin-top:0.5rem}
+.plan-actual-badge{display:inline-block;background:var(--green-light);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle}
+/* Botón ver planes en la card de cuenta */
+.upgrade-btn{font-size:12px;background:linear-gradient(135deg,var(--green),#0D9B73);color:#fff;border:none;cursor:pointer;padding:6px 13px;border-radius:8px;font-family:inherit;font-weight:500;white-space:nowrap;box-shadow:0 2px 6px rgba(10,123,92,0.20)}
+.upgrade-btn:hover{opacity:0.9}
+
+/* ── MOBILE ───────────────────────────────────────────────── */
+@media (max-width:480px){
+  body{padding:0.75rem 0.75rem;padding-top:max(0.75rem,env(safe-area-inset-top));padding-bottom:max(1rem,env(safe-area-inset-bottom))}
+  .app{max-width:100%}
+  .header{gap:10px;margin-bottom:1.25rem}
+  .ttl{font-size:17px}
+  .sub{font-size:11px}
+  .badge{font-size:10px;padding:2px 7px}
+  .hist-btn{font-size:11px;padding:6px 10px}
+  .card{padding:1rem 1rem;margin-bottom:0.9rem;border-radius:12px}
+  .slabel{font-size:10px;margin-bottom:5px}
+  .grid2{gap:7px}.grid3{grid-template-columns:1fr 1fr;gap:7px}
+  input[type=text],input[type=password],input[type=date],input[type=email]{padding:11px 11px;font-size:15px}
+  .sbtn{padding:11px 13px;font-size:13px}
+  .mic-inline{padding:13px;font-size:14px;margin-top:10px;min-height:48px}
+  .tabs{gap:3px;padding:3px}
+  .tab{padding:8px 10px;font-size:12px}
+  .rbtn{width:72px;height:72px;font-size:32px}
+  .rtime{font-size:26px}
+  .rstat{font-size:12px}
+  .dropzone{padding:1rem}
+  .dropzone .icon{font-size:26px;margin-bottom:6px}
+  .dropzone p{font-size:12px}
+  .gbtn{padding:14px;font-size:15px;margin-top:12px}
+  textarea{font-size:14px;padding:10px}
+  .arow{gap:6px}
+  .abtn{min-width:calc(33% - 6px);flex:1 1 calc(33% - 6px);padding:10px 4px;font-size:11px}
+  .report-edit{font-size:14px;line-height:1.85;padding:1rem;min-height:250px}
+  .sello-preview{gap:8px;padding:10px}
+  .sello-preview img{height:44px}
+  .sello-preview span{font-size:10px}
+  .hist-overlay{padding:0;align-items:flex-end}
+  .hist-panel{border-radius:18px 18px 0 0;max-height:90vh;overflow-y:auto;padding:1.25rem 1rem}
+  .hist-head h2{font-size:15px}
+  .modbtn{padding:11px 6px;font-size:12px}
+  .modicon{font-size:15px}
+  .footer{font-size:10px;margin-top:1rem}
+}
+@media (max-width:360px){
+  .grid3{grid-template-columns:1fr 1fr}
+  .abtn{font-size:10px;padding:9px 2px}
+  .header{gap:7px}
+}
+
+/* ===== Landing (solo visible sin sesión) ===== */
+.lp{width:100%;max-width:560px;margin:0 auto}
+.lp-hero{text-align:center;padding:2.2rem 0 1.6rem}
+.lp-eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0f6e56;background:rgba(15,110,86,.08);border:1px solid rgba(15,110,86,.25);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+.lp-h1{font-size:clamp(26px,6vw,36px);font-weight:800;letter-spacing:-.02em;line-height:1.12;color:#0d1b16}
+.lp-h1 em{font-style:normal;color:#0f6e56}
+.lp-sub{font-size:15px;color:#5b6b64;margin:12px auto 18px;max-width:420px;line-height:1.55}
+.lp-cta{display:inline-block;background:linear-gradient(135deg,#0f6e56,#1d8a6e);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:12px;padding:13px 30px;cursor:pointer;box-shadow:0 6px 18px rgba(15,110,86,.28)}
+.lp-cta:active{transform:translateY(1px)}
+.lp-cta-note{display:block;font-size:12px;color:#8aa39a;margin-top:8px}
+.lp-demo{background:#fff;border:1px solid #e3eae6;border-radius:16px;box-shadow:0 10px 30px rgba(13,27,22,.07);overflow:hidden;margin:1.6rem 0 0;text-align:left}
+.lp-demo-voz{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px dashed #e3eae6;background:#f7faf9}
+.lp-demo-voz .mic{font-size:16px}
+.lp-wave{display:flex;align-items:center;gap:3px;height:18px}
+.lp-wave span{width:3px;border-radius:2px;background:#0f6e56;height:6px;animation:lpwave 1.1s ease-in-out infinite}
+.lp-wave span:nth-child(2){animation-delay:.1s}.lp-wave span:nth-child(3){animation-delay:.2s}
+.lp-wave span:nth-child(4){animation-delay:.3s}.lp-wave span:nth-child(5){animation-delay:.4s}
+.lp-wave span:nth-child(6){animation-delay:.5s}.lp-wave span:nth-child(7){animation-delay:.6s}
+@keyframes lpwave{0%,100%{height:5px}50%{height:16px}}
+.lp-demo-voz .vtxt{font-size:12px;color:#5b6b64}
+.lp-informe{font-family:Georgia,'Times New Roman',serif;padding:16px 20px 18px;font-size:13px;line-height:1.65;color:#22312b}
+.lp-informe .tit{font-weight:700;color:#1D5C3A}
+.lp-informe p{opacity:0;transform:translateY(4px);animation:lpline .5s ease forwards;margin:0 0 6px}
+.lp-informe p:nth-child(1){animation-delay:.4s}.lp-informe p:nth-child(2){animation-delay:1.1s}
+.lp-informe p:nth-child(3){animation-delay:1.8s}.lp-informe p:nth-child(4){animation-delay:2.5s}
+.lp-informe p:nth-child(5){animation-delay:3.2s}
+@keyframes lpline{to{opacity:1;transform:none}}
+.lp-informe .sello-mini{color:#1D5C3A;font-weight:700}
+.lp-feats{display:grid;grid-template-columns:1fr;gap:12px;margin:1rem 0 2rem}
+.lp-feat{background:#fff;border:1px solid #e3eae6;border-radius:14px;padding:16px 18px}
+.lp-feat .fi{font-size:20px}
+.lp-feat h3{font-size:14px;font-weight:700;color:#0d1b16;margin:6px 0 4px}
+.lp-feat p{font-size:13px;color:#5b6b64;line-height:1.5;margin:0}
+.lp-precios{margin:0 0 2rem}
+.lp-precios h2,.lp-feats-wrap h2{font-size:18px;font-weight:800;color:#0d1b16;text-align:center;margin:1.6rem 0 4px}
+.lp-precios .psub{font-size:12.5px;color:#8aa39a;text-align:center;margin-bottom:14px}
+.lp-pgrid{display:grid;grid-template-columns:1fr;gap:10px}
+.lp-plan{background:#fff;border:1px solid #e3eae6;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lp-plan.destacado{border-color:#0f6e56;box-shadow:0 6px 18px rgba(15,110,86,.12)}
+.lp-plan .pn{font-size:14px;font-weight:700;color:#0d1b16}
+.lp-plan .pd{font-size:12px;color:#5b6b64}
+.lp-plan .pp{font-size:18px;font-weight:800;color:#0f6e56;white-space:nowrap}
+.lp-plan .pp small{font-size:11px;font-weight:600;color:#8aa39a}
+.lp-footer{text-align:center;font-size:11.5px;color:#8aa39a;padding:0 0 2.5rem}
+.lp-footer a{color:#0f6e56;text-decoration:none}
+@media(min-width:520px){.lp-feats{grid-template-columns:repeat(3,1fr)}}
+@media(prefers-reduced-motion:reduce){.lp-wave span,.lp-informe p{animation:none;opacity:1;transform:none}}
+
+/* ===== Hub de herramientas (tras iniciar sesión) ===== */
+.hub-wrap{width:100%;max-width:640px;margin:0 auto;text-align:center}
+.hub-head{margin-bottom:26px}
+.hub-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:560px){.hub-grid{grid-template-columns:1fr 1fr}}
+.hub-card{
+  all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:26px 20px 24px;transition:border-color .15s,transform .15s,box-shadow .15s;
+}
+.hub-card:hover,.hub-card:focus-visible{border-color:var(--green);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.hub-card:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.hub-ico{font-size:30px;margin-bottom:10px}
+.hub-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.hub-desc{font-size:13px;color:var(--ink-3);line-height:1.5}
+.hub-soon{opacity:.55;cursor:default}
+.hub-soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
+.hub-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-4);background:var(--surface);border-radius:999px;padding:3px 10px;margin-top:8px}
+.tool-back{all:unset;cursor:pointer;font-size:13px;color:var(--green);display:inline-flex;align-items:center;gap:5px;margin-bottom:10px}
+.tool-back:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<!-- ── MODAL PRECIOS ──────────────────────────────────────── -->
+<div class="pricing-overlay" id="pricingOverlay" onclick="closePricingIfOutside(event)">
+  <div class="pricing-box" style="position:relative">
+    <button class="pricing-close" onclick="closePricing()">✕</button>
+    <div class="pricing-head">
+      <h2>Elegí tu plan</h2>
+      <p>Comenzá con 30 días gratis · Sin tarjeta de crédito · Cancelá cuando quieras</p>
+    </div>
+    <!-- Toggle mensual/anual -->
+    <div class="pricing-toggle">
+      <span>Mensual</span>
+      <button class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+        <div class="toggle-knob"></div>
+      </button>
+      <span>Anual <span class="badge-ahorro">Ahorrá 20%</span></span>
+    </div>
+    <!-- Grid de planes -->
+    <div class="pricing-grid" id="pricingGrid">
+      <!-- Básico -->
+      <div class="plan-card">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price"><sup>$</sup><span id="precioBasico">19</span></div>
+        <div class="plan-price-period" id="periodoBasico">por mes</div>
+        <ul class="plan-features">
+          <li>60 informes por mes</li>
+          <li>Todas las modalidades</li>
+          <li>Descarga Word y TXT</li>
+          <li>Subida a Google Drive</li>
+          <li>Historial de informes</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" id="btnBasico" onclick="suscribirse('basico')">Elegir Básico</button>
+      </div>
+      <!-- Pro (popular) -->
+      <div class="plan-card popular">
+        <div class="plan-popular-badge">⭐ Más popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><sup>$</sup><span id="precioPro">39</span></div>
+        <div class="plan-price-period" id="periodoPro">por mes</div>
+        <ul class="plan-features">
+          <li>300 informes por mes</li>
+          <li>Todas las modalidades</li>
+          <li>Descarga Word y TXT</li>
+          <li>Subida a Google Drive</li>
+          <li>Historial de informes</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <button class="plan-btn plan-btn-fill" id="btnPro" onclick="suscribirse('pro')">Elegir Pro</button>
+      </div>
+      <!-- Clínica -->
+      <div class="plan-card">
+        <div class="plan-name">Clínica</div>
+        <div class="plan-price"><sup>$</sup><span id="precioClinica">79</span></div>
+        <div class="plan-price-period" id="periodoClinica">por mes</div>
+        <ul class="plan-features">
+          <li>Informes ilimitados</li>
+          <li>Todas las modalidades</li>
+          <li>Descarga Word y TXT</li>
+          <li>Subida a Google Drive</li>
+          <li>Historial de informes</li>
+          <li>Soporte prioritario</li>
+          <li>Ideal para clínicas</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" id="btnClinica" onclick="suscribirse('clinica')">Elegir Clínica</button>
+      </div>
+    </div>
+    <div class="pricing-footer">🔒 Pagos seguros con Stripe · Cancelás en cualquier momento</div>
+  </div>
+</div>
+
+<!-- ── PANTALLA DE AUTH ─────────────────────────────────── -->
+<div class="auth-screen" id="authScreen">
+  <div class="lp lp-hero">
+    <span class="lp-eyebrow">Para radiólogos</span>
+    <div class="lp-h1">Dictá el estudio.<br><em>El informe se redacta solo.</em></div>
+    <p class="lp-sub">Informes radiológicos estructurados en segundos, con tus plantillas, tu sello y tu firma. Listos en Word.</p>
+    <button class="lp-cta" onclick="lpGoRegistro()">Probá gratis 1 mes</button>
+    <span class="lp-cta-note">Sin tarjeta · Cancelás cuando quieras</span>
+    <div class="lp-demo" aria-hidden="true">
+      <div class="lp-demo-voz">
+        <span class="mic">🎙️</span>
+        <div class="lp-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <span class="vtxt">"...índice de calcio cero, coronarias sin lesiones..."</span>
+      </div>
+      <div class="lp-informe">
+        <p class="tit">Angiotomografía de arterias coronarias</p>
+        <p><strong>Hallazgos:</strong> índice de calcio de 0 UA. Arterias coronarias epicárdicas de origen y trayecto normal, sin lesiones.</p>
+        <p><strong>Conclusiones:</strong></p>
+        <p>1. Corresponde a categoría CAD-RADS 0 (ausencia de EAC).</p>
+        <p class="sello-mini">Dr(a). — sello y firma incluidos automáticamente</p>
+      </div>
+    </div>
+  </div>
+  <div class="auth-box" id="authBox">
+    <div class="auth-logo">IR</div>
+    <div class="auth-title">InfoEasyRad</div>
+    <div class="auth-sub">Sistema de informes radiológicos por voz</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Iniciar sesión</button>
+      <button class="auth-tab" id="tabReg" onclick="switchAuthTab('registro')">Registrarse</button>
+    </div>
+    <!-- LOGIN -->
+    <div id="formLogin">
+      <div class="auth-field">
+        <label>Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="username email"/>
+      </div>
+      <div class="auth-field">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" id="loginPass"/>
+      </div>
+      <button class="auth-btn" id="loginSubmitBtn" onclick="doAuthLogin()">Iniciar sesión</button>
+      <div class="auth-alert" id="loginAlert"></div>
+      <div class="auth-forgot"><a onclick="doForgotPassword()">¿Olvidaste tu contraseña?</a></div>
+    </div>
+    <!-- REGISTRO -->
+    <div id="formReg" style="display:none">
+      <div class="auth-field">
+        <label>Nombre completo</label>
+        <input type="text" id="regNombre" placeholder="Dr. Juan Pérez" autocomplete="name"/>
+      </div>
+      <div class="auth-field">
+        <label>Correo electrónico</label>
+        <input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label>Contraseña</label>
+        <input type="password" id="regPass" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/>
+      </div>
+      <div class="auth-field">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="regPass2" placeholder="Repetí tu contraseña" autocomplete="new-password"/>
+      </div>
+      <button class="auth-btn" id="regSubmitBtn" onclick="doAuthRegister()">Crear cuenta</button>
+      <div class="auth-alert" id="regAlert"></div>
+    </div>
+    <!-- Links legales -->
+    <div style="text-align:center;margin-top:1.25rem;padding-top:1rem;border-top:1px solid #e5e9ef">
+      <p style="font-size:11px;color:#9ca3af;line-height:1.7">
+        Al usar InfoEasyRad aceptás nuestros
+        <a href="/terms" target="_blank" style="color:#0A7B5C;text-decoration:none;font-weight:500">Términos y Condiciones</a>
+        y nuestra
+        <a href="/privacy" target="_blank" style="color:#0A7B5C;text-decoration:none;font-weight:500">Política de Privacidad</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="lp lp-feats-wrap">
+    <h2>Hecho para el flujo real de un radiólogo</h2>
+    <div class="lp-feats">
+      <div class="lp-feat"><span class="fi">🩻</span><h3>30 plantillas estructuradas</h3><p>US, TC, RM, RX y fluoroscopía — 6 subtipos por modalidad, basadas en guías RSNA/ACR.</p></div>
+      <div class="lp-feat"><span class="fi">✒️</span><h3>Tu informe, tu identidad</h3><p>Sello, firma, centro y protocolo configurables. El Word sale listo para entregar.</p></div>
+      <div class="lp-feat"><span class="fi">☁️</span><h3>Tu historial, en todas partes</h3><p>Historial en la nube y carpeta automática en tu Google Drive. Face ID en iPhone.</p></div>
+    </div>
+  </div>
+
+  <div class="lp lp-precios">
+    <h2>Planes simples</h2>
+    <p class="psub">Empezá con 1 mes gratis. Sin permanencia.</p>
+    <div class="lp-pgrid">
+      <div class="lp-plan"><div><div class="pn">Básico</div><div class="pd">60 informes al mes</div></div><div class="pp">$19<small>/mes</small></div></div>
+      <div class="lp-plan destacado"><div><div class="pn">Pro</div><div class="pd">300 informes al mes</div></div><div class="pp">$39<small>/mes</small></div></div>
+      <div class="lp-plan"><div><div class="pn">Clínica</div><div class="pd">Informes ilimitados</div></div><div class="pp">$79<small>/mes</small></div></div>
+    </div>
+    <div style="text-align:center;margin-top:14px"><button class="lp-cta" onclick="lpGoRegistro()">Crear cuenta gratis</button></div>
+  </div>
+
+  <div class="lp lp-footer">
+    <a href="/terms" target="_blank">Términos y Condiciones</a> · <a href="/privacy" target="_blank">Política de Privacidad</a><br>
+    © 2026 InfoEasyRad
+  </div>
+</div>
+
+<div class="auth-screen" id="hubScreen" style="display:none">
+  <div class="hub-wrap">
+    <div class="hub-head">
+      <div class="auth-logo" style="margin:0 auto 14px">IR</div>
+      <div class="auth-title">¿Qué querés hacer?</div>
+      <div class="auth-sub">Elegí una herramienta para continuar</div>
+    </div>
+    <div class="hub-grid">
+      <button type="button" class="hub-card" onclick="abrirInfoEasy()">
+        <span class="hub-ico">🎙️</span>
+        <span class="hub-name">InfoEasyRad</span>
+        <span class="hub-desc">Informá tus estudios fácilmente: dictás y el informe se redacta solo.</span>
+      </button>
+      <button type="button" class="hub-card" onclick="abrirTavi()">
+        <span class="hub-ico">🫀</span>
+        <span class="hub-name">Formulario TAVI</span>
+        <span class="hub-desc">Reporte estructurado de TC pre-TAVI, con mediciones y cálculos automáticos.</span>
+      </button>
+      <button type="button" class="hub-card" onclick="window.location.href='/cardiometro.html'">
+        <span class="hub-ico">🫀</span>
+        <span class="hub-name">Cardiómetro RM</span>
+        <span class="hub-desc">Resonancia magnética cardíaca. Captura de parámetros y cálculo automático de severidad valvular.</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="header">
+    <div class="logo">IR</div>
+    <div><div class="ttl">InfoEasyRad</div><div class="sub">Informes radiológicos por voz</div></div>
+    <span class="badge">v11</span>
+    <button class="hist-btn" onclick="openHistorial()">📋 Historial</button>
+    <button class="hist-btn" onclick="confirmLogout()" title="Cerrar sesión">⏻ Salir</button>
+    <button class="hist-btn" onclick="mostrarHub()" title="Cambiar de herramienta">🧰 Herramientas</button>
+  </div>
+
+<!-- Modal historial -->
+<div class="hist-overlay" id="histOverlay" onclick="closeHistorialIfOutside(event)">
+  <div class="hist-panel" id="histPanel">
+    <div class="hist-head">
+      <h2>📋 Historial de informes</h2>
+      <button class="hist-close" onclick="closeHistorial()">✕</button>
+    </div>
+    <div id="histContent"></div>
+    <div class="hist-actions">
+      <button class="hist-clear" onclick="clearAllHistorial()">🗑 Borrar todo</button>
+    </div>
+  </div>
+</div>
+
+  <div class="slabel">Modalidad de estudio</div>
+  <div class="card">
+    <div class="modgrid" id="modGrid">
+      <button class="modbtn" data-mod="CCTA" onclick="selectModalidad('CCTA')"><span class="modicon">🫀</span>CCTA</button>
+      <button class="modbtn" data-mod="Rayos X" onclick="selectModalidad('Rayos X')"><span class="modicon">🦴</span>Rayos X</button>
+      <button class="modbtn" data-mod="Ultrasonido" onclick="selectModalidad('Ultrasonido')"><span class="modicon">〜</span>Ultrasonido</button>
+      <button class="modbtn" data-mod="Tomografía computada" onclick="selectModalidad('Tomografía computada')"><span class="modicon">⊚</span>Tomografía computada</button>
+      <button class="modbtn" data-mod="Resonancia magnética" onclick="selectModalidad('Resonancia magnética')"><span class="modicon">🧠</span>Resonancia magnética</button>
+      <button class="modbtn" data-mod="Fluoroscopía" onclick="selectModalidad('Fluoroscopía')"><span class="modicon">📽️</span>Fluoroscopía</button>
+      <button class="modbtn" data-mod="Otro" onclick="selectModalidad('Otro')"><span class="modicon">📋</span>Otro</button>
+    </div>
+    <!-- Selector subtipo Ultrasonido -->
+    <div class="subtipo-panel" id="subtipoPanel">
+      <div class="subtipo-label" id="subtipoPanelLabel">Tipo de ultrasonido</div>
+      <div class="subtipo-grid" id="subtipoPanelGrid">
+        <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')" data-sub="Abdominal">🫁 Abdominal</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')" data-sub="Tiroideo">🦋 Tiroideo</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')" data-sub="Obstétrico">🤰 Obstétrico</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Renal')" data-sub="Renal">🫘 Renal</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')" data-sub="Pélvico">⭕ Pélvico</button>
+        <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')" data-sub="Partes blandas">💪 Partes blandas</button>
+      </div>
+    </div>
+    <div class="dropzone" id="dzRef" style="margin-top:10px"
+      onclick="document.getElementById('finputRef').click()"
+      ondragover="event.preventDefault();this.classList.add('over')"
+      ondragleave="this.classList.remove('over')"
+      ondrop="onDropRef(event)">
+      <div class="icon">📄</div>
+      <p>Arrastrá o hacé clic para subir una plantilla de referencia (opcional)</p>
+      <small>.docx · .txt</small>
+    </div>
+    <input type="file" id="finputRef" accept=".docx,.txt" style="display:none" onchange="onFileSelectRef(this)"/>
+    <div class="finfo" id="finfoRef"><span class="chk">✓</span><span id="fnameRef"></span></div>
+  </div>
+
+  <div class="slabel">Datos del paciente</div>
+  <div class="card">
+    <div class="grid2">
+      <div><label>Nombre completo</label><input type="text" id="pNombre" placeholder="Apellidos, Nombre"/></div>
+      <div><label>Edad</label><input type="text" id="pEdad" placeholder="Ej. 58 años"/></div>
+    </div>
+    <div class="grid3">
+      <div><label>N° expediente</label><input type="text" id="pExpediente" placeholder="000000"/></div>
+      <div><label>Localidad</label><input type="text" id="pLocalidad" placeholder="Ciudad"/></div>
+      <div><label>Fecha</label><input type="date" id="pFecha"/></div>
+    </div>
+    <button class="mic-inline" id="pacMicBtn" onclick="togglePacMic()">🎙 Dictar datos del paciente</button>
+    <div class="tip" id="pacTip" style="display:none">Podés decir: "Paciente Pérez García Juan, 58 años, expediente 123456, Tegucigalpa" · También funciona: "Juan Pérez, tiene 58 años, folio 123456, de San Pedro Sula"</div>
+    <div class="alert" id="pacAlert"></div>
+  </div>
+
+  <div class="slabel">Cuenta</div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="flex:1;min-width:0">
+        <div class="srow" style="margin-top:0">
+          <span class="dot ok" id="dot"></span>
+          <span class="stext" id="kst" style="font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Cargando...</span>
+        </div>
+        <div id="planInfo" style="margin-top:6px"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button onclick="openPricing()" class="upgrade-btn">⬆ Planes</button>
+        <button onclick="doLogout()" style="font-size:11px;background:none;border:1.5px solid var(--border);color:var(--ink-3);cursor:pointer;padding:5px 10px;border-radius:7px;font-family:inherit;white-space:nowrap">Salir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">Nombre del médico</div>
+  <div class="card">
+    <div class="row">
+      <input type="text" id="medNombre" placeholder="Dr. Nombre Apellido" autocomplete="off" oninput="saveMedNombre()"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Se incluye en el informe Word y en el sello</span></div>
+  </div>
+
+  <div class="slabel">Centro / Institución</div>
+  <div class="card">
+    <div class="row">
+      <input type="text" id="centroNombre" placeholder="Nombre del centro de diagnóstico" autocomplete="off" oninput="saveCentroNombre()"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Se menciona en el método de estudio de los informes</span></div>
+  </div>
+
+  <div class="slabel">Protocolo CCTA (opcional)</div>
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <input type="text" id="cctaEquipo" placeholder="Tomógrafo, ej: multidetector de 512 cortes" autocomplete="off" oninput="saveCcta()"/>
+    </div>
+    <div class="row" style="margin-bottom:8px">
+      <input type="text" id="cctaContraste" placeholder="Volumen de contraste, ej: 70 ml" autocomplete="off" oninput="saveCcta()"/>
+    </div>
+    <div class="row">
+      <input type="text" id="cctaPremed" placeholder="Premedicación, ej: 5 mg de isosorbide S.L." autocomplete="off" oninput="saveCcta()"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Datos de tu equipo y protocolo para el método de estudio CCTA. Si quedan vacíos, el informe usa redacción genérica.</span></div>
+  </div>
+
+  <div class="slabel">Guardado de informes</div>
+  <div class="card">
+    <div class="srow" style="display:flex;align-items:center;justify-content:space-between">
+      <span class="stext">Subir a Drive automáticamente al generar</span>
+      <input type="checkbox" id="autoDrive" style="width:20px;height:20px;accent-color:#0f6e56" onchange="localStorage.setItem('auto_drive',this.checked?'1':'0')"/>
+    </div>
+    <div class="srow" style="display:flex;align-items:center;justify-content:space-between">
+      <span class="stext">Historial en la nube (todos tus dispositivos)</span>
+      <input type="checkbox" id="histCloud" style="width:20px;height:20px;accent-color:#0f6e56" onchange="localStorage.setItem('hist_cloud',this.checked?'1':'0')"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Drive: carpeta "InfoEasyRad" automática. iPhone: el botón Word guarda en Archivos › InfoEasyRad. Nube: historial en tu cuenta, accesible desde cualquier dispositivo.</span></div>
+  </div>
+
+  <div class="slabel" id="bioLabel" style="display:none">Seguridad</div>
+  <div class="card" id="bioCard" style="display:none">
+    <div class="srow" style="display:flex;align-items:center;justify-content:space-between">
+      <span class="stext">Bloquear con Face ID / Touch ID</span>
+      <input type="checkbox" id="bioLock" style="width:20px;height:20px;accent-color:#0f6e56" onchange="toggleBioLock(this.checked)"/>
+    </div>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">Al abrir la app se pedirá tu biometría para acceder</span></div>
+  </div>
+
+  <div class="slabel">Sello y firma</div>
+  <div class="card">
+    <div id="selloCfgPreview" style="display:none;text-align:center;margin-bottom:10px">
+      <img id="selloCfgImg" style="max-height:70px;max-width:100%;opacity:0.9" alt="Sello configurado"/>
+    </div>
+    <div id="selloCfgEmpty" style="text-align:center;font-size:12px;color:#aaa;margin-bottom:10px">Sin sello configurado — el informe se firmará solo con el nombre</div>
+    <div class="arow" style="margin-top:0">
+      <button class="abtn" onclick="document.getElementById('selloFileInput').click()">🖼 Subir imagen o PDF</button>
+      <button class="abtn" onclick="document.getElementById('selloCamInput').click()">📷 Tomar foto</button>
+      <button class="abtn sec" id="selloClearBtn" onclick="clearSello()" style="display:none">✕ Quitar sello</button>
+    </div>
+    <input type="file" id="selloFileInput" accept="image/png,image/jpeg,image/jpg,application/pdf" style="display:none" onchange="onSelloFileSelect(this)"/>
+    <input type="file" id="selloCamInput" accept="image/*" capture="environment" style="display:none" onchange="onSelloFileSelect(this)"/>
+    <div class="srow"><span class="stext" style="font-size:11px;color:#aaa">JPG · PNG · PDF (primera página) · o fotografiá tu sello físico</span></div>
+    <div class="alert" id="selloAlert"></div>
+  </div>
+
+  <div class="slabel">Dictado del informe</div>
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" id="t1" onclick="switchTab('mic')">🎙 Grabar</button>
+      <button class="tab" id="t2" onclick="switchTab('file')">📁 Subir archivo</button>
+    </div>
+    <div id="pMic">
+      <div class="reca">
+        <div class="rtime" id="rtime">0:00</div>
+        <button class="rbtn" id="rbtn" onclick="toggleRec()">🎙</button>
+        <div class="rstat" id="rstat">Presioná para dictar el informe</div>
+      </div>
+    </div>
+    <div id="pFile" class="hidden">
+      <div class="dropzone" id="dz"
+        onclick="document.getElementById('finput').click()"
+        ondragover="event.preventDefault();this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="onDrop(event)">
+        <div class="icon">🎵</div>
+        <p>Arrastrá o hacé clic para seleccionar</p>
+        <small>MP3 · M4A · WAV · OGG · WEBM · máx 25 MB</small>
+      </div>
+      <input type="file" id="finput" accept="audio/*" style="display:none" onchange="onFileSelect(this)"/>
+      <div class="finfo" id="finfo"><span class="chk">✓</span><span id="fname"></span></div>
+    </div>
+    <button class="gbtn" id="tbtn" onclick="doTranscribe()" disabled>🎙 Transcribir audio</button>
+    <div class="alert" id="ta"></div>
+  </div>
+
+  <div class="slabel">Transcripción</div>
+  <div class="card">
+    <textarea id="tbox" style="min-height:100px" placeholder="La transcripción aparecerá aquí, o escribí/pegá el dictado directamente..."></textarea>
+    <button class="gbtn" id="gbtn" onclick="doGenerate()" disabled>📄 Generar informe</button>
+    <div class="alert" id="ga"></div>
+  </div>
+
+  <div class="rout" id="rout">
+    <div class="slabel">Informe — editá directamente en el texto</div>
+    <textarea class="report-edit" id="reportEdit" spellcheck="true"></textarea>
+    <div class="edit-hint">✏️ Hacé clic en cualquier parte para editar</div>
+    <div class="sello-preview">
+      <img id="selloPreviewImg" src="" alt="Sello y firma" style="display:none"/>
+      <span><span id="selloPreviewLabel">Firma</span> · <span id="selloNombrePreview">Dr. Nombre Apellido</span><br>Se incluye automáticamente en el Word</span>
+    </div>
+    <div class="arow">
+      <button class="abtn" onclick="doCopy()">📋 Copiar</button>
+      <button class="abtn sec" onclick="doRegenerate()">🔄 Regenerar ↗</button>
+      <button class="abtn" onclick="doNew()">➕ Nuevo</button>
+      <button class="abtn pri" onclick="doDownloadTxt()">⬇ .txt</button>
+      <button class="abtn word" id="wordBtn" onclick="doDownloadDocx()">📝 Word</button>
+      <button class="abtn" style="background:#1a73e8;color:#fff;border-color:#1a73e8" id="driveBtn" onclick="doUploadDrive()">&#9652; Word a Drive</button>
+    </div>
+    <div class="alert" id="ra"></div>
+  </div>
+
+  <div class="footer">InfoEasyRad · <span id="footerNombre">Informes radiológicos por voz</span></div>
+
+<div id="bioOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#0d1b16;color:#fff;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px">
+  <div style="font-size:44px">🔒</div>
+  <div style="font-size:17px;font-weight:600">InfoEasyRad bloqueado</div>
+  <div style="font-size:13px;color:#9fb8ae">Usá Face ID o Touch ID para acceder</div>
+  <button onclick="bioUnlock()" style="margin-top:8px;padding:12px 28px;border-radius:10px;border:none;background:#0f6e56;color:#fff;font-size:15px;font-weight:600">Desbloquear</button>
+</div>
+</div>
+<script>
+// Carpeta de Drive del usuario: se busca/crea automáticamente ('InfoEasyRad')
+// Sello configurable por el usuario (localStorage: sello_b64, sello_w, sello_h)
+
+let mrInforme=null,chunksInforme=[],rintInforme=null,rsecsInforme=0,afile=null,tab='mic';
+let mrPac=null,chunksPac=[],rintPac=null;
+let modalidadActual=null,subtipoActual=null,refFile=null;
+
+// Helper: nombre del médico
+function getMedNombre(){
+  return localStorage.getItem('med_nombre')||'Dr(a). Nombre Apellido';
+}
+function saveMedNombre(){
+  const val=document.getElementById('medNombre').value.trim();
+  if(val) localStorage.setItem('med_nombre',val);
+  else localStorage.removeItem('med_nombre');
+  document.getElementById('selloNombrePreview').textContent=val||'Dr(a). Nombre Apellido';
+  document.getElementById('footerNombre').textContent=val||'Informes radiológicos por voz';
+}
+
+function getCentroNombre(){
+  return localStorage.getItem('centro_nombre')||'';
+}
+function saveCentroNombre(){
+  const val=document.getElementById('centroNombre').value.trim();
+  if(val) localStorage.setItem('centro_nombre',val);
+  else localStorage.removeItem('centro_nombre');
+}
+
+// fetch autenticado: adjunta el access token y reintenta una vez tras refresh si expira
+async function authFetch(path,opts,reintento){
+  opts=opts||{};if(reintento===undefined)reintento=true;
+  const t=localStorage.getItem('supa_access_token');
+  opts.headers=Object.assign({},opts.headers||{},t?{'Authorization':'Bearer '+t}:{});
+  const r=await fetch(API_BASE+path,opts);
+  if(r.status===401&&reintento){
+    const rt=localStorage.getItem('supa_refresh_token');
+    if(rt){
+      try{
+        const rr=await fetch(API_BASE+'/api/auth-login',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'refresh',refresh_token:rt})});
+        if(rr.ok){
+          const d=await rr.json();
+          if(d.access_token){
+            localStorage.setItem('supa_access_token',d.access_token);
+            localStorage.setItem('supa_refresh_token',d.refresh_token||rt);
+            return authFetch(path,opts,false);
+          }
+        }
+      }catch(e){}
+    }
+  }
+  return r;
+}
+
+function getCctaEquipo(){return localStorage.getItem('ccta_equipo')||'';}
+function getCctaContraste(){return localStorage.getItem('ccta_contraste')||'';}
+function getCctaPremed(){return localStorage.getItem('ccta_premed')||'';}
+function saveCcta(){
+  const eq=document.getElementById('cctaEquipo').value.trim();
+  const co=document.getElementById('cctaContraste').value.trim();
+  const pm=document.getElementById('cctaPremed').value.trim();
+  eq?localStorage.setItem('ccta_equipo',eq):localStorage.removeItem('ccta_equipo');
+  co?localStorage.setItem('ccta_contraste',co):localStorage.removeItem('ccta_contraste');
+  pm?localStorage.setItem('ccta_premed',pm):localStorage.removeItem('ccta_premed');
+}
+
+// ===== Biometría (Face ID / Touch ID vía Capacitor) =====
+function getBioPlugin(){
+  return (window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.NativeBiometric)||null;
+}
+async function bioAvailable(){
+  const p=getBioPlugin();if(!p)return false;
+  try{const r=await p.isAvailable();return !!(r&&r.isAvailable);}catch(e){return false;}
+}
+function toggleBioLock(on){
+  localStorage.setItem('bio_lock',on?'1':'0');
+}
+async function bioUnlock(){
+  const p=getBioPlugin();
+  if(!p){document.getElementById('bioOverlay').style.display='none';return;}
+  try{
+    await p.verifyIdentity({reason:'Desbloquear InfoEasyRad',title:'InfoEasyRad',subtitle:'',description:''});
+    document.getElementById('bioOverlay').style.display='none';
+  }catch(e){/* usuario canceló o falló — sigue bloqueado */}
+}
+async function initBio(){
+  if(await bioAvailable()){
+    document.getElementById('bioLabel').style.display='';
+    document.getElementById('bioCard').style.display='';
+    document.getElementById('bioLock').checked=localStorage.getItem('bio_lock')==='1';
+    if(localStorage.getItem('bio_lock')==='1'){
+      document.getElementById('bioOverlay').style.display='flex';
+      bioUnlock(); // intento automático al abrir
+    }
+  }
+}
+
+// ===== Guardado en el dispositivo (Archivos de iOS vía Capacitor Filesystem) =====
+async function saveBlobToDevice(blob,filename){
+  const FS=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Filesystem;
+  if(!FS)return false;
+  const b64=await new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result.split(',')[1]);
+    r.onerror=()=>rej(new Error('read'));
+    r.readAsDataURL(blob);
+  });
+  try{await FS.mkdir({path:'InfoEasyRad',directory:'DOCUMENTS',recursive:true});}catch(e){/* ya existe */}
+  await FS.writeFile({path:'InfoEasyRad/'+filename,data:b64,directory:'DOCUMENTS'});
+  return true;
+}
+
+// ===== Sello configurable =====
+const SELLO_MAX_W=700; // px máx de ancho al normalizar
+function getSello(){
+  const b64=localStorage.getItem('sello_b64');
+  if(!b64)return null;
+  return {b64,w:parseInt(localStorage.getItem('sello_w')||'700'),h:parseInt(localStorage.getItem('sello_h')||'340')};
+}
+function updateSelloUI(){
+  const s=getSello();
+  const cfgPrev=document.getElementById('selloCfgPreview');
+  const cfgEmpty=document.getElementById('selloCfgEmpty');
+  const cfgImg=document.getElementById('selloCfgImg');
+  const clearBtn=document.getElementById('selloClearBtn');
+  const prevImg=document.getElementById('selloPreviewImg');
+  const prevLabel=document.getElementById('selloPreviewLabel');
+  if(s){
+    cfgImg.src='data:image/png;base64,'+s.b64;
+    cfgPrev.style.display='block';cfgEmpty.style.display='none';clearBtn.style.display='';
+    if(prevImg){prevImg.src=cfgImg.src;prevImg.style.display='';}
+    if(prevLabel)prevLabel.textContent='Sello y firma';
+  }else{
+    cfgPrev.style.display='none';cfgEmpty.style.display='block';clearBtn.style.display='none';
+    if(prevImg){prevImg.src='';prevImg.style.display='none';}
+    if(prevLabel)prevLabel.textContent='Firma';
+  }
+}
+function saveSelloFromCanvas(canvas){
+  try{
+    const b64=canvas.toDataURL('image/png').split(',')[1];
+    localStorage.setItem('sello_b64',b64);
+    localStorage.setItem('sello_w',String(canvas.width));
+    localStorage.setItem('sello_h',String(canvas.height));
+    updateSelloUI();
+    alert2('selloAlert','Sello guardado ✓','ok');
+  }catch(e){
+    alert2('selloAlert','No se pudo guardar (imagen muy grande): '+e.message,'err');
+  }
+}
+function canvasFromImage(img){
+  const scale=Math.min(1,SELLO_MAX_W/img.width);
+  const c=document.createElement('canvas');
+  c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height); // fondo blanco (JPG sin alfa, PDF, fotos)
+  ctx.drawImage(img,0,0,c.width,c.height);
+  return c;
+}
+function loadPdfJs(){
+  return new Promise((res,rej)=>{
+    if(window.pdfjsLib)return res();
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      res();
+    };
+    s.onerror=()=>rej(new Error('No se pudo cargar el lector de PDF'));
+    document.head.appendChild(s);
+  });
+}
+async function onSelloFileSelect(input){
+  const file=input.files&&input.files[0];
+  input.value=''; // permite re-seleccionar el mismo archivo
+  if(!file)return;
+  if(file.size>15*1024*1024){alert2('selloAlert','Archivo demasiado grande (máx 15 MB)','err');return;}
+  alert2('selloAlert','Procesando...','warn');
+  try{
+    if(file.type==='application/pdf'||/\.pdf$/i.test(file.name)){
+      await loadPdfJs();
+      const buf=await file.arrayBuffer();
+      const pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
+      const page=await pdf.getPage(1);
+      const vp1=page.getViewport({scale:1});
+      const scale=Math.min(2,SELLO_MAX_W/vp1.width);
+      const vp=page.getViewport({scale});
+      const c=document.createElement('canvas');
+      c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+      const ctx=c.getContext('2d');
+      ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
+      await page.render({canvasContext:ctx,viewport:vp}).promise;
+      saveSelloFromCanvas(c);
+    }else if(/^image\//.test(file.type)){
+      const url=URL.createObjectURL(file);
+      const img=new Image();
+      img.onload=()=>{URL.revokeObjectURL(url);saveSelloFromCanvas(canvasFromImage(img));};
+      img.onerror=()=>{URL.revokeObjectURL(url);alert2('selloAlert','No se pudo leer la imagen','err');};
+      img.src=url;
+    }else{
+      alert2('selloAlert','Formato no soportado. Usá JPG, PNG o PDF','err');
+    }
+  }catch(e){
+    alert2('selloAlert','Error: '+e.message,'err');
+  }
+}
+function clearSello(){
+  localStorage.removeItem('sello_b64');
+  localStorage.removeItem('sello_w');
+  localStorage.removeItem('sello_h');
+  updateSelloUI();
+  alert2('selloAlert','Sello eliminado — se firmará solo con el nombre','ok');
+}
+
+let usuarioActual=null;
+
+
+const SUBTITULOS={
+  'CCTA':'Informes radiológicos por voz',
+  'Rayos X':'Radiología simple',
+  'Ultrasonido':'Ultrasonido diagnóstico',
+  'Tomografía computada':'Tomografía computada',
+  'Resonancia magnética':'Resonancia magnética',
+  'Fluoroscopía':'Fluoroscopía',
+  'Otro':'Estudio de imagen'
+};
+
+function selectModalidad(mod){
+  modalidadActual=mod;
+  // Mostrar selector de subtipo para Ultrasonido y TC
+  const panel=document.getElementById('subtipoPanel');
+  const label=document.getElementById('subtipoPanelLabel');
+  const grid=document.getElementById('subtipoPanelGrid');
+  // Resetear subtipo y limpiar grid antes de cambiar
+  subtipoActual=null;
+  grid.innerHTML='';
+  panel.classList.remove('show');
+
+  if(mod==='Ultrasonido'){
+    label.textContent='Tipo de ultrasonido';
+    grid.innerHTML=\`
+      <button class="subtipo-btn" onclick="selectSubtipo('Abdominal')" data-sub="Abdominal">🫁 Abdominal</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Tiroideo')" data-sub="Tiroideo">🦋 Tiroideo</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Obstétrico')" data-sub="Obstétrico">🤰 Obstétrico</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Renal')" data-sub="Renal">🫘 Renal</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Pélvico')" data-sub="Pélvico">⭕ Pélvico</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('Partes blandas')" data-sub="Partes blandas">💪 Partes blandas</button>\`;
+    panel.classList.add('show');
+  } else if(mod==='Tomografía computada'){
+    label.textContent='Tipo de tomografía';
+    grid.innerHTML=\`
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Tórax')" data-sub="TC Tórax">🫁 Tórax</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Abdomen-Pelvis')" data-sub="TC Abdomen-Pelvis">🫃 Abdomen-Pelvis</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Cerebro')" data-sub="TC Cerebro">🧠 Cerebro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Columna')" data-sub="TC Columna">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Cuello')" data-sub="TC Cuello">🔵 Cuello</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('TC Angio')" data-sub="TC Angio">🩸 Angio-TC</button>\`;
+    panel.classList.add('show');
+  } else if(mod==='Resonancia magnética'){
+    label.textContent='Tipo de resonancia';
+    grid.innerHTML=\`
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Cerebro')" data-sub="RM Cerebro">🧠 Cerebro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Columna')" data-sub="RM Columna">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Rodilla')" data-sub="RM Rodilla">🦵 Rodilla</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Hombro')" data-sub="RM Hombro">💪 Hombro</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Abdomen')" data-sub="RM Abdomen">🫁 Abdomen</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RM Pelvis')" data-sub="RM Pelvis">⭕ Pelvis</button>\`;
+    panel.classList.add('show');
+  } else if(mod==='Rayos X'){
+    label.textContent='Tipo de radiografía';
+    grid.innerHTML=\`
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Tórax')" data-sub="RX Tórax">🫁 Tórax</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Abdomen')" data-sub="RX Abdomen">🫃 Abdomen</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Columna')" data-sub="RX Columna">🦴 Columna</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Extremidades')" data-sub="RX Extremidades">🦵 Extremidades</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Pelvis')" data-sub="RX Pelvis">⭕ Pelvis/Cadera</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('RX Cráneo')" data-sub="RX Cráneo">💀 Cráneo/Senos</button>\`;
+    panel.classList.add('show');
+  } else if(mod==='Fluoroscopía'){
+    label.textContent='Tipo de fluoroscopía';
+    grid.innerHTML=\`
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Esófago-Estómago')" data-sub="FL Esófago-Estómago">🫁 Esófago-Estómago</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Colon')" data-sub="FL Colon">🫃 Colon por enema</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Cistouretrograma')" data-sub="FL Cistouretrograma">💧 Cistouretrograma</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Histerosalpingo')" data-sub="FL Histerosalpingo">⭕ Histerosalpingo</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Articulación')" data-sub="FL Articulación">🦵 Articulografía</button>
+      <button class="subtipo-btn" onclick="selectSubtipo('FL Mielografía')" data-sub="FL Mielografía">🦴 Mielografía</button>\`;
+    panel.classList.add('show');
+  }
+  document.querySelectorAll('.modbtn').forEach(b=>b.classList.toggle('active',b.dataset.mod===mod));
+  // subtítulo fijo
+}
+function onDropRef(e){e.preventDefault();document.getElementById('dzRef').classList.remove('over');if(e.dataTransfer.files[0])setRefFile(e.dataTransfer.files[0]);}
+function onFileSelectRef(el){if(el.files[0])setRefFile(el.files[0]);}
+function setRefFile(f){
+  const ext=f.name.split('.').pop().toLowerCase();
+  if(ext!=='docx'&&ext!=='txt'){alert('Solo se aceptan archivos .docx o .txt');return;}
+  refFile=f;
+  document.getElementById('fnameRef').textContent=f.name+' · '+Math.round(f.size/1024)+' KB';
+  document.getElementById('finfoRef').classList.add('show');
+}
+
+document.getElementById('pFecha').value=new Date().toISOString().slice(0,10);
+selectModalidad('CCTA');
+
+function switchTab(t){
+  tab=t;afile=null;
+  document.getElementById('t1').classList.toggle('active',t==='mic');
+  document.getElementById('t2').classList.toggle('active',t==='file');
+  document.getElementById('pMic').classList.toggle('hidden',t!=='mic');
+  document.getElementById('pFile').classList.toggle('hidden',t!=='file');
+  document.getElementById('tbtn').disabled=true;
+  document.getElementById('finfo').classList.remove('show');
+}
+// ── AUTH / LOGIN ─────────────────────────────────────────
+const API_BASE='';  // Vercel functions en el mismo dominio
+
+// ── SUPABASE AUTH CONFIG ────────────────────────────────────
+const SUPA_URL='https://huqkgxlddbjvcxzasnba.supabase.co';
+const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cWtneGxkZGJqdmN4emFzbmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMDU1NzEsImV4cCI6MjA5OTc4MTU3MX0.saPSEkGfoeA2QBqM-XwJXaUj0CvCmZ7jJ0jus6h7XvY';
+
+async function supaAuthFetch(endpoint, body){
+  // Usar proxy de Vercel para evitar bloqueos CORS en iOS
+  let action='login';
+  if(endpoint.includes('signup'))action='signup';
+  else if(endpoint.includes('recover'))action='recover';
+
+  const payload={...body, action};
+  const r=await fetch(API_BASE+'/api/auth-login',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  });
+  let d;
+  try{d=await r.json();}catch(e){d={error:'Error de conexión'};}
+  if(!r.ok){
+    throw new Error(d.error||'Error '+r.status);
+  }
+  return d;
+}
+
+// ── PANTALLA AUTH ───────────────────────────────────────────
+function mostrarHub(){
+  const a=document.getElementById('authScreen');const h=document.getElementById('hubScreen');
+  if(a)a.style.display='none';
+  if(h){h.style.display='flex';window.scrollTo(0,0);}
+}
+function abrirInfoEasy(){
+  const h=document.getElementById('hubScreen');
+  if(h)h.style.display='none';
+}
+function abrirTavi(){
+  const email=(usuarioActual&&usuarioActual.email)||localStorage.getItem('ier_email_saved')||'';
+  window.location.href='/tavi'+(email?('?u='+encodeURIComponent(email)):'');
+}
+function lpGoRegistro(){
+  switchAuthTab('registro');
+  const b=document.getElementById('authBox');
+  if(b)b.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function switchAuthTab(tab){
+  document.getElementById('formLogin').style.display=tab==='login'?'block':'none';
+  document.getElementById('formReg').style.display=tab==='registro'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
+  document.getElementById('tabReg').classList.toggle('active',tab==='registro');
+}
+
+async function doAuthLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const btn=document.getElementById('loginSubmitBtn');
+  const alert=document.getElementById('loginAlert');
+  if(!email||!pass){showAuthAlert('loginAlert','Completá todos los campos','err');return;}
+  btn.disabled=true;btn.textContent='Ingresando...';
+  try{
+    const d=await supaAuthFetch('token?grant_type=password',{email:email.toLowerCase().trim(),password:pass.trim()});
+    localStorage.setItem('supa_access_token',d.access_token);
+    localStorage.setItem('supa_refresh_token',d.refresh_token);
+    localStorage.setItem('ier_email_saved', email.toLowerCase().trim());
+    await cargarUsuarioDesdeServer(email);
+    mostrarHub();
+  }catch(e){
+    showAuthAlert('loginAlert',e.message==='Invalid login credentials'?'Email o contraseña incorrectos':e.message,'err');
+  }finally{btn.disabled=false;btn.textContent='Iniciar sesión';}
+}
+
+async function doAuthRegister(){
+  const nombre=document.getElementById('regNombre').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const pass2=document.getElementById('regPass2').value;
+  const btn=document.getElementById('regSubmitBtn');
+  if(!nombre||!email||!pass){showAuthAlert('regAlert','Completá todos los campos','err');return;}
+  if(pass.length<8){showAuthAlert('regAlert','La contraseña debe tener al menos 8 caracteres','err');return;}
+  if(pass!==pass2){showAuthAlert('regAlert','Las contraseñas no coinciden','err');return;}
+  btn.disabled=true;btn.textContent='Creando cuenta...';
+  try{
+    await supaAuthFetch('signup',{email,password:pass,data:{nombre}});
+    showAuthAlert('regAlert','✅ Cuenta creada. Revisá tu email para verificar tu cuenta antes de iniciar sesión.','ok');
+    setTimeout(()=>switchAuthTab('login'),3000);
+  }catch(e){
+    const msg=e.message.includes('already registered')?'Este email ya tiene una cuenta registrada':e.message;
+    showAuthAlert('regAlert',msg,'err');
+  }finally{btn.disabled=false;btn.textContent='Crear cuenta';}
+}
+
+async function doForgotPassword(){
+  const email=document.getElementById('loginEmail').value.trim();
+  if(!email){showAuthAlert('loginAlert','Ingresá tu email primero','warn');return;}
+  try{
+    await supaAuthFetch('recover',{email});
+    showAuthAlert('loginAlert','✅ Te enviamos un email para restablecer tu contraseña','ok');
+  }catch(e){showAuthAlert('loginAlert',e.message,'err');}
+}
+
+function showAuthAlert(id,msg,tipo){
+  const el=document.getElementById(id);
+  el.textContent=msg;el.className='auth-alert show '+tipo;
+}
+
+async function cargarUsuarioDesdeServer(email){
+  const r=await fetch(API_BASE+'/api/auth',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email,nombre:''})
+  });
+  if(!r.ok)throw new Error('Error al cargar usuario');
+  const data=await r.json();
+  usuarioActual=data;
+  localStorage.setItem('ier_user',JSON.stringify(data));
+  document.getElementById('kst').textContent=data.email;
+  mostrarPlanInfo(data);
+  checkGenBtn();
+}
+
+async function verificarSesion(){
+  const diag=[];
+  diag.push('origen: '+location.origin);
+  const savedUser=localStorage.getItem('ier_user');
+  const token=localStorage.getItem('supa_access_token');
+  const refreshToken=localStorage.getItem('supa_refresh_token');
+  diag.push('AT:'+(token?'SÍ':'NO')+' RT:'+(refreshToken?'SÍ':'NO')+' USR:'+(savedUser?'SÍ':'NO'));
+
+  if(token&&savedUser){
+    try{
+      usuarioActual=JSON.parse(savedUser);
+      document.getElementById('kst').textContent=usuarioActual.email;
+      mostrarPlanInfo(usuarioActual);
+      checkGenBtn();
+      mostrarHub();
+      // Renovar token en segundo plano (expira en ~1h); si falla, la sesión visual sigue
+      if(refreshToken){
+        fetch(API_BASE+'/api/auth-login',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'refresh',refresh_token:refreshToken})
+        }).then(r=>r.ok?r.json():null).then(d=>{
+          if(d&&d.access_token){
+            localStorage.setItem('supa_access_token',d.access_token);
+            localStorage.setItem('supa_refresh_token',d.refresh_token||refreshToken);
+          }
+        }).catch(()=>{});
+      }
+      return;
+    }catch(e){diag.push('restore-err: '+e.message);}
+  }
+
+  // Intentar renovar token con refresh token
+  if(refreshToken){
+    try{
+      const r=await fetch(API_BASE+'/api/auth-login',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'refresh',refresh_token:refreshToken})
+      });
+      diag.push('refresh-status: '+r.status);
+      if(r.ok){
+        const d=await r.json();
+        if(d.access_token){
+          localStorage.setItem('supa_access_token',d.access_token);
+          localStorage.setItem('supa_refresh_token',d.refresh_token||refreshToken);
+          const email=savedUser?JSON.parse(savedUser).email:localStorage.getItem('ier_email_saved');
+          if(email){try{await cargarUsuarioDesdeServer(email);}catch(e){diag.push('carga-err: '+e.message);}}
+          mostrarHub();
+          return;
+        }
+      }
+    }catch(e){diag.push('refresh-err: '+e.message);}
+  }
+
+  // Sin sesión válida — mostrar login con email precargado (NO borramos claves durante diagnóstico)
+  const savedEmail=localStorage.getItem('ier_email_saved');
+  if(savedEmail) document.getElementById('loginEmail').value=savedEmail;
+  const dg=document.getElementById('authDiag');
+  if(dg)dg.textContent='🔧 '+diag.join(' | ');
+  console.log('verificarSesion diag:',diag);
+  const h=document.getElementById('hubScreen');if(h)h.style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+}
+
+function confirmLogout(){
+  if(confirm('¿Cerrar sesión? Tendrás que ingresar tu contraseña de nuevo la próxima vez.'))doLogout();
+}
+function doLogout(){
+  usuarioActual=null;
+  localStorage.removeItem('supa_access_token');
+  localStorage.removeItem('supa_refresh_token');
+  localStorage.removeItem('ier_user');
+  document.getElementById('gbtn').disabled=true;
+  const h=document.getElementById('hubScreen');if(h)h.style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+}
+
+function mostrarPlanInfo(u){
+  const pi=document.getElementById('planInfo');
+  const LIMITES={trial:null,gratis:5,basico:60,pro:300,clinica:null,starter:60,ilimitado:null};
+  const limite=LIMITES[u.plan];
+  const restantes=limite===null?'∞':Math.max(0,limite-(u.informes_mes||0));
+  const planNombre={trial:'Trial (1 mes gratis)',gratis:'Gratis',basico:'Básico',pro:'Pro',clinica:'Clínica',starter:'Starter',ilimitado:'Ilimitado'};
+  const clasePlan={'trial':'plan-trial','gratis':'plan-gratis','basico':'plan-starter','pro':'plan-pro','clinica':'plan-ilimitado','starter':'plan-starter','ilimitado':'plan-ilimitado'};
+  pi.style.display='block';
+  pi.innerHTML='<span class="plan-badge '+clasePlan[u.plan]+'">'+planNombre[u.plan]+'</span><span class="plan-counter">'+
+    (u.informes_mes||0)+(limite?'/'+limite:'')+' informes · '+restantes+' restantes</span>';
+  // logoutBtn ya no existe como elemento separado
+}
+
+function checkGenBtn(){
+  const hasUser=!!usuarioActual;
+  const hasText=document.getElementById('tbox').value.trim().length>=5;
+  document.getElementById('gbtn').disabled=!(hasUser&&hasText);
+}
+async function togglePacMic(){
+  if(mrPac&&mrPac.state==='recording'){mrPac.stop();return;}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    chunksPac=[];
+    const mime=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'audio/mp4';
+    mrPac=new MediaRecorder(stream,{mimeType:mime});
+    mrPac.ondataavailable=e=>{if(e.data.size>0)chunksPac.push(e.data)};
+    mrPac.onstop=async()=>{
+      stream.getTracks().forEach(t=>t.stop());clearInterval(rintPac);
+      document.getElementById('pacMicBtn').classList.remove('rec');
+      document.getElementById('pacMicBtn').textContent='🎙 Dictar datos del paciente';
+      document.getElementById('pacTip').style.display='none';
+      const ext=mime.includes('mp4')?'mp4':'webm';
+      await transcribePaciente(new File([new Blob(chunksPac,{type:mime})],'pac.'+ext,{type:mime}));
+    };
+    mrPac.start(200);
+    document.getElementById('pacMicBtn').classList.add('rec');
+    document.getElementById('pacMicBtn').textContent='⏹ Detener';
+    document.getElementById('pacTip').style.display='block';
+    rintPac=setInterval(()=>{},1000);
+  }catch(e){alert2('pacAlert','Error mic: '+e.message,'err');}
+}
+async function transcribePaciente(audioFile){
+  if(!usuarioActual){alert2('pacAlert','Iniciá sesión primero','warn');return;}
+  const btn=document.getElementById('pacMicBtn');btn.textContent='⏳ Procesando...';btn.disabled=true;
+  try{
+    const fd=new FormData();fd.append('file',audioFile);
+    const r=await authFetch('/api/transcribe',{method:'POST',body:fd});
+    if(!r.ok)throw new Error('Error transcripción '+r.status);
+    const td=await r.json();
+    const txt=td.texto;
+    const sysPrompt=\`Extraé datos de un paciente médico del texto dictado por voz y respondé SOLO con JSON válido, sin texto adicional ni bloques de código.
+
+Formato: {"nombre":"","edad":"","expediente":"","localidad":""}
+
+REGLAS DE EXTRACCIÓN:
+- nombre: Apellido(s) y nombre. Formatos posibles: "Pérez García Juan", "Juan Pérez", "paciente Juan Pérez García", "nombre Juan Pérez García". Ordenar como "Apellidos, Nombre". Si hay dos apellidos, incluirlos ambos.
+- edad: Solo el número seguido de " años". Ej: "58 años". Frases como "tiene 58", "de 58 años", "58 años de edad" → "58 años".
+- expediente: Solo dígitos, puede venir como "expediente 123456", "exp 123456", "número 123456", "folio 123456", "número de expediente 123456".
+- localidad: Ciudad, municipio o región. Ej: "Tegucigalpa", "San Pedro Sula", "México". Puede venir como "de Tegucigalpa", "localidad Tegucigalpa", "vive en...".
+
+Si un dato no se menciona o no se puede determinar con seguridad, dejá la cadena vacía "".\`;
+    const r2=await authFetch('/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        system_prompt:sysPrompt,
+        transcripcion:'Texto dictado: '+txt,
+        _solo_parseo:true
+      })
+    });
+    const d2raw=await r2.json();
+    const d2={choices:[{message:{content:d2raw.informe||d2raw.error||''}}]};
+    const raw=d2.choices[0].message.content.replace(/\`\`\`json|\`\`\`/g,'').trim();
+    const datos=JSON.parse(raw);
+
+    // Aplicar y contar campos detectados
+    let detectados=[];
+    if(datos.nombre&&datos.nombre.trim()){
+      document.getElementById('pNombre').value=datos.nombre.trim();
+      detectados.push('nombre');
+    }
+    if(datos.edad&&datos.edad.trim()){
+      // Asegurar formato "N años"
+      const edadLimpia=datos.edad.trim().replace(/^(\d+)\s*(años?)?$/i,'$1 años');
+      document.getElementById('pEdad').value=edadLimpia;
+      detectados.push('edad');
+    }
+    if(datos.expediente&&datos.expediente.trim()){
+      document.getElementById('pExpediente').value=datos.expediente.trim().replace(/\D/g,'');
+      detectados.push('expediente');
+    }
+    if(datos.localidad&&datos.localidad.trim()){
+      document.getElementById('pLocalidad').value=datos.localidad.trim();
+      detectados.push('localidad');
+    }
+
+    if(detectados.length===0){
+      alert2('pacAlert','No se detectaron datos. Intentá dictar: "Nombre Juan Pérez, edad 55 años, expediente 123456, localidad Tegucigalpa"','warn');
+    } else {
+      alert2('pacAlert','Detectado: '+detectados.join(', ')+' ✓','ok');
+    }
+  }catch(e){alert2('pacAlert','Error: '+e.message,'err');}
+  finally{btn.textContent='🎙 Dictar datos del paciente';btn.disabled=false;}
+}
+async function toggleRec(){
+  if(mrInforme&&mrInforme.state==='recording'){mrInforme.stop();return;}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});chunksInforme=[];
+    const mime=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'audio/mp4';
+    mrInforme=new MediaRecorder(stream,{mimeType:mime});
+    mrInforme.ondataavailable=e=>{if(e.data.size>0)chunksInforme.push(e.data)};
+    mrInforme.onstop=()=>{
+      const ext=mime.includes('mp4')?'mp4':'webm';
+      afile=new File([new Blob(chunksInforme,{type:mime})],'dictado.'+ext,{type:mime});
+      stream.getTracks().forEach(t=>t.stop());clearInterval(rintInforme);
+      document.getElementById('rbtn').classList.remove('rec');document.getElementById('rbtn').textContent='🎙';
+      document.getElementById('rstat').textContent='Grabado ('+fmt(rsecsInforme)+') — listo para transcribir';
+      document.getElementById('tbtn').disabled=false;
+    };
+    mrInforme.start(200);rsecsInforme=0;
+    document.getElementById('rbtn').classList.add('rec');document.getElementById('rbtn').textContent='⏹';
+    document.getElementById('rstat').textContent='Grabando...';
+    rintInforme=setInterval(()=>{rsecsInforme++;document.getElementById('rtime').textContent=fmt(rsecsInforme);},1000);
+  }catch(e){document.getElementById('rstat').textContent='Error: '+e.message;}
+}
+function fmt(s){return Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60}
+function onDrop(e){e.preventDefault();document.getElementById('dz').classList.remove('over');if(e.dataTransfer.files[0])setFile(e.dataTransfer.files[0]);}
+function onFileSelect(el){if(el.files[0])setFile(el.files[0]);}
+function setFile(f){
+  if(f.size>25*1024*1024){alert2('ta','Supera 25MB','err');return;}
+  const ext=f.name.split('.').pop().toLowerCase();
+  const tm={mp3:'audio/mpeg',m4a:'audio/mp4',wav:'audio/wav',ogg:'audio/ogg',webm:'audio/webm',mp4:'audio/mp4'};
+  const nm={mp3:'audio.mp3',m4a:'audio.m4a',wav:'audio.wav',ogg:'audio.ogg',webm:'audio.webm',mp4:'audio.mp4'};
+  afile=new File([f],nm[ext]||('audio.'+ext),{type:tm[ext]||f.type||'audio/mpeg'});
+  document.getElementById('fname').textContent=f.name+' · '+Math.round(f.size/1024)+' KB';
+  document.getElementById('finfo').classList.add('show');document.getElementById('tbtn').disabled=false;
+}
+async function doTranscribe(){
+  if(!usuarioActual){alert2('ta','Iniciá sesión primero','warn');return;}
+  if(!afile){alert2('ta','Sin audio','warn');return;}
+  const btn=document.getElementById('tbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Transcribiendo...';
+  try{
+    const fd=new FormData();fd.append('file',afile);
+    const r=await authFetch('/api/transcribe',{method:'POST',body:fd});
+    if(!r.ok){let m='Error '+r.status;try{const j=await r.json();m=j.error?.message||m;}catch(x){}throw new Error(m);}
+    const td=await r.json();
+    document.getElementById('tbox').value=td.texto.trim();checkGenBtn();alert2('ta','Transcripción lista ✓','ok');
+  }catch(e){alert2('ta','Error: '+e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='🎙 Transcribir audio';}
+}
+function normalizeCadRads(t){
+  return t.replace(/\bcad[-\s]?r[ao]d[sz]?\s*([0-5][abAB]?)\b/gi,'CAD-RADS $1')
+    .replace(/\bcadr[ao]d[sz]?\s*([0-5][abAB]?)\b/gi,'CAD-RADS $1')
+    .replace(/\bcad\s*r[ao]s\s*([0-5][abAB]?)\b/gi,'CAD-RADS $1')
+    .replace(/\bcategor[ií]a\s*([0-5][abAB]?)\b/gi,'CAD-RADS $1')
+    .replace(/CAD-RADS\s+([0-5])\s*[Aa]\b/g,'CAD-RADS $1A')
+    .replace(/CAD-RADS\s+([0-5])\s*[Bb]\b/g,'CAD-RADS $1B');
+}
+function getPacienteData(){
+  const nombre=document.getElementById('pNombre').value.trim()||'_______________';
+  const edad=document.getElementById('pEdad').value.trim()||'___';
+  const exp=document.getElementById('pExpediente').value.trim()||'_______________';
+  const local=document.getElementById('pLocalidad').value.trim()||'_______________';
+  const fechaRaw=document.getElementById('pFecha').value;
+  let fecha='_______________';
+  if(fechaRaw){const [y,m,d]=fechaRaw.split('-');const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];fecha=parseInt(d)+' de '+meses[parseInt(m)-1]+' de '+y;}
+  return{nombre,edad,exp,local,fecha};
+}
+function buildPromptUS(pac, subtipo){
+  const cabecera=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+
+  const prompts={
+    'Abdominal': 'Eres un radiólogo especialista en ultrasonido abdominal. Estructurás dictados como informes formales de ultrasonido abdominal en español médico formal, siguiendo las guías RadReport de la RSNA.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido de abdomen\n\nTécnica:\nAbdomen explorado con transductor de ultrasonido en modalidad de escala de grises y técnica Doppler color limitada.\n\nHallazgos:\n\nHígado: [ecotextura, ecogenicidad, masas focales]\nVesícula biliar: [colelitiasis, pared, Murphy sonográfico]\nVías biliares: [dilatación, colédoco en cm]\nPáncreas: [visualización, alteraciones]\nRiñón derecho: [tamaño, parénquima, masas, cálculos, hidronefrosis]\nRiñón izquierdo: [tamaño, parénquima, masas, cálculos, hidronefrosis]\nBazo: [tamaño, ecogenicidad]\nAorta y VCI: [calibre]\nLíquido libre: [ascitis, derrames]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'Tiroideo': 'Eres un radiólogo especialista en ultrasonido tiroideo. Estructurás dictados como informes formales de ultrasonido tiroideo en español médico formal, aplicando la clasificación ACR TI-RADS según las guías RSNA/ACR.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido de tiroides\n\nTécnica:\nUltrasonido tiroideo con transductor de alta frecuencia en escala de grises y Doppler color.\n\nHallazgos:\n\nLóbulo derecho: [dimensiones cm, ecogenicidad, nódulos]\nLóbulo izquierdo: [dimensiones cm, ecogenicidad, nódulos]\nIstmo: [grosor cm, nódulos]\nNódulos (si presentes):\n  - Composición: [sólido/quístico/espongiforme/mixto]\n  - Ecogenicidad: [hiper/iso/hipoecoico/muy hipoecoico]\n  - Forma: [más ancho que alto / más alto que ancho]\n  - Márgenes: [lisos/irregulares/espiculados/extratiroideos]\n  - Focos ecogénicos: [ninguno/macrocalcificaciones/periférico/puntiformes]\n  - Puntuación ACR TI-RADS: TR[1-5]\nGanglios cervicales: [adenopatías]\n\nImpresión:\n1. [Conclusiones con categoría TI-RADS y recomendación]'+firma,
+
+    'Obstétrico': 'Eres un radiólogo especialista en ultrasonido obstétrico. Estructurás dictados como informes formales de ultrasonido obstétrico en español médico formal, siguiendo el léxico RSNA 2024 para primer trimestre y guías ISUOG.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido obstétrico\n\nTécnica:\nUltrasonido obstétrico transabdominal [y/o transvaginal].\n\nHallazgos:\n\nNúmero de fetos: [único/gemelar]\nPresentación: [cefálica/pélvica/transversa]\nFrecuencia cardíaca fetal: [__] lpm\nBiometría fetal:\n  - DBP: [__] mm\n  - CC: [__] mm\n  - CA: [__] mm\n  - LF: [__] mm\n  - Peso fetal estimado: [__] g (percentil [__])\nPlacenta: [localización, grado, previa]\nLíquido amniótico: ILA [__] cm — [normal/polihidramnios/oligohidramnios]\nCuello uterino: longitud [__] cm, cerrado.\nAnexos maternos: [masas]\n\nImpresión:\n1. [Embarazo + semanas + concordancia biométrica]'+firma,
+
+    'Renal': 'Eres un radiólogo especialista en ultrasonido renal. Estructurás dictados como informes formales de ultrasonido renal y de vías urinarias en español médico formal, siguiendo las guías RadReport RSNA.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido renal y de vías urinarias\n\nTécnica:\nUltrasonido renal bilateral con vejiga en escala de grises y Doppler.\n\nHallazgos:\n\nRiñón derecho: [dimensiones, parénquima, masas, cálculos, hidronefrosis, índice de resistencia]\nRiñón izquierdo: [dimensiones, parénquima, masas, cálculos, hidronefrosis, índice de resistencia]\nVejiga: [repleta/vacía, paredes, lesiones, volumen]\nResiduo postmiccional: [__] cc\nUréteres: [dilatación]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'Pélvico': 'Eres un radiólogo especialista en ultrasonido pélvico ginecológico. Estructurás dictados como informes formales de ultrasonido pélvico en español médico formal, siguiendo las guías RadReport RSNA y ISUOG.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido pélvico\n\nTécnica:\nUltrasonido pélvico transabdominal [y/o transvaginal].\n\nHallazgos:\n\nÚtero: [posición, dimensiones, miometrio, endometrio en mm]\nOvario derecho: [dimensiones, quistes, masas]\nOvario izquierdo: [dimensiones, quistes, masas]\nFondo de saco de Douglas: [líquido libre]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'Partes blandas': 'Eres un radiólogo especialista en ultrasonido musculoesquelético y de partes blandas. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA y ESSR.\n\nPLANTILLA:\n\n'+cabecera+'Ultrasonido de partes blandas — [región]\n\nTécnica:\nUltrasonido con transductor de alta resolución en escala de grises y Doppler color de [región anatómica].\n\nHallazgos:\n\nTejidos blandos: [colecciones, masas, engrosamiento]\nTendones: [fibras, integridad, tendinosis, ruptura]\nBursas: [bursitis]\nArticulación: [derrame articular]\nDoppler: [hipervascularidad]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma
+  };
+
+  const sub=subtipo||'Abdominal';
+  return prompts[sub]||prompts['Abdominal'];
+}
+
+function buildSystemPrompt(pac){
+  return 'Eres un radiólogo especialista en imagen cardiovascular. Estructurás dictados médicos como informes formales de CCTA en español médico formal.\n\nREGLAS:\n1. Tipo oración en todo el texto, excepto siglas médicas (CAD-RADS, DA, CD, TPI, DP, Cx, OM, DER, DLP, EAC, ACI, HRP, S.L.) siempre en mayúsculas.\n2. Incisos no mencionados: completar con valores normales.\n3. Conclusiones numeradas 1. 2. 3. — nunca guiones.\n4. CAD-RADS siempre con interpretación entre paréntesis: CAD-RADS 0 (ausencia de EAC) · 1 (mínima no obstructiva, 1-24%) · 2 (leve no obstructiva, 25-49%) · 3 (estenosis moderada, 50-69%) · 4A (estenosis grave, 70-99%) · 4B (TCI >50% o 3 vasos >70%) · 5 (oclusión total).\n5. Autocorregir errores.\n6. Score de calcio sin dato: 0 UA.\n7. Ramo intermedio sin dato: Ausente.\n\nPLANTILLA:\n\n'+pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\nUnidad de imagen cardiovascular y torácica\nModalidad de tomografía computada\nAngiotomografía de arterias coronarias\n\nMotivo de envío:\n[contenido]\n\nMétodo de estudio:\nEl estudio fue practicado en un tomógrafo '+(getCctaEquipo()||'multidetector')+'. Se realizó estudio en fase simple para cálculo del índice de calcio y post contraste no iónico'+(getCctaContraste()?' (vol. '+getCctaContraste()+')':'')+' en fase arterial con protocolo prospectivo de baja radiación y reconstrucción con algoritmo de Deep Learning de acuerdo al protocolo (DER [valor] mSv, DLP [valor] mGy·cm) del centro'+(getCentroNombre()?' '+getCentroNombre():' de diagnóstico por imagen')+'. '+(getCctaPremed()?'El paciente fue premedicado con '+getCctaPremed()+' para vasodilatación coronaria. ':'')+'Incidentes: ninguno.\n\nCalidad del estudio:\n[contenido]\n\nHallazgos:\n\na) Score de calcio:\n[UA + riesgo + percentil si se mencionó]\n\nb) Arterias coronarias:\nExiste dominancia [derecha/izquierda/codominancia]. El origen de las coronarias es normal.\n- Coronaria derecha: [contenido]\n- Tronco principal izquierdo: [contenido]\n- Descendente anterior: [contenido]\n- Circunfleja: [contenido]\n- Ramo intermedio: [contenido]\n\nc) Evaluación funcional:\n[sin dato: "No valorable por la naturaleza prospectiva del estudio. Las cavidades cardiacas son de tamaño normal."]\n\nd) Evaluación pericárdica y vascular:\n[sin dato: "Pericardio de grosor normal y sin derrame. Aorta y arteria pulmonar principal de calibre normal."]\n\ne) Válvula aórtica:\n[sin dato: "Trivalva de morfología normal."]\n\nf) Hallazgos incidentales:\n[sin dato: "Ninguno."]\n\nConclusiones:\n1. Índice de calcio de [valor] UA (riesgo [bajo/intermedio/alto], percentil [X] de acuerdo a género y edad).\n2. Arterias coronarias epicárdicas [sin/con lesiones], corresponde a categoría CAD-RADS [X] ([interpretación])[modificadores].\n3. [Adicional si aplica]\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+}
+async function doGenerate(){
+  if(!usuarioActual){alert2('ga','Iniciá sesión primero','warn');return;}
+  const rawTxt=document.getElementById('tbox').value.trim();
+  if(!rawTxt){alert2('ga','Ingresá el dictado primero','warn');return;}
+  const txt=normalizeCadRads(rawTxt);const pac=getPacienteData();
+  const btn=document.getElementById('gbtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generando informe...';
+  try{
+    const r=await authFetch('/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        system_prompt:modalidadActual==='Ultrasonido'?buildPromptUS(pac,subtipoActual):modalidadActual==='Tomografía computada'?buildPromptTC(pac,subtipoActual):modalidadActual==='Resonancia magnética'?buildPromptRM(pac,subtipoActual):modalidadActual==='Rayos X'?buildPromptRX(pac,subtipoActual):modalidadActual==='Fluoroscopía'?buildPromptFL(pac,subtipoActual):buildSystemPrompt(pac),
+        transcripcion:'Estructurá este dictado como informe radiológico formal de '+(subtipoActual||modalidadActual||'CCTA')+':\n\n'+txt,
+        modalidad:modalidadActual||'CCTA'
+      })
+    });
+    const d=await r.json();
+    if(!r.ok){
+      if(d.error==='limite_alcanzado'){
+        alert2('ga',d.mensaje,'warn');
+        return;
+      }
+      throw new Error(d.error||'Error '+r.status);
+    }
+    const rep=d.informe||'';
+    if(!rep)throw new Error('Respuesta vacía');
+    document.getElementById('reportEdit').value=rep;
+    document.getElementById('rout').classList.add('show');
+    document.getElementById('reportEdit').scrollIntoView({behavior:'smooth',block:'start'});
+    saveToHistorial(rep,pac);
+    // Actualizar contador en UI
+    if(usuarioActual){
+      usuarioActual.informes_mes=(usuarioActual.informes_mes||0)+1;
+      localStorage.setItem('ier_user',JSON.stringify(usuarioActual));
+      mostrarPlanInfo(usuarioActual);
+    }
+    alert2('ga','Informe generado ✓','ok');
+    if(localStorage.getItem('auto_drive')==='1'){setTimeout(doUploadDrive,400);}
+  }catch(e){alert2('ga','Error: '+e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='📄 Generar informe';}
+}
+function doRegenerate(){
+  const informe=document.getElementById('reportEdit').value.trim();
+  if(!informe){alert2('ra','No hay informe','warn');return;}
+  const instruccion=prompt('¿Qué querés corregir o cambiar?');
+  if(!instruccion)return;
+  _regen(informe,instruccion);
+}
+async function _regen(informe,instruccion){
+  if(!usuarioActual){alert2('ra','Iniciá sesión primero','warn');return;}
+  document.getElementById('reportEdit').disabled=true;alert2('ra','Aplicando corrección...','warn');
+  try{
+    const r=await authFetch('/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        system_prompt:'Eres un radiólogo especialista. Corregí el informe según la instrucción. Mantené formato y plantilla. Respondé SOLO con el informe corregido.',
+        transcripcion:'Informe actual:\n\n'+informe+'\n\nInstrucción: '+instruccion,
+        modalidad:modalidadActual||'CCTA'
+      })
+    });
+    const d=await r.json();
+    if(!r.ok){
+      if(d.error==='limite_alcanzado'){alert2('ra',d.mensaje,'warn');return;}
+      throw new Error(d.error||'Error '+r.status);
+    }
+    document.getElementById('reportEdit').value=d.informe||'';
+    alert2('ra','Actualizado ✓','ok');
+  }catch(e){alert2('ra','Error: '+e.message,'err');}
+  finally{document.getElementById('reportEdit').disabled=false;}
+}
+function doCopy(){
+  const txt=document.getElementById('reportEdit').value;
+  navigator.clipboard.writeText(txt).then(()=>alert2('ra','Copiado ✓','ok'))
+    .catch(()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert2('ra','Copiado ✓','ok');});
+}
+function doDownloadTxt(){
+  const nombre=document.getElementById('pNombre').value.trim().replace(/[\s,]+/g,'_')||'paciente';
+  const blob=new Blob([document.getElementById('reportEdit').value],{type:'text/plain;charset=utf-8'});
+  const modSlug=(modalidadActual||'Informe').replace(/\s+/g,'_');
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=modSlug+'_'+nombre+'_'+new Date().toISOString().slice(0,10)+'.txt';a.click();
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function buildDocx(texto){
+  const sello=getSello();
+  // Dimensiones en EMU (1px @96dpi = 9525 EMU), ancho máx ~4.7cm de celda, alto máx proporcional
+  let IMG_W=0,IMG_H=0;
+  if(sello){
+    const MAX_W=2700000,MAX_H=1500000;
+    IMG_W=sello.w*9525;IMG_H=sello.h*9525;
+    if(IMG_W>MAX_W){IMG_H=Math.round(IMG_H*MAX_W/IMG_W);IMG_W=MAX_W;}
+    if(IMG_H>MAX_H){IMG_W=Math.round(IMG_W*MAX_H/IMG_H);IMG_H=MAX_H;}
+  }
+  function p(t,opts={}){
+    const{bold=false,center=false,indent=0,hang=0,before=0,after=120,color='',size=22}=opts;
+    let pPr='<w:pPr>';
+    if(center)pPr+='<w:jc w:val="center"/>';
+    if(indent||hang)pPr+=\`<w:ind w:left="${indent}"${hang?' w:hanging="'+hang+'"':''}/>\`;
+    if(before||after!==120)pPr+=\`<w:spacing w:before="${before}" w:after="${after}"/>\`;
+    pPr+='</w:pPr>';
+    let rPr='<w:rPr>';
+    if(bold)rPr+='<w:b/>';
+    if(color)rPr+=\`<w:color w:val="${color}"/>\`;
+    if(size!==22)rPr+=\`<w:sz w:val="${size}"/><w:szCs w:val="${size}"/>\`;
+    rPr+='</w:rPr>';
+    return \`<w:p>${pPr}<w:r>${rPr}<w:t xml:space="preserve">${esc(t)}</w:t></w:r></w:p>\`;
+  }
+  function imgXml(nombre,cargo){
+    const nameW=sello?'5400':'9360';
+    const nameCell='<w:tc><w:tcPr><w:tcW w:w="'+nameW+'" w:type="dxa"/><w:tcBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:spacing w:before="300" w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1D5C3A"/></w:rPr><w:t>'+esc(nombre)+'</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="0" w:after="40"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="1D5C3A"/></w:rPr><w:t>'+esc(cargo)+'</w:t></w:r></w:p></w:tc>';
+    if(!sello){
+      return '<w:tbl><w:tblPr><w:tblW w:w="9360" w:type="dxa"/><w:tblBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/><w:insideH w:val="none"/><w:insideV w:val="none"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="9360"/></w:tblGrid><w:tr>'+nameCell+'</w:tr></w:tbl>';
+    }
+    const selloCell='<w:tc><w:tcPr><w:tcW w:w="3960" w:type="dxa"/><w:tcBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/></w:tcBorders><w:vAlign w:val="center"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:rPr/><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><wp:extent cx="'+IMG_W+'" cy="'+IMG_H+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="1" name="sello"/><wp:cNvGraphicFramePr/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="1" name="sello"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdSello" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+IMG_W+'" cy="'+IMG_H+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p></w:tc>';
+    return '<w:tbl><w:tblPr><w:tblW w:w="9360" w:type="dxa"/><w:tblBorders><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/><w:insideH w:val="none"/><w:insideV w:val="none"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="5400"/><w:gridCol w:w="3960"/></w:tblGrid><w:tr>'+nameCell+selloCell+'</w:tr></w:tbl>';
+}
+  const lines=texto.split('\n');
+  const atentIdx=lines.findIndex(l=>/^Atentamente/i.test(l.trim()));
+  const processLines=(arr)=>arr.map(line=>{
+    const t=line.trim();
+    if(!t)return '<w:p><w:pPr><w:spacing w:after="0"/></w:pPr></w:p>';
+    if(/^(Unidad de imagen|Modalidad de tomograf|Angiotomograf)/i.test(t))return p(t,{bold:true,center:true,size:24,before:0,after:60});
+    if(/^[a-fA-F]\)\s|^(Motivo|Método|Calidad|Hallazgos|Conclusiones|Atentamente)/i.test(t))return p(t,{bold:true,before:200,after:80});
+    if(t.startsWith('-'))return p('• '+t.substring(1).trim(),{indent:360,after:60});
+    if(/^\d+\.\s/.test(t))return p(t,{indent:360,hang:360,after:80});
+    if(/^Dr\.|^Radiólogo/i.test(t))return p(t,{bold:true,color:'1D5C3A',after:40});
+    if(/^(Edad:|Número de expediente:|Localidad:|Fecha:)/i.test(t))return p(t,{after:40});
+    return p(t,{after:60});
+  }).join('\n');
+
+  let bodyXml;
+  if(atentIdx>=0){
+    const antes=processLines(lines.slice(0,atentIdx));
+    const atent='<w:p><w:pPr><w:spacing w:before="200" w:after="80"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>'+esc(lines[atentIdx].trim())+'</w:t></w:r></w:p>';
+    const resta=lines.slice(atentIdx+1).filter(l=>l.trim());
+    const nomLine=resta.find(l=>/^Dr\./.test(l.trim()))||getMedNombre();
+    const cargoLine=resta.find(l=>/^Radiol/.test(l.trim()))||'Radiólogo';
+    bodyXml=antes+'\n'+atent+'\n'+imgXml(nomLine.trim(),cargoLine.trim());
+  }else{
+    bodyXml=processLines(lines)+'\n'+imgXml(getMedNombre(),'Radiólogo');
+  }
+  const docXml=\`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+  xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+  mc:Ignorable="w14">
+  <w:body>${bodyXml}
+    <w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr>
+  </w:body></w:document>\`;
+  const stylesXml=\`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:docDefaults><w:rPrDefault><w:rPr>
+    <w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+    <w:sz w:val="22"/><w:szCs w:val="22"/>
+    <w:lang w:val="es-419"/>
+  </w:rPr></w:rPrDefault>
+  <w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault>
+  </w:docDefaults></w:styles>\`;
+  const docRels=\`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+  ${sello?'<Relationship Id="rIdSello" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/sello.png"/>':''}
+</Relationships>\`;
+  const contentTypes=\`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Default Extension="png" ContentType="image/png"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+</Types>\`;
+  const appRels=\`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>\`;
+  const zip=new JSZip();
+  zip.file('[Content_Types].xml',contentTypes);
+  zip.file('_rels/.rels',appRels);
+  zip.file('word/document.xml',docXml);
+  zip.file('word/styles.xml',stylesXml);
+  zip.file('word/_rels/document.xml.rels',docRels);
+  if(sello){
+    const bin=atob(sello.b64);const arr=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    zip.file('word/media/sello.png',arr);
+  }
+  return zip;
+}
+async function doDownloadDocx(){
+  const txt=document.getElementById('reportEdit').value.trim();
+  if(!txt){alert2('ra','No hay informe','warn');return;}
+  if(typeof JSZip==='undefined'){alert2('ra','JSZip no cargó, verificá tu conexión','err');return;}
+  const nombre=document.getElementById('pNombre').value.trim().replace(/[\s,]+/g,'_')||'paciente';
+  const btn=document.getElementById('wordBtn');btn.innerHTML='<span class="spin"></span> Preparando PDF...';btn.disabled=true;
+  try{
+    const zip=buildDocx(txt);
+    const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const modSlug=(modalidadActual||'Informe').replace(/\s+/g,'_');
+    const nombreArchivo=modSlug+'_'+nombre+'_'+new Date().toISOString().slice(0,10)+'.docx';
+    let enDispositivo=false;
+    try{enDispositivo=await saveBlobToDevice(blob,nombreArchivo);}catch(e){enDispositivo=false;}
+    if(enDispositivo){
+      alert2('ra','Guardado en Archivos › InfoEasyRad ✓','ok');
+    }else{
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+      a.download=nombreArchivo;a.click();
+      alert2('ra','Word descargado ✓','ok');
+    }
+  }catch(e){alert2('ra','Error Word: '+e.message,'err');}
+  finally{btn.innerHTML='📝 Word';btn.disabled=false;}
+}
+function doNew(){
+  ['pNombre','pEdad','pExpediente','pLocalidad','tbox'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pFecha').value=new Date().toISOString().slice(0,10);
+  document.getElementById('reportEdit').value='';document.getElementById('rout').classList.remove('show');
+  document.getElementById('rtime').textContent='0:00';document.getElementById('rstat').textContent='Presioná para dictar el informe';
+  afile=null;document.getElementById('tbtn').disabled=true;document.getElementById('gbtn').disabled=true;
+  document.getElementById('finfo').classList.remove('show');
+  refFile=null;document.getElementById('finfoRef').classList.remove('show');document.getElementById('finputRef').value='';
+  ['ta','ga','ra','pacAlert'].forEach(id=>alert2(id,'',''));window.scrollTo({top:0,behavior:'smooth'});
+}
+function alert2(id,msg,type){
+  const el=document.getElementById(id);if(!msg){el.className='alert';return;}
+  el.className='alert show '+type;el.textContent=msg;
+  if(type==='ok')setTimeout(()=>{el.className='alert';},4000);
+}
+document.getElementById('tbox').addEventListener('input',checkGenBtn);
+
+const GOOGLE_CLIENT_ID='919495150821-59mjnqjsn09bncg49ecq8prne972o04j.apps.googleusercontent.com';
+let googleAccessToken=null;
+
+function getGoogleToken(callback){
+  if(googleAccessToken){callback();return;}
+  const client=google.accounts.oauth2.initTokenClient({
+    client_id:GOOGLE_CLIENT_ID,
+    scope:'https://www.googleapis.com/auth/drive.file',
+    callback:(resp)=>{
+      if(resp.error){alert2('ra','Error al autorizar Google Drive: '+resp.error,'err');return;}
+      googleAccessToken=resp.access_token;
+      callback();
+    }
+  });
+  client.requestAccessToken();
+}
+
+async function getOrCreateDriveFolder(){
+  // Cache del ID de carpeta (se valida contra Drive por si el usuario la borró)
+  const cached=localStorage.getItem('drive_folder_id');
+  if(cached){
+    try{
+      const r=await fetch('https://www.googleapis.com/drive/v3/files/'+cached+'?fields=id,trashed',{
+        headers:{'Authorization':'Bearer '+googleAccessToken}});
+      if(r.ok){const d=await r.json();if(!d.trashed)return cached;}
+    }catch(e){}
+    localStorage.removeItem('drive_folder_id');
+  }
+  // Buscar carpeta existente creada por la app
+  const q=encodeURIComponent("name='InfoEasyRad' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+  const rs=await fetch('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id)',{
+    headers:{'Authorization':'Bearer '+googleAccessToken}});
+  if(rs.ok){
+    const d=await rs.json();
+    if(d.files&&d.files.length){localStorage.setItem('drive_folder_id',d.files[0].id);return d.files[0].id;}
+  }
+  // Crear la carpeta
+  const rc=await fetch('https://www.googleapis.com/drive/v3/files',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
+    body:JSON.stringify({name:'InfoEasyRad',mimeType:'application/vnd.google-apps.folder'})});
+  if(!rc.ok)throw new Error('No se pudo crear la carpeta en Drive');
+  const dc=await rc.json();
+  localStorage.setItem('drive_folder_id',dc.id);
+  return dc.id;
+}
+
+async function doUploadDrive(){
+  const txt=document.getElementById('reportEdit').value.trim();
+  if(!txt){alert2('ra','No hay informe para subir','warn');return;}
+  if(typeof JSZip==='undefined'){alert2('ra','JSZip no cargó, verificá tu conexión','err');return;}
+  const nombre=document.getElementById('pNombre').value.trim().replace(/[\s,]+/g,'_')||'paciente';
+  const modSlug=(modalidadActual||'Informe').replace(/\s+/g,'_');
+  const nombreArchivo=modSlug+'_'+nombre+'_'+new Date().toISOString().slice(0,10)+'.docx';
+
+  const btn=document.getElementById('driveBtn');
+  const btnHtmlOriginal=btn.innerHTML;
+
+  getGoogleToken(async()=>{
+    btn.innerHTML='<span class="spin"></span> Subiendo...';
+    btn.disabled=true;
+    const oldLnk=document.getElementById('driveLink');if(oldLnk)oldLnk.remove();
+    try{
+      // Generar el mismo .docx que el botón Word
+      const zip=buildDocx(txt);
+      const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+
+      // Subir a Drive como multipart
+      const boundary='-------InfoEasyRadBoundary';
+      const folderId=await getOrCreateDriveFolder();
+      const meta=JSON.stringify({
+        name:nombreArchivo,
+        parents:[folderId],
+        mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      });
+
+      // Construir el body multipart manualmente
+      const metaBytes=new TextEncoder().encode(
+        '--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+meta+'\r\n--'+boundary+'\r\nContent-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n\r\n'
+      );
+      const endBytes=new TextEncoder().encode('\r\n--'+boundary+'--');
+      const docxBytes=await blob.arrayBuffer();
+
+      const bodyParts=[metaBytes,new Uint8Array(docxBytes),endBytes];
+      const totalLength=bodyParts.reduce((sum,p)=>sum+p.byteLength,0);
+      const bodyBuffer=new Uint8Array(totalLength);
+      let offset=0;
+      for(const part of bodyParts){bodyBuffer.set(part,offset);offset+=part.byteLength;}
+
+      const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer '+googleAccessToken,
+          'Content-Type':'multipart/related; boundary="'+boundary+'"'
+        },
+        body:bodyBuffer
+      });
+      if(!r.ok){
+        const e=await r.json();
+        if(e.error&&e.error.status==='UNAUTHENTICATED'){googleAccessToken=null;}
+        throw new Error(e.error?.message||'Error al subir');
+      }
+      const d=await r.json();
+      const fileId=d.id;
+      // Nota: el archivo queda PRIVADO en el Drive del usuario (datos de pacientes).
+      // El link funciona para el dueño de la cuenta; compartirlo requiere hacerlo desde Drive.
+      const link='https://drive.google.com/file/d/'+fileId+'/view';
+      const lnk=document.createElement('div');
+      lnk.id='driveLink';
+      lnk.style.cssText='margin-top:10px;font-size:12px;padding:10px 14px;background:#e6f9f2;border-radius:8px;border:1px solid #9fe1cb;line-height:1.7';
+      lnk.innerHTML='✓ Guardado en Drive › carpeta InfoEasyRad: <a href="'+link+'" target="_blank" style="color:#0f6e56;font-weight:600">'+nombreArchivo+'</a>';
+      document.getElementById('ra').insertAdjacentElement('afterend',lnk);
+      alert2('ra','Subido a Drive ✓','ok');
+    }catch(e){
+      alert2('ra','Error: '+e.message,'err');
+    }finally{
+      btn.innerHTML=btnHtmlOriginal;
+      btn.disabled=false;
+    }
+  });
+}
+
+// ── RESONANCIA MAGNÉTICA ───────────────────────────────────
+function buildPromptRM(pac, subtipo){
+  const cab=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+  const prompts={
+    'RM Cerebro':'Eres un radiólogo especialista en neurorradiología. Estructurás dictados como informes formales de RM de cerebro en español médico formal, siguiendo la plantilla RSNA con 22 elementos clave y guías ASNR.\n\nREGLAS: 5 secciones: Técnica, Comparación, Hallazgos (16 sub-elementos), Impresión. Tipo oración. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Resonancia magnética de cerebro [sin/con contraste]\n\nTécnica:\nEstudio multiparamétrico con secuencias T1, T2, FLAIR, DWI, T1 con gadolinio. [Campos de visión, grosor de corte].\n\nComparación: [Estudio previo o "Sin estudios previos para comparación"]\n\nHallazgos:\nParénquima supratentorial: [señal, lesiones, edema, cambios isquémicos]\nParénquima infratentorial: [cerebelo, tronco encefálico]\nSustancia blanca: [lesiones, hiperintensidades T2/FLAIR]\nDifusión (DWI): [restricción de difusión]\nVentrículos y cisternas: [tamaño, morfología, hidrocefalia]\nLínea media: [desplazamiento]\nEspacio subaracnoideo y surcos: [ensanchamiento, hemorragia]\nSilla turca e hipófisis: [tamaño, lesiones]\nÓrbitas: [incluidas en el FOV]\nSenos paranasales y mastoides: [opacificación]\nHueso y partes blandas: [lesiones, engrosamiento]\nGadolinio: [realce patológico, tipo]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RM Columna':'Eres un radiólogo especialista en RM de columna vertebral. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA, ASNR y SSR.\n\nREGLAS: Tipo oración. Describir nivel por nivel. Conclusiones numeradas con gradación estenosis. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Resonancia magnética de columna [cervical/torácica/lumbar] [sin/con contraste]\n\nTécnica:\nSecuencias sagitales T1, T2, STIR y axiales T2 de columna [región]. [Con/Sin] gadolinio.\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nAlineación: [lordosis/cifosis, escoliosis]\nCuerpos vertebrales: [señal, altura, fracturas, nivel por nivel]\nDiscos intervertebrales: [señal, altura, protrusiones/hernias por nivel]\nCanal raquídeo: [amplitud, estenosis central — leve/moderada/severa]\nForámenes neurales: [permeabilidad, estenosis foraminal]\nCono medular y cauda equina: [nivel, señal, compresión]\nLigamentos: [engrosamiento, señal]\nArticulaciones facetarias: [hipertrofia, derrame]\nParavertebral: [masas, señal]\n\nImpresión:\n1. [Conclusiones numeradas por nivel con grado de estenosis]'+firma,
+
+    'RM Rodilla':'Eres un radiólogo especialista en RM musculoesquelética. Estructurás dictados como informes formales de RM de rodilla en español médico formal, siguiendo las guías RadReport RSNA y SSR/ESSR.\n\nREGLAS: Tipo oración. Describir sistemáticamente todos los compartimentos. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Resonancia magnética de rodilla [derecha/izquierda] sin contraste\n\nTécnica:\nSecuencias coronales DP FS, sagitales DP FS y T1, axiales DP FS de rodilla [lado].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nMenisco medial: [señal, morfología, desgarro — tipo, localización — grado I/II/III]\nMenisco lateral: [señal, morfología, desgarro]\nLigamento cruzado anterior (LCA): [señal, continuidad, ruptura]\nLigamento cruzado posterior (LCP): [señal, continuidad]\nLigamento colateral medial (LCM): [engrosamiento, lesión]\nLigamento colateral lateral (LCL): [señal]\nCartílago articular: [grosor, señal, defectos — compartimento medial, lateral, patelofemoral]\nHueso subcondral: [edema óseo, contusión, fractura oculta]\nDerrame articular: [volumen, señal]\nBursa prerrotuliana e infrarrotuliana: [bursitis]\nTendón rotuliano y cuádriceps: [señal, continuidad]\nFosa poplítea: [quiste de Baker]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RM Hombro':'Eres un radiólogo especialista en RM musculoesquelética. Estructurás dictados como informes formales de RM de hombro en español médico formal, siguiendo las guías RadReport RSNA y ESSR.\n\nREGLAS: Tipo oración. Evaluar manguito rotador sistemáticamente. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Resonancia magnética de hombro [derecho/izquierdo] sin contraste\n\nTécnica:\nSecuencias coronales DP FS y T1, sagitales DP FS, axiales DP FS de hombro [lado].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nManguito rotador:\n  - Supraespinoso: [señal, grosor, desgarro — parcial/completo, localización, retracción]\n  - Infraespinoso: [señal, integridad]\n  - Subescapular: [señal, integridad]\n  - Redondo menor: [señal, integridad]\nTendón del bíceps (porción larga): [señal, posición en corredera, desgarro, luxación]\nBursa subacromial-subdeltoidea: [bursitis, colección]\nEspacio subacromial: [distancia, acromion — tipo I/II/III]\nArticulación glenohumeral: [derrame, labrum anterior/posterior, inestabilidad]\nArticulación acromioclavicular: [artrosis, osteofitos, derrame]\nHueso: [edema, fractura oculta, lesión de Hill-Sachs o Bankart]\nPartes blandas: [atrofia muscular]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RM Abdomen':'Eres un radiólogo especialista en RM abdominal. Estructurás dictados como informes formales de RM de abdomen en español médico formal, siguiendo las guías RadReport RSNA, LI-RADS y ACR.\n\nREGLAS: Tipo oración. Lesiones hepáticas usar LI-RADS. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Resonancia magnética de abdomen [sin/con contraste]\n\nTécnica:\nSecuencias T2 HASTE axial y coronal, T1 en fase/fuera de fase, DWI, T1 con gadolinio en fases dinámica arterial, portal y tardía. [Hepatobiliar si aplica].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nHígado: [tamaño, señal, lesiones — LI-RADS si aplica, vías biliares]\nVesícula biliar: [señal, cálculos, pared]\nPáncreas: [señal, tamaño, conducto de Wirsung, lesiones]\nBazo: [tamaño, señal, lesiones]\nGlándulas suprarrenales: [tamaño, lesiones — protocolo adrenal si aplica]\nRiñones: [tamaño, señal, lesiones, hidronefrosis]\nVascular: [permeabilidad portal, hepática, aorta]\nGanglios: [adenopatías]\nPeritoneo y ascitis: [líquido libre]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RM Pelvis':'Eres un radiólogo especialista en RM de pelvis. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA, PI-RADS (próstata) y ESUR (útero/ovarios).\n\nREGLAS: Tipo oración. Próstata usar PI-RADS v2.1. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Resonancia magnética de pelvis [sin/con contraste]\n\nTécnica:\nSecuencias axiales T2, sagitales T2, coronales T2, DWI y T1 con gadolinio de pelvis.\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\n[Si masculino]\nPróstata: [tamaño — volumen cc, zona periférica, zona transicional — lesiones con categoría PI-RADS 1-5]\nVesículas seminales: [señal, lesiones]\nUretra: [permeabilidad]\n[Si femenino]\nÚtero: [tamaño, señal, miometrio, endometrio — espesor]\nOvarios: [tamaño, quistes, masas — señal, tabiques, componente sólido]\nCérvix: [señal, lesiones]\nVejiga: [pared, lesiones, divertículos]\nRecto y sigma: [pared, lesiones]\nLinfonodos: [adenopatías ilíacas, obturadoras]\nEstructuras óseas: [lesiones]\nLíquido libre: [derrame peritoneal, Douglas]\n\nImpresión:\n1. [Conclusiones con categoría PI-RADS si aplica]'+firma
+  };
+  return prompts[subtipo]||prompts['RM Cerebro'];
+}
+
+// ── RAYOS X ────────────────────────────────────────────────
+function buildPromptRX(pac, subtipo){
+  const cab=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+  const prompts={
+    'RX Tórax':'Eres un radiólogo especialista en radiología de tórax. Estructurás dictados como informes formales de radiografía de tórax en español médico formal, siguiendo las guías RSNA (33 conceptos clave del template de Chest Xray) y la STR.\n\nREGLAS: Tipo oración. Describir líneas y tubos, pulmones, mediastino, corazón, hueso. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Radiografía de tórax PA [y lateral]\n\nTécnica:\nProyección posteroanterior [y lateral] de tórax. [Técnica adecuada/limitada].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nLíneas y tubos: [sonda endotraqueal, catéter venoso central, sonda nasogástrica, marcapasos — posición]\nPulmones y pleura: [expansión, transparencia, consolidación, vidrio despulido, nódulos, neumotórax, derrame pleural]\nMediastino: [calibre, ensanchamiento, contornos]\nCorazón: [índice cardiotorácico, silueta]\nHilios pulmonares: [tamaño, densidad]\nDiafragma: [ángulos costofrénicos, elevación]\nEstructuras óseas: [costillas, vértebras, clavículas — fracturas, lesiones]\nPartes blandas: [calcificaciones, lesiones]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RX Abdomen':'Eres un radiólogo especialista en radiología abdominal. Estructurás dictados como informes formales de radiografía de abdomen en español médico formal, siguiendo las guías RadReport RSNA.\n\nREGLAS: Tipo oración. Evaluar distribución de gas, calcificaciones, partes blandas y hueso. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Radiografía de abdomen [simple/de pie/decúbito]\n\nTécnica:\nProyección [anteroposterior de pie/decúbito supino] de abdomen.\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nDistribución de gas intestinal: [patrón normal/anormal, dilatación, niveles hidroaéreos, íleo, obstrucción]\nAire libre subdiafragmático: [neumoperitoneo — presente/ausente]\nCalcificaciones: [urolitiasis, flebolitos, calcificaciones vasculares, apendiculares]\nSilueta de órganos: [hígado, bazo, riñones — tamaño estimado]\nPartes blandas: [masas, densidades]\nEstructuras óseas: [vértebras lumbares, pelvis, costillas — lesiones]\nCuerpos extraños: [sondas, catéteres, material quirúrgico]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RX Columna':'Eres un radiólogo especialista en radiología musculoesquelética. Estructurás dictados como informes formales de radiografía de columna en español médico formal, siguiendo las guías RadReport RSNA.\n\nREGLAS: Tipo oración. Describir alineación, vértebras, espacios y partes blandas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Radiografía de columna [cervical/torácica/lumbar] [proyecciones]\n\nTécnica:\nProyecciones [AP y lateral ± oblicuas] de columna [región].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nAlineación: [lordosis/cifosis — preservada/rectificada/invertida, escoliosis — ángulo de Cobb si aplica]\nCuerpos vertebrales: [altura, forma, densidad ósea, osteofitos — nivel por nivel, fracturas]\nEspacios discales: [altura — preservada/reducida, nivel por nivel]\nArticulaciones facetarias: [artrosis]\nAgujeros de conjunción: [tamaño, permeabilidad en oblicuas]\nPartes blandas paravertebrales: [ensanchamiento, calcificaciones]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RX Extremidades':'Eres un radiólogo especialista en radiología musculoesquelética. Estructurás dictados como informes formales de radiografía de extremidades en español médico formal, siguiendo las guías RadReport RSNA.\n\nREGLAS: Tipo oración. Describir hueso, articulación y partes blandas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Radiografía de [segmento anatómico] [derecho/izquierdo] [proyecciones]\n\nTécnica:\nProyecciones [AP y lateral ± oblicua] de [segmento].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nHueso: [trabeculado, cortical, densidad, fracturas — localización, trazo, desplazamiento, cuerpos libres]\nArticulación: [espacio articular, alineación, subluxación, luxación, derrame]\nPartes blandas: [edema, calcificaciones, cuerpos extraños]\nEpífisis y fisis: [en pacientes pediátricos — maduración ósea]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RX Pelvis':'Eres un radiólogo especialista en radiología musculoesquelética. Estructurás dictados como informes formales de radiografía de pelvis y caderas en español médico formal, siguiendo las guías RadReport RSNA.\n\nREGLAS: Tipo oración. Evaluar anillo pélvico, caderas y partes blandas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Radiografía de pelvis AP [y proyecciones de caderas]\n\nTécnica:\nProyección anteroposterior de pelvis. [Proyecciones adicionales de caderas si aplica].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nAnillo pélvico: [continuidad, fracturas — ramas, acetábulo, sacro, cóccix]\nCadera derecha: [espacio articular, alineación de la cabeza femoral, signos de artrosis, prótesis]\nCadera izquierda: [ídem]\nLumbar inferior: [vértebras incluidas]\nPartes blandas: [calcificaciones, cuerpos extraños, prótesis — si presentes]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'RX Cráneo':'Eres un radiólogo especialista en radiología de cabeza y cuello. Estructurás dictados como informes formales de radiografía de cráneo y/o senos paranasales en español médico formal, siguiendo las guías RadReport RSNA.\n\nREGLAS: Tipo oración. Describir calota, suturas, senos y partes blandas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Radiografía de [cráneo/senos paranasales] [proyecciones]\n\nTécnica:\nProyecciones [AP/Towne/lateral/Waters/Caldwell] de [cráneo/senos paranasales].\n\nComparación: [Estudio previo o "Sin estudios previos"]\n\nHallazgos:\nCalota craneal: [grosor, densidad, fractura, lesiones líticas/blásticas]\nSuturas: [permeabilidad — en pediátrico: sinostosis]\nSilla turca: [tamaño, forma]\nSenos paranasales: [maxilares, frontales, etmoidales, esfenoidal — velamiento, niveles hidroaéreos, engrosamiento mucoso, quistes]\nMastoides y oídos: [opacificación]\nMandíbula: [continuidad, articulación temporomandibular]\nPartes blandas: [calcificaciones, lesiones]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma
+  };
+  return prompts[subtipo]||prompts['RX Tórax'];
+}
+
+// ── FLUOROSCOPÍA ───────────────────────────────────────────
+function buildPromptFL(pac, subtipo){
+  const cab=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+  const prompts={
+    'FL Esófago-Estómago':'Eres un radiólogo especialista en fluoroscopía gastrointestinal. Estructurás dictados como informes formales de esofagograma o estudio gastroduodenal en español médico formal, siguiendo las guías RadReport RSNA y ACR.\n\nREGLAS: Tipo oración. Describir técnica con contraste, mucosa, motilidad y hallazgos por segmento. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'[Esofagograma / Estudio gastroduodenal / Tránsito esófago-gastro-duodenal]\n\nTécnica:\nEstudio realizado con contraste baritado [y doble contraste]. Se obtuvieron imágenes fluoroscópicas en posición [erguida/decúbito] en proyecciones [AP, lateral, oblicuas].\n\nHallazgos:\nEsófago: [calibre, mucosa, peristaltismo, reflujo gastroesofágico, divertículos, estenosis, lesiones de llenado]\nUnión esofagogástrica: [hernia hiatal — tipo, tamaño]\nEstómago: [tamaño, forma, mucosa, vaciamiento, úlceras, lesiones de llenado]\nDuodeno: [marco duodenal, mucosa, lesiones]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'FL Colon':'Eres un radiólogo especialista en fluoroscopía gastrointestinal. Estructurás dictados como informes formales de colon por enema en español médico formal, siguiendo las guías RadReport RSNA.\n\nREGLAS: Tipo oración. Describir llenado, mucosa y morfología por segmento. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Colon por enema [simple / doble contraste]\n\nTécnica:\nEstudio realizado con contraste baritado [y aire] bajo control fluoroscópico. Preparación colónica [adecuada/regular/inadecuada].\n\nHallazgos:\nRecto: [calibre, mucosa, lesiones de llenado, defectos]\nSigma: [haustras, mucosa, divertículos, lesiones]\nColon descendente: [haustras, mucosa, permeabilidad]\nColon transverso: [haustras, lesiones]\nColon ascendente: [haustras, permeabilidad]\nCiego y válvula ileocecal: [llenado, mucosa, apéndice si visualizado]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'FL Cistouretrograma':'Eres un radiólogo especialista en uroradiología. Estructurás dictados como informes formales de cistouretrograma miccional en español médico formal, siguiendo las guías RadReport RSNA y SIU.\n\nREGLAS: Tipo oración. Describir fase de llenado, miccional y postmiccional. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Cistouretrograma miccional\n\nTécnica:\nEstudio realizado mediante cateterismo vesical con instilación de contraste yodado hidrosoluble bajo control fluoroscópico. Imágenes en fases de llenado, miccional y postmiccional.\n\nHallazgos:\nFase de llenado: [capacidad vesical, morfología, pared, defectos de llenado, divertículos]\nReflujo vesicoureteral: [ausente / presente — lado, grado I-V]\nFase miccional: [cuello vesical, uretra — calibre, defectos, estenosis, válvulas]\nFase postmiccional: [residuo]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'FL Histerosalpingo':'Eres un radiólogo especialista en radiología ginecológica. Estructurás dictados como informes formales de histerosalpingografía en español médico formal, siguiendo las guías RadReport RSNA y ESUR.\n\nREGLAS: Tipo oración. Describir cavidad uterina y trompas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Histerosalpingografía\n\nTécnica:\nEstudio realizado mediante catéter cervical con instilación de contraste yodado hidrosoluble bajo control fluoroscópico.\n\nHallazgos:\nCavidad uterina: [forma, tamaño, contornos, defectos de llenado — pólipo, mioma, sinequias]\nTrompa derecha: [permeabilidad, calibre, morfología, hidrosálpinx, oclusión]\nTrompa izquierda: [permeabilidad, calibre, morfología]\nDerrame peritoneal: [libre / localizado — permeabilidad tubaria]\n\nImpresión:\n1. [Conclusiones — permeabilidad bilateral/unilateral/obstrucción]'+firma,
+
+    'FL Articulación':'Eres un radiólogo especialista en fluoroscopía musculoesquelética. Estructurás dictados como informes formales de articulografía en español médico formal, siguiendo las guías RadReport RSNA y SRR.\n\nREGLAS: Tipo oración. Describir técnica de inyección, distribución del contraste y hallazgos. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Articulografía de [articulación] [derecha/izquierda]\n\nTécnica:\nBajo guía fluoroscópica se realizó punción articular de [articulación] con aguja [calibre], verificando posición intraarticular, e inyectando [volumen] de contraste yodado [y/o gadolinio]. Sin complicaciones.\n\nHallazgos:\nDistribución del contraste: [patrón intraarticular normal/anormal]\nFugas extraarticulares: [presente/ausente — localización]\nEspacio articular: [amplitud, fragmentos libres]\nContorno articular: [irregularidades, osteofitos]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'FL Mielografía':'Eres un radiólogo especialista en neurorradiología intervencionista. Estructurás dictados como informes formales de mielografía en español médico formal, siguiendo las guías RadReport RSNA y ASNR.\n\nREGLAS: Tipo oración. Describir columna de contraste por nivel. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Mielografía [cervical/torácica/lumbar]\n\nTécnica:\nBajo guía fluoroscópica se realizó punción [lumbar/cervical] con aguja espinal, con salida de LCR claro, e inyección de contraste yodado no iónico [volumen] intratecal. Sin complicaciones inmediatas.\n\nHallazgos:\nColumna de contraste: [permeabilidad, nivel superior e inferior estudiado]\nDefectos de llenado: [presentes/ausentes — localización, nivel, tipo — extradural/intradural extramedular/intramedular]\nRaíces nerviosas: [morfología, amputaciones, desplazamiento]\nCalibre del saco tecal: [normal/reducido por nivel]\n\nImpresión:\n1. [Conclusiones numeradas por nivel]'+firma
+  };
+  return prompts[subtipo]||prompts['FL Esófago-Estómago'];
+}
+
+// ── SUBTIPO TOMOGRAFÍA COMPUTADA ───────────────────────────
+function buildPromptTC(pac, subtipo){
+  const cab=pac.nombre+'\nEdad: '+pac.edad+'\nNúmero de expediente: '+pac.exp+'\nLocalidad: '+pac.local+'\nFecha: '+pac.fecha+'\n\n';
+  const firma='\n\nAtentamente,\n\n'+getMedNombre()+'\nRadiólogo';
+
+  const prompts={
+    'TC Tórax': 'Eres un radiólogo especialista en TC de tórax. Estructurás dictados como informes formales de tomografía computada de tórax en español médico formal, siguiendo las guías RadReport RSNA, ACR Lung-RADS y Fleischner Society.\n\nREGLAS: Tipo oración en todo el texto. Nódulos pulmonares seguir guías Fleischner/Lung-RADS. Conclusiones numeradas. Autocorregir errores.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de tórax\n\nTécnica:\nSe obtuvieron imágenes axiales de cuerpo completo desde ápices pulmonares hasta bases, con reconstrucciones multiplanares en ventanas de pulmón, mediastino y ósea. [Con/Sin] contraste intravenoso.\n\nHallazgos:\n\nPulmones y vías aéreas:\n[Parénquima, nódulos, consolidaciones, vidrio despulido, derrame pleural, neumotórax]\n\nMediastino e hilio:\n[Adenopatías por criterio de tamaño, estructuras vasculares, tráquea, bronquios principales]\n\nCorazón y pericardio:\n[Tamaño cardíaco, calcificaciones coronarias, derrame pericárdico]\n\nPared torácica y estructuras óseas:\n[Costillas, vértebras, esternón, partes blandas]\n\nHallazgos incidentales abdominales superiores:\n[Hígado, bazo, riñones en cortes incluidos]\n\nImpresión:\n1. [Conclusiones numeradas + categoría Lung-RADS si aplica]'+firma,
+
+    'TC Abdomen-Pelvis': 'Eres un radiólogo especialista en TC de abdomen y pelvis. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA, LI-RADS para hígado y criterios AJR.\n\nREGLAS: Tipo oración. Lesiones hepáticas usar LI-RADS si contexto oncológico. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de abdomen y pelvis\n\nTécnica:\nSe obtuvieron imágenes axiales desde las bases pulmonares hasta la sínfisis del pubis. [Con/Sin] contraste intravenoso en fase [portal/arterial/tardía]. Reconstrucciones multiplanares.\n\nHallazgos:\n\nHígado: [tamaño, parénquima, lesiones focales, vías biliares intrahepáticas]\nVesícula y vías biliares: [colelitiasis, pared, colédoco]\nPáncreas: [parénquima, conducto de Wirsung, lesiones]\nBazo: [tamaño, lesiones]\nGlándulas suprarrenales: [tamaño, nódulos]\nRiñones: [tamaño, parénquima, lesiones, hidronefrosis, uréteres]\nVejiga: [pared, lesiones, contenido]\nÓrganos reproductores: [útero/ovarios o próstata si visualizados]\nLinfoadenopatías: [retroperitoneal, mesentérica, ilíaca]\nVascular: [aorta, vena cava, vasos mesentéricos]\nÓseo: [vértebras, pelvis, lesiones]\nPeritoneo y líquido libre: [ascitis, implantes]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'TC Cerebro': 'Eres un radiólogo especialista en neurorradiología. Estructurás dictados como informes formales de TC de cráneo en español médico formal, siguiendo las guías RadReport RSNA y ASNR.\n\nREGLAS: Tipo oración. Describir sistemáticamente parénquima, ventrículos, cisternas, línea media, hueso y partes blandas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de cráneo [sin/con contraste]\n\nTécnica:\nSe obtuvieron imágenes axiales del cráneo desde la base hasta el vértex, revisadas en ventanas de parénquima, subdural y ósea.\n\nHallazgos:\n\nParénquima cerebral: [densidad, lesiones, edema, hemorragia]\nVentrículos y cisternas: [tamaño, morfología, hidrocefalia]\nLínea media: [desplazamiento]\nCerebelo y tronco del encéfalo: [lesiones, densidad]\nEspacio subaracnoideo: [hemorragia, ensanchamiento]\nHueso y base de cráneo: [fracturas, lesiones líticas/blásticas]\nSenos paranasales y mastoide: [opacificación, lesiones]\nPartes blandas extracraneales: [hematoma, edema]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'TC Columna': 'Eres un radiólogo especialista en TC de columna vertebral. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA y SSR.\n\nREGLAS: Tipo oración. Describir nivel por nivel los discos, forámenes y canal raquídeo. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de columna [cervical/torácica/lumbar] [sin/con contraste]\n\nTécnica:\nSe obtuvieron imágenes axiales y reconstrucciones sagitales y coronales de la columna [región] en ventanas de parénquima y ósea.\n\nHallazgos:\n\nAlineación: [lordosis/cifosis normal o alterada, escoliosis]\nCuerpos vertebrales: [altura, densidad, lesiones, fracturas, nivel por nivel]\nDiscos intervertebrales: [altura, hidratación, herniaciones por nivel]\nCanal raquídeo: [amplitud, estenosis]\nForámenes neurales: [permeabilidad, compresión radicular]\nArticulaciones facetarias: [artrosis, derrame]\nPartes blandas paravertebrales: [masas, hematoma]\n\nImpresión:\n1. [Conclusiones numeradas por nivel]'+firma,
+
+    'TC Cuello': 'Eres un radiólogo especialista en TC de cuello. Estructurás dictados como informes formales en español médico formal, siguiendo las guías RadReport RSNA y el template de cuello RadShare.\n\nREGLAS: Tipo oración. Describir sistemáticamente suprahioideo, infrahioideo, tiroides, ganglios y vasos. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Tomografía computada de cuello [con/sin] contraste intravenoso\n\nTécnica:\nImágenes axiales desde la base del cráneo hasta los ápices pulmonares, con reconstrucciones multiplanares en ventana de tejidos blandos y ósea.\n\nHallazgos:\n\nRegión suprahioidea:\nNasofaringe y orofaringe: [masas, engrosamiento]\nEspacios parafaríngeo y masticador: [lesiones]\nCavidad oral y piso de boca: [lesiones]\n\nRegión infrahioidea:\nHipofaringe y pliegues ariepiglóticos: [lesiones]\nGlándulas salivales: [parótidas, submandibulares]\n\nTiroides: [tamaño, nódulos, calcificaciones]\nGanglios linfáticos: [cadenas, adenopatías por tamaño o morfología]\nVasos: [carótidas, yugulares — permeabilidad]\nHueso: [mandíbula, columna cervical — lesiones]\nÁpices pulmonares: [incluidos en el estudio]\n\nImpresión:\n1. [Conclusiones numeradas]'+firma,
+
+    'TC Angio': 'Eres un radiólogo especialista en angiotomografía computada. Estructurás dictados como informes formales de Angio-TC en español médico formal, siguiendo las guías RadReport RSNA, SIR y SVS.\n\nREGLAS: Tipo oración. Describir calibre, permeabilidad, estenosis (NASCET si carotídea), disección, aneurismas con medidas. Conclusiones numeradas. Autocorregir.\n\nPLANTILLA:\n\n'+cab+'Angiotomografía computada — [región vascular]\n\nTécnica:\nEstudio con contraste intravenoso en fase arterial [y/o venosa], con reconstrucciones MIP, VR y MPR del eje vascular.\n\nHallazgos:\n\nCalidad técnica: [opacificación del contraste, artefactos]\nEje aórtico: [aorta ascendente, cayado, aorta torácica, aorta abdominal — calibre, calcificaciones, disección, aneurisma]\nVasos viscerales: [tronco celíaco, mesentérica superior/inferior, renales — permeabilidad]\nEje ilíaco y femoral: [ilíacas, femorales — permeabilidad, estenosis, oclusión]\n[Vasos específicos según región estudiada]\nHallazgos incidentales: [parénquima en cortes incluidos]\n\nImpresión:\n1. [Conclusiones numeradas con medidas y grado de estenosis si aplica]'+firma
+  };
+
+  const sub=subtipo||'TC Abdomen-Pelvis';
+  return prompts[sub]||prompts['TC Abdomen-Pelvis'];
+}
+
+// ── SUBTIPO ULTRASONIDO ────────────────────────────────────
+function selectSubtipo(sub){
+  subtipoActual=sub;
+  document.querySelectorAll('.subtipo-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.sub===sub);
+  });
+}
+
+// ── STRIPE CHECKOUT ────────────────────────────────────────
+const STRIPE_PK='pk_test_51Ttqrz2UwoUQkw5sxj5RSRO2wmkAErWZ3oRIwYUVEFSDVkuOBTg9tUk4xIKTeleilYPIfSAGPjGsmSZgPCrGypAO00uRR1wlW3';
+
+const PRICES={
+  basico: {
+    mensual:'price_1Tvk952UwoUQkw5sFpEbLoS3',
+    anual:  'price_1Tvk962UwoUQkw5sQwSXlupm'
+  },
+  pro: {
+    mensual:'price_1Tvk972UwoUQkw5sSO9EEHN9',
+    anual:  'price_1Tvk972UwoUQkw5s8O3e4hZ0'
+  },
+  clinica: {
+    mensual:'price_1Tvk982UwoUQkw5stwF6ec8R',
+    anual:  'price_1Tvk982UwoUQkw5sJOBbShcm'
+  }
+};
+
+const PRECIOS_DISPLAY={
+  basico: {mensual:19, anual:Math.round(19*12*0.8/12)},
+  pro:    {mensual:39, anual:Math.round(39*12*0.8/12)},
+  clinica:{mensual:79, anual:Math.round(79*12*0.8/12)}
+};
+
+let billingAnual=false;
+
+function toggleBilling(){
+  billingAnual=!billingAnual;
+  const tog=document.getElementById('billingToggle');
+  tog.classList.toggle('on',billingAnual);
+  // Actualizar precios mostrados
+  ['basico','pro','clinica'].forEach(p=>{
+    const precio=billingAnual?PRECIOS_DISPLAY[p].anual:PRECIOS_DISPLAY[p].mensual;
+    const nombre=p.charAt(0).toUpperCase()+p.slice(1);
+    document.getElementById('precio'+nombre).textContent=precio;
+    document.getElementById('periodo'+nombre).textContent=billingAnual?'por mes (pago anual)':'por mes';
+  });
+}
+
+function openPricing(){
+  // Marcar el plan actual del usuario
+  if(usuarioActual){
+    const planActual=usuarioActual.plan;
+    ['basico','pro','clinica'].forEach(p=>{
+      const btn=document.getElementById('btn'+p.charAt(0).toUpperCase()+p.slice(1));
+      const esPlanActual=(p===planActual)||(p==='clinica'&&planActual==='ilimitado');
+      if(esPlanActual){
+        btn.textContent='Plan actual';
+        btn.disabled=true;
+      } else {
+        btn.disabled=false;
+        btn.textContent='Elegir '+p.charAt(0).toUpperCase()+p.slice(1);
+      }
+    });
+  }
+  document.getElementById('pricingOverlay').classList.add('open');
+}
+
+function closePricing(){
+  document.getElementById('pricingOverlay').classList.remove('open');
+}
+
+function closePricingIfOutside(e){
+  if(e.target===document.getElementById('pricingOverlay'))closePricing();
+}
+
+async function suscribirse(plan){
+  if(!usuarioActual){alert('Iniciá sesión primero');return;}
+  const billing=billingAnual?'anual':'mensual';
+  const priceId=PRICES[plan][billing];
+  const btn=document.getElementById('btn'+plan.charAt(0).toUpperCase()+plan.slice(1));
+  btn.disabled=true;btn.textContent='Redirigiendo...';
+  try{
+    // Llamar al backend para crear la sesión de Stripe Checkout
+    const r=await fetch(API_BASE+'/api/checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        usuario_id:usuarioActual.id,
+        email:usuarioActual.email,
+        price_id:priceId,
+        plan
+      })
+    });
+    if(!r.ok)throw new Error('Error '+r.status);
+    const d=await r.json();
+    // Redirigir a Stripe Checkout
+    window.location.href=d.url;
+  }catch(e){
+    alert('Error al procesar: '+e.message);
+    btn.disabled=false;
+    btn.textContent='Elegir '+plan.charAt(0).toUpperCase()+plan.slice(1);
+  }
+}
+
+// ── HISTORIAL ──────────────────────────────────────────────
+const HIST_KEY='inf_historial';
+const HIST_MAX=20;
+
+function fmtFecha(iso){
+  return new Date(iso).toLocaleString('es',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function histCloudOn(){return localStorage.getItem('hist_cloud')!=='0'&&!!usuarioActual;}
+
+function saveToHistorial(texto,pac){
+  const hist=getHistorial();
+  const entry={
+    id:Date.now(),
+    fecha:new Date().toLocaleString('es',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    nombre:pac.nombre!=='_______________'?pac.nombre:'Sin nombre',
+    modalidad:modalidadActual||'CCTA',
+    texto
+  };
+  hist.unshift(entry);
+  if(hist.length>HIST_MAX)hist.length=HIST_MAX;
+  localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+  if(histCloudOn()){
+    authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'save',modalidad:entry.modalidad,nombre_paciente:entry.nombre,texto})
+    }).then(r=>{
+      if(r&&r.ok){
+        const h=getHistorial();
+        const it=h.find(x=>String(x.id)===String(entry.id));
+        if(it){it.sync=1;localStorage.setItem(HIST_KEY,JSON.stringify(h));}
+      }
+    }).catch(()=>{});
+  }
+}
+
+async function migrarHistorialSiHaceFalta(){
+  if(!histCloudOn()||localStorage.getItem('hist_migrado')==='1')return;
+  const hist=getHistorial();
+  const pendientes=hist.filter(e=>e.sync!==1).slice().reverse();
+  for(const e of pendientes){
+    try{
+      const r=await authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'save',modalidad:e.modalidad,nombre_paciente:e.nombre,texto:e.texto})});
+      if(!r.ok)return; // columnas aún no creadas o sin permiso: reintenta la próxima vez
+    }catch(err){return;}
+  }
+  localStorage.setItem('hist_migrado','1');
+}
+
+function getHistorial(){
+  try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]');}
+  catch{return [];}
+}
+
+function openHistorial(){
+  renderHistorial();
+  document.getElementById('histOverlay').classList.add('open');
+}
+
+function closeHistorial(){
+  document.getElementById('histOverlay').classList.remove('open');
+}
+
+function closeHistorialIfOutside(e){
+  if(e.target===document.getElementById('histOverlay'))closeHistorial();
+}
+
+async function renderHistorial(){
+  const cont=document.getElementById('histContent');
+  let hist=getHistorial();
+  if(histCloudOn()){
+    cont.innerHTML='<div class="hist-empty">Cargando historial...</div>';
+    try{
+      await migrarHistorialSiHaceFalta();
+      const r=await authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'list'})});
+      if(r.ok){
+        const d=await r.json();
+        const nube=(d.informes||[]).map(i=>({id:i.id,fecha:fmtFecha(i.created_at),nombre:i.nombre_paciente||'Sin nombre',modalidad:i.modalidad||'CCTA',texto:i.texto}));
+        if(nube.length||localStorage.getItem('hist_migrado')==='1'){
+          hist=nube;
+          localStorage.setItem(HIST_KEY,JSON.stringify(hist.slice(0,HIST_MAX)));
+        }
+      }
+    }catch(e){/* sin conexión: usa cache local */}
+  }
+  if(hist.length===0){
+    cont.innerHTML='<div class="hist-empty">📭 No hay informes guardados todavía.<br>Los informes generados se guardan automáticamente.</div>';
+    return;
+  }
+  cont.innerHTML='<div class="hist-list">'+hist.map(e=>\`
+    <div class="hist-item" data-id="${e.id}" onclick="loadFromHistorial('${e.id}')">
+      <div class="hist-item-header">
+        <span class="hist-item-name">${escH(e.nombre)}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="hist-item-mod">${escH(e.modalidad)}</span>
+          <button class="hist-del" onclick="deleteHistItem(event,'${e.id}')" title="Eliminar">✕</button>
+        </div>
+      </div>
+      <div class="hist-item-meta">${escH(e.fecha)}</div>
+      <div class="hist-item-preview">${escH(e.texto.substring(0,140))}…</div>
+    </div>\`).join('')+'</div>';
+}
+
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function loadFromHistorial(id){
+  const hist=getHistorial();
+  const entry=hist.find(e=>String(e.id)===String(id));
+  if(!entry)return;
+  document.getElementById('reportEdit').value=entry.texto;
+  document.getElementById('rout').classList.add('show');
+  closeHistorial();
+  document.getElementById('reportEdit').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function deleteHistItem(ev,id){
+  ev.stopPropagation();
+  let hist=getHistorial();
+  hist=hist.filter(e=>String(e.id)!==String(id));
+  localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+  if(histCloudOn()&&!/^[0-9]{13}$/.test(String(id))){
+    authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'delete',informe_id:id})}).catch(()=>{});
+  }
+  renderHistorial();
+}
+
+function clearAllHistorial(){
+  if(!confirm('¿Borrar todo el historial? Esto incluye la copia en la nube.'))return;
+  localStorage.removeItem(HIST_KEY);
+  localStorage.removeItem('hist_migrado');
+  if(histCloudOn()){
+    authFetch('/api/informes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'clear'})}).catch(()=>{});
+  }
+  renderHistorial();
+}
+
+// ===== Inicialización (al final: todas las constantes ya declaradas) =====
+// Inicialización
+(function(){
+  // Cargar nombre del médico guardado
+  const savedMed=localStorage.getItem('med_nombre');
+  if(savedMed){
+    document.getElementById('medNombre').value=savedMed;
+    document.getElementById('selloNombrePreview').textContent=savedMed;
+    document.getElementById('footerNombre').textContent=savedMed;
+  }
+  const savedCentro=localStorage.getItem('centro_nombre');
+  if(savedCentro)document.getElementById('centroNombre').value=savedCentro;
+  document.getElementById('cctaEquipo').value=localStorage.getItem('ccta_equipo')||'';
+  document.getElementById('cctaContraste').value=localStorage.getItem('ccta_contraste')||'';
+  document.getElementById('cctaPremed').value=localStorage.getItem('ccta_premed')||'';
+  document.getElementById('autoDrive').checked=localStorage.getItem('auto_drive')==='1';
+  document.getElementById('histCloud').checked=localStorage.getItem('hist_cloud')!=='0';
+  initBio();
+  // Cargar sello guardado
+  updateSelloUI();
+  // Verificar sesión activa
+  verificarSesion();
+})();
+
+</script>
+</body>
+</html>`);
+};
