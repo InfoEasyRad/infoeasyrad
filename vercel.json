@@ -1,3 +1,13 @@
 {
-  "version": 2
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/tavi",
+      "destination": "/tavi.html"
+    },
+    {
+      "source": "/cardiometro",
+      "destination": "/cardiometro.html"
+    }
+  ]
 }
