@@ -1,26 +1,30 @@
 {
   "version": 2,
-  "cleanUrls": true,
+  "cleanUrls": false,
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/api"
+      "source": "/(.*)\\.html",
+      "destination": "/$1.html"
     },
     {
-      "source": "/tavi",
+      "source": "^/tavi$",
       "destination": "/tavi.html"
     },
     {
-      "source": "/privacy",
+      "source": "^/privacy$",
       "destination": "/privacy.html"
     },
     {
-      "source": "/terms",
+      "source": "^/terms$",
       "destination": "/terms.html"
     },
     {
-      "source": "/cardiometro",
+      "source": "^/cardiometro$",
       "destination": "/cardiometro.html"
+    },
+    {
+      "source": "^/$",
+      "destination": "/api"
     }
   ]
 }
