@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reporte estructurado de TC pre-TAVI</title>
+<meta name="robots" content="noindex, nofollow"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cherry:#990011;
+    --cherry-deep:#6B000C;
+    --cherry-wash:#FBF2F3;
+    --slate:#2F3C7E;
+    --ink:#1E1416;
+    --muted:#7A6C6E;
+    --rule:#E2D6D7;
+    --paper:#FFFFFF;
+    --shell:#F6F2F1;
+    --ok:#2C6E49;
+    --flag:#B45309;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --serif:"IBM Plex Serif",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--shell);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit}
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    background:var(--cherry);
+    color:#fff;
+    padding:calc(22px + env(safe-area-inset-top)) 28px 20px;
+  }
+  .masthead-in{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
+  .eyebrow{
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:#F0C4C8;font-weight:600;margin:0 0 4px
+  }
+  .masthead h1{font-family:var(--serif);font-weight:700;font-size:27px;margin:0;letter-spacing:-.01em}
+  .masthead p{margin:6px 0 0;color:#F0C4C8;font-size:13.5px;max-width:52ch}
+
+  /* ---------- mode picker ---------- */
+  .gate{max-width:1280px;margin:0 auto;padding:46px 28px 70px}
+  .gate h2{font-family:var(--serif);font-size:22px;margin:0 0 6px}
+  .gate .lede{color:var(--muted);margin:0 0 28px;font-size:14.5px}
+  .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;max-width:860px}
+  .choice{
+    all:unset;cursor:pointer;display:block;
+    background:var(--paper);border:1px solid var(--rule);border-radius:4px;
+    padding:24px 24px 22px;transition:border-color .15s,transform .15s,box-shadow .15s;
+  }
+  .choice:hover,.choice:focus-visible{border-color:var(--cherry);transform:translateY(-2px);box-shadow:0 6px 20px rgba(153,0,17,.09)}
+  .choice:focus-visible{outline:2px solid var(--cherry);outline-offset:3px}
+  .choice .glyph{display:block;margin-bottom:14px}
+  .choice h3{font-family:var(--serif);font-size:19px;margin:0 0 6px}
+  .choice p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}
+  .choice .count{
+    display:inline-block;margin-top:14px;font-family:var(--mono);font-size:11.5px;
+    letter-spacing:.04em;color:var(--cherry);background:var(--cherry-wash);
+    padding:3px 8px;border-radius:2px;
+  }
+
+  /* ---------- workspace ---------- */
+  .wrap{max-width:1280px;margin:0 auto;padding:26px 28px 90px;display:grid;grid-template-columns:1fr 314px;gap:30px;align-items:start}
+  @media (max-width:1000px){.wrap{grid-template-columns:1fr}}
+
+  .bar{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid var(--rule);
+  }
+  .badge{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--cherry);color:#fff;padding:5px 11px;border-radius:2px;font-weight:500;
+  }
+  .badge.tri{background:var(--slate)}
+  .linkish{
+    all:unset;cursor:pointer;font-size:13px;color:var(--cherry);border-bottom:1px solid currentColor;padding-bottom:1px;
+  }
+  .linkish:focus-visible{outline:2px solid var(--cherry);outline-offset:3px}
+
+  section.block{
+    background:var(--paper);border:1px solid var(--rule);border-radius:4px;
+    margin-bottom:16px;overflow:hidden;
+  }
+  section.block.bav{border-left:3px solid var(--cherry)}
+  .block-head{
+    display:flex;align-items:baseline;gap:12px;padding:14px 20px 12px;border-bottom:1px solid var(--rule);
+  }
+  .letter{
+    font-family:var(--mono);font-weight:600;font-size:13px;color:var(--cherry);
+    background:var(--cherry-wash);padding:2px 8px;border-radius:2px;flex:none;
+  }
+  .block-head h2{font-family:var(--serif);font-size:17px;margin:0;font-weight:600}
+  .block-head .note{margin-left:auto;font-size:12px;color:var(--muted);font-style:italic}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:2px;background:var(--rule)}
+  .cell{background:var(--paper);padding:12px 20px 14px;min-width:0}
+  .cell.wide{grid-column:1/-1}
+  label.lab{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;line-height:1.3}
+  .inrow{display:flex;align-items:center;gap:8px}
+  input[type=number],input[type=text],input[type=date],select,textarea{
+    width:100%;min-width:0;border:1px solid var(--rule);border-radius:3px;background:#fff;
+    padding:7px 9px;font-size:14.5px;color:var(--ink);font-family:var(--mono);
+    font-variant-numeric:tabular-nums;
+  }
+  input[type=text],select,textarea,input[type=date]{font-family:var(--sans)}
+  textarea{resize:vertical;min-height:64px;line-height:1.45}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--cherry);outline-offset:1px;border-color:var(--cherry)}
+  .unit{font-family:var(--mono);font-size:12px;color:var(--muted);flex:none;min-width:34px}
+  .checks{display:flex;flex-wrap:wrap;gap:8px 18px;padding-top:2px}
+  .checks label{display:flex;gap:7px;align-items:flex-start;font-size:13.5px;line-height:1.35;cursor:pointer}
+  input[type=checkbox]{margin:2px 0 0;accent-color:var(--cherry);width:15px;height:15px;flex:none}
+
+  .derived{background:#FAF7F7}
+  .derived .val{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--slate);font-variant-numeric:tabular-nums}
+  .derived .val.empty{color:#B9AFB0;font-weight:400}
+  .formula{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px;display:block}
+
+  /* ---------- rail ---------- */
+  .rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:14px}
+  @media (max-width:1000px){.rail{position:static}}
+  .card{background:var(--paper);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+  .card h3{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    margin:0;padding:11px 16px;color:var(--muted);border-bottom:1px solid var(--rule);font-weight:500;
+  }
+  .card .body{padding:6px 16px 14px}
+  .kv{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px dotted var(--rule)}
+  .kv:last-child{border-bottom:0}
+  .kv .k{font-size:12.5px;color:var(--muted);line-height:1.3}
+  .kv .v{font-family:var(--mono);font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;flex:none}
+  .kv .v.empty{color:#C4BABB;font-weight:400}
+
+  .flagline{display:flex;gap:9px;padding:8px 0;border-bottom:1px dotted var(--rule);font-size:12.5px;line-height:1.35}
+  .flagline:last-child{border-bottom:0}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--flag);margin-top:6px;flex:none}
+  .flagline em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--flag);font-weight:600}
+  .quiet{color:var(--muted);font-size:12.5px;padding:8px 0}
+
+  .fill{display:block;height:5px;background:var(--rule);border-radius:3px;overflow:hidden;margin:2px 0 8px}
+  .fill i{display:block;height:100%;background:var(--cherry);width:0;transition:width .25s}
+
+  .btn{
+    all:unset;box-sizing:border-box;display:block;width:100%;text-align:center;cursor:pointer;
+    background:var(--cherry);color:#fff;padding:11px 14px;border-radius:3px;
+    font-size:14px;font-weight:600;transition:background .15s;
+  }
+  .btn:hover{background:var(--cherry-deep)}
+  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .btn.ghost{background:transparent;color:var(--cherry);border:1px solid var(--rule)}
+  .btn.ghost:hover{background:var(--cherry-wash);border-color:var(--cherry)}
+  .btnrow{display:flex;flex-direction:column;gap:8px;padding:14px 16px}
+
+  .disclaimer{font-size:11.5px;color:var(--muted);line-height:1.45;padding:0 16px 14px}
+
+  /* ---------- report ---------- */
+  .sheet-shell{max-width:1000px;margin:0 auto;padding:26px 28px 90px}
+  .sheet{background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:44px 48px 40px}
+  @media (max-width:640px){.sheet{padding:26px 22px}.wrap,.gate,.sheet-shell{padding-left:16px;padding-right:16px}}
+  .sheet h2{font-family:var(--serif);font-size:23px;margin:0 0 2px}
+  .sheet .sub{color:var(--muted);font-size:13px;margin:0 0 22px}
+  .idgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 22px;
+    padding:14px 0 16px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);margin-bottom:22px}
+  .idgrid div span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .idgrid div strong{font-family:var(--mono);font-size:14px;font-weight:600}
+  .rsec{margin-bottom:20px;break-inside:avoid}
+  .rsec h3{
+    font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--cherry);margin:0 0 8px;font-weight:600;
+  }
+  table.rt{width:100%;border-collapse:collapse}
+  table.rt td{padding:5px 0;border-bottom:1px dotted var(--rule);font-size:13.5px;vertical-align:baseline}
+  table.rt td.n{text-align:right;font-family:var(--mono);font-weight:600;white-space:nowrap;padding-left:14px;font-variant-numeric:tabular-nums}
+  table.rt tr.calc td{color:var(--slate)}
+  .rnote{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px solid var(--rule);padding-top:14px;margin-top:26px}
+  .empty-state{color:var(--muted);font-size:13.5px}
+
+
+  /* ---------- puerta de acceso ---------- */
+  .entry{max-width:1280px;margin:0 auto;padding:56px 28px 40px}
+  .entrycard{max-width:520px;background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:32px 34px 30px}
+  .entrycard h2{font-family:var(--serif);font-size:21px;margin:0 0 8px}
+  .entrycard p.lede{color:var(--muted);font-size:14px;margin:0 0 22px;line-height:1.5}
+  .entrycard label.lab{font-size:13px;margin-bottom:6px}
+  .entrycard input[type=email]{
+    width:100%;border:1px solid var(--rule);border-radius:3px;background:#fff;
+    padding:10px 11px;font-size:15px;font-family:var(--sans);color:var(--ink);
+  }
+  .entrycard input[type=email]:focus{outline:2px solid var(--cherry);outline-offset:1px;border-color:var(--cherry)}
+  .err{color:var(--cherry);font-size:13px;margin:8px 0 0;min-height:18px}
+  .entrycard .btn{margin-top:16px}
+  .fineprint{font-size:12px;color:var(--muted);line-height:1.5;margin:16px 0 0}
+
+  /* ---------- pie de sitio ---------- */
+  .sitefoot{border-top:1px solid var(--rule);background:#F1EBEA;margin-top:40px}
+  .sitefoot-in{max-width:1280px;margin:0 auto;padding:30px 28px 40px;
+    display:grid;grid-template-columns:minmax(0,1fr) 292px;gap:36px;align-items:start}
+  @media (max-width:860px){.sitefoot-in{grid-template-columns:1fr;gap:26px}}
+  .sitefoot h4{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 12px;font-weight:500;
+  }
+  ol.refs{margin:0;padding:0;list-style:none;counter-reset:r;
+    columns:2;column-gap:30px;font-size:11.5px;line-height:1.5;color:var(--muted)}
+  @media (max-width:1100px){ol.refs{columns:1}}
+  ol.refs li{counter-increment:r;break-inside:avoid;margin:0 0 8px;padding-left:20px;position:relative}
+  ol.refs li::before{content:counter(r) ".";position:absolute;left:0;font-family:var(--mono);color:var(--cherry);font-size:11px}
+  ol.refs em{font-style:italic}
+  .cred{border-left:3px solid var(--cherry);padding-left:16px}
+  .cred .name{font-family:var(--serif);font-size:15.5px;font-weight:600;color:var(--ink);margin:0 0 3px}
+  .cred .role{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0}
+  .cred .tag{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--cherry);margin-bottom:6px}
+  .sitefoot .legal{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:14px;
+    font-size:11.5px;color:var(--muted);line-height:1.5}
+
+
+  /* ---------- imagen adjunta ---------- */
+  .drop{
+    border:1.5px dashed var(--rule);border-radius:4px;background:#FCFAFA;
+    padding:24px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;
+  }
+  .drop:hover,.drop.over{border-color:var(--cherry);background:var(--cherry-wash)}
+  .drop:focus-visible{outline:2px solid var(--cherry);outline-offset:2px}
+  .drop p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
+  .drop strong{color:var(--cherry);font-weight:600}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:14px}
+  .thumb{border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:#fff;position:relative}
+  .thumb img{display:block;width:100%;height:118px;object-fit:cover;background:#F1ECEC}
+  .thumb .cap{padding:7px 9px;border-top:1px solid var(--rule)}
+  .thumb .cap input{width:100%;border:0;padding:2px 0;font-size:12px;font-family:var(--sans);background:transparent}
+  .thumb .cap input:focus{outline:0;border-bottom:1px solid var(--cherry)}
+  .thumb .kill{
+    all:unset;position:absolute;top:6px;right:6px;cursor:pointer;width:22px;height:22px;
+    border-radius:50%;background:rgba(30,20,22,.72);color:#fff;font-size:13px;line-height:22px;text-align:center;
+  }
+  .thumb .kill:hover{background:var(--cherry)}
+  .thumb .kill:focus-visible{outline:2px solid #fff;outline-offset:1px}
+
+  /* ---------- firma ---------- */
+  .signblock{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);break-inside:avoid}
+  .signline{margin:34px 0 0;border-top:1px solid var(--ink);width:300px;padding-top:7px}
+  .signline .who{font-size:14px;font-weight:600;line-height:1.35}
+  .signline .what{font-size:12px;color:var(--muted);line-height:1.4}
+  .rimgs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+  .rimg{break-inside:avoid}
+  .rimg img{display:block;width:100%;border:1px solid var(--rule);border-radius:3px}
+  .rimg figcaption{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.4}
+
+  @media print{
+    body{background:#fff}
+    .noprint{display:none !important}
+    .sheet-shell{padding:0;max-width:none}
+    .sheet{border:0;padding:0}
+    .rsec{page-break-inside:avoid}
+    .rimg,.signblock{page-break-inside:avoid}
+    .rimgs{grid-template-columns:1fr 1fr}
+    .printfoot{display:block !important;margin-top:22px;padding-top:12px;border-top:1px solid #C9BDBE;font-size:9pt;color:#7A6C6E;line-height:1.5}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<header class="masthead noprint">
+  <div class="masthead-in">
+    <div>
+      <a href="/" style="display:inline-flex;align-items:center;gap:5px;color:#F0C4C8;font-size:12.5px;text-decoration:none;margin-bottom:8px;border-bottom:1px solid rgba(240,196,200,.5);padding-bottom:2px">← InfoEasyRad</a>
+      <p class="eyebrow">Tomografía computada · planificación</p>
+      <h1>Reporte estructurado pre-TAVI</h1>
+      <p id="mastsub">Todas las medidas de la raíz aórtica en una única reconstrucción sistólica.</p>
+    </div>
+    <div id="mastright"></div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer class="sitefoot noprint" id="sitefoot"></footer>
+
+<script>
+(function(){
+"use strict";
+
+
+/* ============================================================
+   Bibliografía y autoría
+   ============================================================ */
+const REFS=[
+ "Blanke P, Weir-McCall JR, Achenbach S, et al. Computed tomography imaging in the context of TAVI/TAVR: an expert consensus document of the Society of Cardiovascular Computed Tomography. <em>JACC Cardiovasc Imaging</em>. 2019. doi:10.1016/j.jcmg.2018.12.003",
+ "Achenbach S, Delgado V, Hausleiter J, et al. SCCT expert consensus document on computed tomography imaging before TAVI/TAVR. <em>J Cardiovasc Comput Tomogr</em>. 2012. PMID 23217460",
+ "Sheth T, Al Rashidi S, Jaffer I. Gated computed tomography evaluation of the aortic root for treatment planning of patients with aortic stenosis. <em>J Soc Cardiovasc Angiogr Interv</em>. 2024;3(3PtB):101298. doi:10.1016/j.jscai.2024.101298",
+ "Sheth T, et al. The ABC bicuspid sizing protocol for SAPIEN 3 balloon-expandable valves. <em>Structural Heart</em>. 2025.",
+ "Petronio AS, Angelillis M, De Backer O, et al. Bicuspid aortic valve sizing for transcatheter aortic valve implantation: development and validation of an algorithm based on multi-slice computed tomography (algoritmo CASPER). <em>J Cardiovasc Comput Tomogr</em>. 2020;14:452-461. doi:10.1016/j.jcct.2020.01.007",
+ "Tchétché D, de Biase C, van Gils L, et al. Bicuspid aortic valve anatomy and relationship with devices: the BAVARD multicentre registry. <em>Circ Cardiovasc Interv</em>. 2019.",
+ "Iannopollo G, Romano V, Buzzatti N, et al. Supra-annular sizing of transcatheter aortic valve prostheses in raphe-type bicuspid aortic valve disease: the LIRA method. <em>Int J Cardiol</em>. 2020;317:144-151.",
+ "Jilaihawi H, Chen M, Webb J, et al. A bicuspid aortic valve imaging classification for the TAVR era. <em>JACC Cardiovasc Imaging</em>. 2016;9:1145-1158.",
+ "Michelena HI, Della Corte A, Evangelista A, et al. International consensus statement on nomenclature and classification of the congenital bicuspid aortic valve and its aortopathy. <em>J Thorac Cardiovasc Surg</em>. 2021.",
+ "Ye Z, Clavel MA, Foley TA, Pibarot P, Enriquez-Sarano M, Michelena HI. Computed tomography calcium scoring in aortic stenosis: bicuspid versus tricuspid morphology. <em>Heart</em>. 2023;110(8):594-602. doi:10.1136/heartjnl-2023-323281",
+ "Bacha Z, Rath S, Qadri M, et al. Comparative outcomes of balloon-expandable and self-expandable valves in transcatheter aortic valve replacement for bicuspid aortic stenosis: a systematic review and meta-analysis. <em>Cardiology in Review</em>. 2025. doi:10.1097/CRD.0000000000001070",
+ "Praz F, Borger MA, Lanz J, et al. 2025 ESC/EACTS guidelines for the management of valvular heart disease. <em>Eur Heart J</em>. 2025. doi:10.1093/eurheartj/ehaf194",
+ "Otto CM, Nishimura RA, Bonow RO, et al. 2020 ACC/AHA guideline for the management of patients with valvular heart disease. <em>J Am Coll Cardiol</em>. 2021;77(4):e25-e197."
+];
+
+const AUTOR={
+  nombre:"Dr. Carlos Leonardo Maldonado Estrada",
+  linea1:"Médico radiólogo · Universidad Nacional Autónoma de Honduras",
+  linea2:"Fellow en Cardio Imagen"
+};
+
+function renderFooter(){
+  const f=document.getElementById("sitefoot");
+  if(!f)return;
+  f.innerHTML=
+    '<div class="sitefoot-in">'+
+      '<div>'+
+        '<h4>Bibliografía</h4>'+
+        '<ol class="refs">'+REFS.map(r=>'<li>'+r+'</li>').join("")+'</ol>'+
+      '</div>'+
+      '<div class="cred">'+
+        '<span class="tag">Desarrollo y contenido</span>'+
+        '<p class="name">'+esc(AUTOR.nombre)+'</p>'+
+        '<p class="role">'+esc(AUTOR.linea1)+'<br>'+esc(AUTOR.linea2)+'</p>'+
+      '</div>'+
+      '<p class="legal">Herramienta de documentación estructurada para uso profesional. Los valores derivados y los puntos de atención son cálculos y umbrales orientativos tomados de las referencias anteriores; no constituyen una indicación, una contraindicación ni un diagnóstico. Los datos capturados permanecen en este navegador y no se transmiten a ningún servidor.</p>'+
+    '</div>';
+}
+
+/* ============================================================
+   Esquema del reporte
+   ============================================================ */
+const N = (k,label,unit,extra) => Object.assign({k,label,unit,type:"num"},extra||{});
+const T = (k,label,extra) => Object.assign({k,label,type:"text"},extra||{});
+const S = (k,label,options,extra) => Object.assign({k,label,type:"select",options},extra||{});
+const A = (k,label,extra) => Object.assign({k,label,type:"area"},extra||{});
+const D = (k,label,unit,fn,formula) => ({k,label,unit,type:"derived",fn,formula});
+const C = (k,label,items) => ({k,label,type:"checks",items});
+
+const GRADOS = ["","Ausente","Leve","Moderado","Grave"];
+
+const SCHEMA = [
+  {id:"id", letter:"—", title:"Identificación", mode:"all", fields:[
+    T("nombre","Nombre"),
+    T("registro","Registro / expediente"),
+    {k:"fecha",label:"Fecha del estudio",type:"date"},
+    N("edad","Edad","años"),
+    S("sexo","Sexo",["","Femenino","Masculino"]),
+    N("talla","Talla","cm"),
+    N("peso","Peso","kg"),
+    D("bsa","Superficie corporal","m²",v=>(v.talla>0&&v.peso>0)?Math.sqrt(v.talla*v.peso/3600):null,"√(talla × peso / 3600)"),
+    T("fase","Fase de reconstrucción",{ph:"p. ej. 35 % R-R"}),
+  ]},
+
+  {id:"ao", letter:"A", title:"Aorta ascendente", mode:"all", note:"Único nivel medido en diástole", fields:[
+    N("ao4","Diámetro a 4 cm del anillo","mm"),
+    N("aomax","Diámetro máximo","mm"),
+  ]},
+
+  {id:"ust", letter:"B", title:"Unión sinotubular", mode:"all", fields:[
+    N("ustd","Diámetro","mm"),
+    N("usth","Altura sobre el plano anular","mm"),
+  ]},
+
+  {id:"senos", letter:"C", title:"Senos de Valsalva", mode:"all", fields:[
+    N("senoD","Derecho","mm"),
+    N("senoI","Izquierdo","mm"),
+    N("senoNC","No coronariano","mm"),
+    D("senoProm","Diámetro medio","mm",v=>avg([v.senoD,v.senoI,v.senoNC]),"media de los tres senos"),
+    N("alturaD","Altura del seno derecho","mm"),
+    N("alturaI","Altura del seno izquierdo","mm"),
+    N("alturaNC","Altura del seno no coronariano","mm"),
+  ]},
+
+  {id:"anillo", letter:"D", title:"Anillo aórtico", mode:"all", note:"Sístole, 30–40 % del R-R", fields:[
+    N("dMayor","Diámetro mayor","mm"),
+    N("dMenor","Diámetro menor","mm"),
+    D("dProm","Diámetro promedio","mm",v=>avg([v.dMayor,v.dMenor]),"(mayor + menor) / 2"),
+    N("perim","Perímetro","mm"),
+    D("dPerim","Ø derivado del perímetro","mm",v=>v.perim>0?v.perim/Math.PI:null,"P / π"),
+    N("area","Área","mm²"),
+    D("dArea","Ø derivado del área","mm",v=>v.area>0?Math.sqrt(4*v.area/Math.PI):null,"√(4·A / π)"),
+    D("exc","Índice de excentricidad","",v=>(v.dMayor>0&&v.dMenor>0)?1-(v.dMenor/v.dMayor):null,"1 − (Ø mín / Ø máx)"),
+  ]},
+
+  {id:"tsvi", letter:"E", title:"Tracto de salida", mode:"all", note:"Área a 2 mm por debajo del anillo", fields:[
+    N("tsviMayor","Diámetro mayor","mm"),
+    N("tsviMenor","Diámetro menor","mm"),
+    N("tsviArea","Área","mm²"),
+    S("tsviCalcio","Calcificación subvalvular",GRADOS),
+  ]},
+
+  {id:"cor", letter:"F", title:"Alturas coronarias", mode:"all", note:"Perpendicular al plano anular", fields:[
+    N("hCD","Coronaria derecha","mm"),
+    N("hTI","Tronco izquierdo","mm"),
+    N("cuspD","Longitud de cúspide derecha","mm"),
+    N("cuspI","Longitud de cúspide izquierda","mm"),
+  ]},
+
+  {id:"proy", letter:"G", title:"Proyecciones", mode:"all", fields:[
+    T("angPerp","Ángulo perpendicular",{ph:"p. ej. LAO 10° CAU 4°"}),
+    T("angOverlap","Overlap",{ph:"p. ej. RAO 11° CAU 23°"}),
+    N("angAo","Ángulo aórtico","°"),
+  ]},
+
+  {id:"valv", letter:"H", title:"Válvula aórtica", mode:"all", fields:[
+    N("agatston","Índice de calcio (Agatston)","UA"),
+    N("volCalcio","Volumen de calcio","mm³"),
+    S("gradoCal","Grado de calcificación",GRADOS),
+    N("septum","Longitud del septum membranoso","mm"),
+    N("planim","Área por planimetría","cm²"),
+    D("areaIdx","Área indexada","cm²/m²",v=>{const b=bsa(v);return (b&&v.planim>0)?v.planim/b:null;},"área / superficie corporal"),
+  ]},
+
+  /* ---------- exclusivo bicúspide ---------- */
+  {id:"morfo", letter:"I", title:"Morfología valvular", mode:"bav", fields:[
+    S("sievers","Clasificación de Sievers",["","Tipo 0 — sin rafe","Tipo 1 — un rafe","Tipo 2 — dos rafes"]),
+    S("fusion","Cúspides fusionadas",["","Derecha – izquierda","Derecha – no coronariana","Izquierda – no coronariana","No aplica (tipo 0)"]),
+    S("michelena","Clasificación de Michelena",["","Fusionada","De dos senos","Parcialmente fusionada"]),
+  ]},
+
+  {id:"rafe", letter:"J", title:"Rafe", mode:"bav", fields:[
+    S("rafePres","Presencia de rafe",["","Sí","No"]),
+    N("rafeLong","Longitud del rafe","mm"),
+    D("rafePct","Longitud respecto al Ø anular medio","%",v=>{const d=v.perim>0?v.perim/Math.PI:null;return (d&&v.rafeLong>0)?100*v.rafeLong/d:null;},"rafe / (P / π) × 100"),
+    S("rafeCal","Calcificación del rafe",GRADOS),
+    S("rafePredom","Calcio predominante sobre el rafe",["","Sí","No"]),
+    N("rafeArea","Área a nivel del rafe","mm²"),
+    N("rafePerim","Perímetro a nivel del rafe","mm"),
+  ]},
+
+  {id:"supra", letter:"K", title:"Plano supra-anular", mode:"bav", fields:[
+    N("sa4Perim","Perímetro a +4 mm","mm"),
+    N("sa4Area","Área a +4 mm","mm²"),
+    N("icd4","Distancia intercomisural a +4 mm","mm"),
+    N("icd8","Distancia intercomisural a +8 mm","mm"),
+    N("senoMax8","Ø sinusal máximo a +8 mm","mm"),
+    S("config","Configuración de la raíz",["","Tubular","Acampanada","En cono"]),
+  ]},
+
+  {id:"calcio", letter:"L", title:"Morfología del calcio", mode:"bav", fields:[
+    C("calcioRiesgo","Morfologías de alto riesgo identificadas",[
+      "Calcio que se extiende del borde valvar a la pared del seno",
+      "Calcio que ocupa el espacio intercomisural",
+      "Depósitos largos y voluminosos en el rafe",
+      "Afectación bilateral con senos de dimensiones reducidas",
+    ]),
+  ]},
+
+  {id:"acceso", letter:"M", title:"Acceso vascular", mode:"all", note:"Adquisición sin sincronización", fields:[
+    N("ilioD","Ø luminal mínimo derecho","mm"),
+    N("ilioI","Ø luminal mínimo izquierdo","mm"),
+    S("tort","Tortuosidad",["","Ausente","Leve","Moderada","Grave"]),
+    S("calcIlio","Calcificación iliofemoral",["","Ausente","Focal","Extensa","Circunferencial"]),
+    S("viaPref","Vía preferente",["","Femoral derecha","Femoral izquierda","Subclavia","Carotídea","Transcava","Transapical","Aorta directa"]),
+  ]},
+
+  {id:"obs", letter:"N", title:"Observaciones", mode:"all", fields:[
+    {k:"obs",label:"Hallazgos adicionales y comentarios",type:"textarea",wide:true},
+  ]},
+
+  {id:"firma", letter:"O", title:"Médico que interpreta el estudio", mode:"all", fields:[
+    T("medico","Nombre completo",{ph:"Dr. / Dra."}),
+    T("especialidad","Especialidad",{ph:"p. ej. Radiología · Cardio imagen"}),
+    T("colegiado","Número de colegiado o registro"),
+    T("institucion","Institución"),
+  ]},
+];
+
+/* ============================================================
+   Alertas — umbrales orientativos de la literatura
+   ============================================================ */
+const FLAGS = [
+  {test:v=>num(v.hCD)>0&&num(v.hCD)<10, txt:"Altura de la coronaria derecha por debajo de 10 mm", tag:"< 10 mm"},
+  {test:v=>num(v.hTI)>0&&num(v.hTI)<10, txt:"Altura del tronco izquierdo por debajo de 10 mm", tag:"< 10 mm"},
+  {test:v=>{const p=avg([v.senoD,v.senoI,v.senoNC]);return p!==null&&p<30;}, txt:"Diámetro sinusal medio por debajo de 30 mm", tag:"< 30 mm"},
+  {test:v=>num(v.usth)>0&&num(v.usth)<15, txt:"Unión sinotubular baja respecto al plano anular", tag:"< 15 mm"},
+  {test:v=>num(v.volCalcio)>=300, txt:"Volumen de calcio en el rango que resta 1 mm en el algoritmo CASPER", tag:"≥ 300 mm³", bav:true},
+  {test:v=>{const d=num(v.perim)>0?num(v.perim)/Math.PI:null;const r=num(v.rafeLong);return d&&r>0&&(100*r/d)>=50;}, txt:"Longitud del rafe igual o mayor al 50 % del Ø anular medio", tag:"≥ 50 %", bav:true},
+  {test:v=>(v.calcioRiesgo||[]).length>0, txt:"Se registró al menos una morfología de calcio de alto riesgo", tag:"alto riesgo", bav:true},
+  {test:v=>num(v.ilioD)>0&&num(v.ilioI)>0&&num(v.ilioD)<5.5&&num(v.ilioI)<5.5, txt:"Ambos accesos iliofemorales por debajo de 5,5 mm", tag:"< 5,5 mm"},
+];
+
+/* ============================================================
+   Utilidades
+   ============================================================ */
+function num(x){const n=parseFloat(x);return isFinite(n)?n:0;}
+function avg(arr){const v=arr.map(num).filter(n=>n>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;}
+function bsa(v){return (num(v.talla)>0&&num(v.peso)>0)?Math.sqrt(num(v.talla)*num(v.peso)/3600):null;}
+function fmt(n,dec){if(n===null||n===undefined||!isFinite(n))return null;return n.toFixed(dec===undefined?1:dec).replace(".",",");}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+const DECIMALS={exc:2,bsa:2,areaIdx:2,rafePct:0};
+function decFor(k){return DECIMALS[k]!==undefined?DECIMALS[k]:1;}
+
+/* ============================================================
+   Estado
+   ============================================================ */
+let mode=null;              // "tri" | "bav"
+let data={};
+let usuario="";             // correo de acceso (no aparece en el reporte)
+let imagenes=[];            // {src, cap} imágenes adjuntas, opcionales
+const app=document.getElementById("app");
+const mastsub=document.getElementById("mastsub");
+const mastright=document.getElementById("mastright");
+
+function sections(){return SCHEMA.filter(s=>s.mode==="all"||s.mode===mode);}
+
+/* --- persistencia local: localStorage en un sitio web, window.storage dentro de Claude --- */
+const store = (function(){
+  const mem = {};
+  const hasLS = (function(){
+    try{ const k="__t"; window.localStorage.setItem(k,"1"); window.localStorage.removeItem(k); return true; }
+    catch(e){ return false; }
+  })();
+  return {
+    async get(k){
+      if(hasLS){ try{ return window.localStorage.getItem(k); }catch(e){} }
+      if(window.storage){ try{ const r=await window.storage.get(k); return r?r.value:null; }catch(e){ return null; } }
+      return (k in mem)?mem[k]:null;
+    },
+    async set(k,v){
+      if(hasLS){ try{ window.localStorage.setItem(k,v); return; }catch(e){} }
+      if(window.storage){ try{ await window.storage.set(k,v); return; }catch(e){} }
+      mem[k]=v;
+    },
+    async del(k){
+      if(hasLS){ try{ window.localStorage.removeItem(k); }catch(e){} }
+      if(window.storage){ try{ await window.storage.delete(k); }catch(e){} }
+      delete mem[k];
+    }
+  };
+})();
+
+let saveTimer=null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{ store.set("tavi:borrador",JSON.stringify({mode,data,imagenes})); },600);
+}
+async function loadDraft(){
+  const v=await store.get("tavi:borrador");
+  if(!v)return null;
+  try{ return JSON.parse(v); }catch(e){ return null; }
+}
+async function clearDraft(){ await store.del("tavi:borrador"); }
+async function saveUser(){ await store.set("tavi:usuario",usuario); }
+async function loadUser(){ return (await store.get("tavi:usuario"))||""; }
+function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim());}
+
+
+/* ============================================================
+   Pantalla 0 — correo de quien elabora el reporte
+   ============================================================ */
+function renderEntry(draft){
+  mastsub.textContent="Identifíquese para comenzar. El correo queda registrado en el reporte que genere.";
+  mastright.innerHTML="";
+
+  const e=el("div","entry");
+  const card=el("div","entrycard");
+  card.innerHTML=
+    '<h2>Antes de comenzar</h2>'+
+    '<p class="lede">Escriba el correo de la persona que elabora el reporte. Aparecerá en el documento final para dejar constancia de quién capturó las mediciones.</p>'+
+    '<label class="lab" for="mail">Correo electrónico</label>'+
+    '<input type="email" id="mail" autocomplete="email" inputmode="email" placeholder="nombre@hospital.org" spellcheck="false">'+
+    '<p class="err" id="mailerr" role="alert"></p>';
+
+  const btn=el("button","btn","Entrar");
+  btn.type="button";
+  card.appendChild(btn);
+  card.appendChild(el("p","fineprint","El correo se guarda únicamente en este navegador y no se envía a ningún servidor. Para cambiarlo después, use el enlace del encabezado."));
+  e.appendChild(card);
+  app.innerHTML="";app.appendChild(e);
+  renderFooter();
+
+  const input=document.getElementById("mail");
+  const err=document.getElementById("mailerr");
+  input.value=usuario||"";
+  setTimeout(()=>input.focus(),40);
+
+  function go(){
+    const v=input.value.trim();
+    if(!v){err.textContent="Escriba un correo para continuar.";input.focus();return;}
+    if(!validEmail(v)){err.textContent="Ese correo no tiene un formato válido. Revise que incluya @ y un dominio.";input.focus();return;}
+    err.textContent="";
+    usuario=v;saveUser();
+    renderGate(draft);
+    window.scrollTo(0,0);
+  }
+  btn.addEventListener("click",go);
+  input.addEventListener("input",()=>{if(err.textContent)err.textContent="";});
+  input.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();go();}});
+}
+
+function userChip(){
+  const box=el("div");
+  box.style.cssText="text-align:right;font-size:12.5px;color:#F0C4C8;line-height:1.4";
+  box.innerHTML='<div style="font-family:var(--mono);font-size:12px">'+esc(usuario)+'</div>';
+  const b=el("button","","Cambiar correo");
+  b.type="button";
+  b.style.cssText="all:unset;cursor:pointer;font-size:12px;color:#fff;border-bottom:1px solid rgba(255,255,255,.5);margin-top:3px";
+  b.addEventListener("click",()=>{renderEntry(null);window.scrollTo(0,0);});
+  box.appendChild(b);
+  return box;
+}
+
+/* ============================================================
+   Pantalla 1 — elección de morfología
+   ============================================================ */
+function renderGate(draft){
+  mastsub.textContent="Todas las medidas de la raíz aórtica en una única reconstrucción sistólica.";
+  mastright.innerHTML="";mastright.appendChild(userChip());
+  const g=el("div","gate");
+  g.innerHTML=
+    '<h2>¿Qué morfología valvular tiene el paciente?</h2>'+
+    '<p class="lede">La morfología define qué mediciones aparecen en el formulario. Podrá cambiarla después sin perder lo que ya haya escrito.</p>';
+
+  const wrap=el("div","choices");
+
+  const tri=el("button","choice");
+  tri.type="button";
+  tri.innerHTML=
+    triGlyph()+
+    '<h3>Válvula tricúspide</h3>'+
+    '<p>Protocolo estándar: anillo, senos, unión sinotubular, alturas coronarias, tracto de salida y acceso vascular.</p>'+
+    '<span class="count">'+countFields("tri")+' campos</span>';
+  tri.addEventListener("click",()=>start("tri"));
+
+  const bav=el("button","choice");
+  bav.type="button";
+  bav.innerHTML=
+    bavGlyph()+
+    '<h3>Válvula bicúspide</h3>'+
+    '<p>Añade morfología de Sievers y Michelena, caracterización del rafe, plano supra-anular y morfología del calcio.</p>'+
+    '<span class="count">'+countFields("bav")+' campos</span>';
+  bav.addEventListener("click",()=>start("bav"));
+
+  wrap.appendChild(tri);wrap.appendChild(bav);
+  g.appendChild(wrap);
+
+  if(draft&&draft.mode){
+    const r=el("p","");
+    r.style.cssText="margin-top:28px;font-size:13.5px;color:var(--muted)";
+    r.innerHTML='Hay un borrador guardado ('+(draft.mode==="bav"?"bicúspide":"tricúspide")+'). ';
+    const b=el("button","linkish","Continuar con el borrador");
+    b.type="button";
+    b.addEventListener("click",()=>{mode=draft.mode;data=draft.data||{};imagenes=draft.imagenes||[];renderForm();});
+    const b2=el("button","linkish","Descartarlo");
+    b2.type="button";b2.style.marginLeft="14px";
+    b2.addEventListener("click",async()=>{await clearDraft();renderGate(null);});
+    r.appendChild(b);r.appendChild(b2);
+    g.appendChild(r);
+  }
+
+  app.innerHTML="";app.appendChild(g);
+  renderFooter();
+}
+
+function countFields(m){
+  return SCHEMA.filter(s=>s.mode==="all"||s.mode===m)
+    .reduce((n,s)=>n+s.fields.filter(f=>f.type!=="derived").length,0);
+}
+
+function triGlyph(){
+  return '<svg class="glyph" width="46" height="46" viewBox="0 0 46 46" aria-hidden="true">'+
+    '<circle cx="23" cy="23" r="19" fill="none" stroke="#990011" stroke-width="2"/>'+
+    '<path d="M23 23 L23 4 M23 23 L6.5 32.5 M23 23 L39.5 32.5" stroke="#990011" stroke-width="2" stroke-linecap="round"/>'+
+    '</svg>';
+}
+function bavGlyph(){
+  return '<svg class="glyph" width="46" height="46" viewBox="0 0 46 46" aria-hidden="true">'+
+    '<circle cx="23" cy="23" r="19" fill="none" stroke="#990011" stroke-width="2"/>'+
+    '<path d="M4.6 19 Q23 27 41.4 19" fill="none" stroke="#990011" stroke-width="2" stroke-linecap="round"/>'+
+    '<path d="M23 23 L23 42" stroke="#990011" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>'+
+    '</svg>';
+}
+
+function start(m){mode=m;renderForm();save();}
+
+/* ============================================================
+   Pantalla 2 — formulario
+   ============================================================ */
+function renderForm(){
+  mastsub.textContent = mode==="bav"
+    ? "Morfología bicúspide. Los bloques marcados en rojo no forman parte del protocolo tricúspide."
+    : "Morfología tricúspide. Protocolo estándar de la raíz aórtica.";
+  mastright.innerHTML="";mastright.appendChild(userChip());
+
+  const wrap=el("div","wrap");
+  const main=el("div");
+
+  const bar=el("div","bar");
+  const left=el("div");
+  left.style.cssText="display:flex;gap:12px;align-items:center;flex-wrap:wrap";
+  left.innerHTML='<span class="badge'+(mode==="tri"?" tri":"")+'">'+(mode==="bav"?"Válvula bicúspide":"Válvula tricúspide")+'</span>';
+  const swap=el("button","linkish","Cambiar morfología");
+  swap.type="button";
+  swap.addEventListener("click",()=>{mode=mode==="bav"?"tri":"bav";renderForm();save();window.scrollTo(0,0);});
+  left.appendChild(swap);
+  bar.appendChild(left);
+  main.appendChild(bar);
+
+  sections().forEach(sec=>{
+    const isBav=sec.mode==="bav";
+    const b=el("section","block"+(isBav?" bav":""));
+    const h=el("div","block-head");
+    h.innerHTML='<span class="letter">'+esc(sec.letter)+'</span><h2>'+esc(sec.title)+'</h2>'+
+      (sec.note?'<span class="note">'+esc(sec.note)+'</span>':"");
+    b.appendChild(h);
+    const g=el("div","grid");
+    sec.fields.forEach(f=>g.appendChild(cellFor(f)));
+    b.appendChild(g);
+    main.appendChild(b);
+  });
+
+  main.appendChild(buildImageBlock());
+
+  wrap.appendChild(main);
+  wrap.appendChild(buildRail());
+  app.innerHTML="";app.appendChild(wrap);
+  renderFooter();
+  drawThumbs();
+  refresh();
+}
+
+function cellFor(f){
+  const c=el("div","cell"+(f.wide||f.type==="textarea"||f.type==="checks"?" wide":"")+(f.type==="derived"?" derived":""));
+  const id="f_"+f.k;
+
+  if(f.type==="derived"){
+    c.innerHTML='<label class="lab" for="'+id+'">'+esc(f.label)+'</label>'+
+      '<div class="val empty" id="'+id+'" data-derived="'+f.k+'">—</div>'+
+      '<span class="formula">'+esc(f.formula||"")+'</span>';
+    return c;
+  }
+
+  const lab=el("label","lab",esc(f.label));
+  lab.setAttribute("for",id);
+  c.appendChild(lab);
+
+  if(f.type==="checks"){
+    const box=el("div","checks");
+    f.items.forEach((it,i)=>{
+      const l=el("label");
+      const cb=document.createElement("input");
+      cb.type="checkbox";cb.value=it;cb.id=id+"_"+i;
+      cb.checked=(data[f.k]||[]).indexOf(it)>=0;
+      cb.addEventListener("change",()=>{
+        const cur=new Set(data[f.k]||[]);
+        cb.checked?cur.add(it):cur.delete(it);
+        data[f.k]=Array.from(cur);
+        refresh();save();
+      });
+      l.appendChild(cb);
+      l.appendChild(document.createTextNode(" "+it));
+      box.appendChild(l);
+    });
+    c.appendChild(box);
+    return c;
+  }
+
+  let input;
+  if(f.type==="select"){
+    input=document.createElement("select");
+    f.options.forEach(o=>{
+      const op=document.createElement("option");
+      op.value=o;op.textContent=o===""?"—":o;
+      input.appendChild(op);
+    });
+  }else if(f.type==="textarea"){
+    input=document.createElement("textarea");
+    input.rows=3;
+  }else{
+    input=document.createElement("input");
+    input.type = f.type==="num" ? "number" : (f.type==="date"?"date":"text");
+    if(f.type==="num"){input.step="0.1";input.inputMode="decimal";}
+    if(f.ph)input.placeholder=f.ph;
+  }
+  input.id=id;
+  input.value=data[f.k]==null?"":data[f.k];
+  input.addEventListener("input",()=>{data[f.k]=input.value;refresh();save();});
+  input.addEventListener("change",()=>{data[f.k]=input.value;refresh();save();});
+
+  if(f.unit){
+    const row=el("div","inrow");
+    row.appendChild(input);
+    row.appendChild(el("span","unit",esc(f.unit)));
+    c.appendChild(row);
+  }else{
+    c.appendChild(input);
+  }
+  return c;
+}
+
+
+/* ============================================================
+   Imágenes adjuntas (opcionales)
+   ============================================================ */
+const MAX_IMG=6, MAX_LADO=1400, MAX_BYTES=12*1024*1024;
+
+function buildImageBlock(){
+  const b=el("section","block");
+  const h=el("div","block-head");
+  h.innerHTML='<span class="letter">P</span><h2>Imágenes</h2><span class="note">Opcional · hasta '+MAX_IMG+'</span>';
+  b.appendChild(h);
+
+  const g=el("div","grid");
+  const c=el("div","cell wide");
+
+  const drop=el("div","drop");
+  drop.tabIndex=0;
+  drop.setAttribute("role","button");
+  drop.innerHTML='<p><strong>Elija imágenes</strong> o arrástrelas aquí<br>'+
+    'Capturas de la estación de trabajo o reconstrucciones. Se incorporan al final del reporte con su pie de figura.</p>';
+
+  const file=document.createElement("input");
+  file.type="file";file.accept="image/*";file.multiple=true;
+  file.style.cssText="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none";
+
+  drop.addEventListener("click",()=>file.click());
+  drop.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();file.click();}});
+  drop.addEventListener("dragover",ev=>{ev.preventDefault();drop.classList.add("over");});
+  drop.addEventListener("dragleave",()=>drop.classList.remove("over"));
+  drop.addEventListener("drop",ev=>{
+    ev.preventDefault();drop.classList.remove("over");
+    if(ev.dataTransfer&&ev.dataTransfer.files)addFiles(ev.dataTransfer.files);
+  });
+  file.addEventListener("change",()=>{addFiles(file.files);file.value="";});
+
+  c.appendChild(drop);
+  c.appendChild(file);
+
+  const strip=el("div","thumbs");
+  strip.id="thumbs";
+  c.appendChild(strip);
+
+  const msg=el("p","");
+  msg.id="imgmsg";
+  msg.style.cssText="font-size:12.5px;color:var(--cherry);margin:10px 0 0;min-height:16px";
+  c.appendChild(msg);
+
+  g.appendChild(c);
+  b.appendChild(g);
+  return b;
+}
+
+function imgMsg(t){
+  const m=document.getElementById("imgmsg");
+  if(m)m.textContent=t||"";
+}
+
+function addFiles(list){
+  const files=Array.from(list||[]).filter(f=>f.type.indexOf("image/")===0);
+  if(!files.length){imgMsg("Solo se admiten archivos de imagen.");return;}
+  imgMsg("");
+  files.forEach(f=>{
+    if(imagenes.length>=MAX_IMG){imgMsg("Se alcanzó el máximo de "+MAX_IMG+" imágenes.");return;}
+    if(f.size>MAX_BYTES){imgMsg("«"+f.name+"» supera el tamaño admitido.");return;}
+    const r=new FileReader();
+    r.onload=()=>shrink(r.result,src=>{
+      if(imagenes.length>=MAX_IMG)return;
+      imagenes.push({src,cap:""});
+      drawThumbs();save();
+    });
+    r.onerror=()=>imgMsg("No se pudo leer «"+f.name+"».");
+    r.readAsDataURL(f);
+  });
+}
+
+/* reduce la imagen para que el reporte no pese de más; si algo falla, usa el original */
+function shrink(dataUrl,done){
+  let listo=false;
+  const acabar=v=>{ if(listo)return; listo=true; done(v); };
+  const reloj=setTimeout(()=>acabar(dataUrl),4000);
+  const im=new Image();
+  im.onload=function(){
+    clearTimeout(reloj);
+    try{
+      const w=im.naturalWidth||im.width, h=im.naturalHeight||im.height;
+      if(!w||!h){acabar(dataUrl);return;}
+      const f=Math.min(1,MAX_LADO/Math.max(w,h));
+      const cv=document.createElement("canvas");
+      cv.width=Math.round(w*f);cv.height=Math.round(h*f);
+      const cx=cv.getContext("2d");
+      if(!cx){acabar(dataUrl);return;}
+      cx.drawImage(im,0,0,cv.width,cv.height);
+      acabar(cv.toDataURL("image/jpeg",0.85));
+    }catch(e){acabar(dataUrl);}
+  };
+  im.onerror=function(){ clearTimeout(reloj); acabar(dataUrl); };
+  try{ im.src=dataUrl; }catch(e){ clearTimeout(reloj); acabar(dataUrl); }
+}
+
+function drawThumbs(){
+  const strip=document.getElementById("thumbs");
+  if(!strip)return;
+  strip.innerHTML="";
+  imagenes.forEach((it,i)=>{
+    const t=el("div","thumb");
+    const im=document.createElement("img");
+    im.src=it.src;im.alt="Imagen "+(i+1);
+    t.appendChild(im);
+
+    const cap=el("div","cap");
+    const inp=document.createElement("input");
+    inp.type="text";inp.placeholder="Pie de figura (opcional)";inp.value=it.cap||"";
+    inp.addEventListener("input",()=>{imagenes[i].cap=inp.value;save();});
+    cap.appendChild(inp);
+    t.appendChild(cap);
+
+    const k=el("button","kill","×");
+    k.type="button";
+    k.title="Quitar la imagen";
+    k.setAttribute("aria-label","Quitar la imagen "+(i+1));
+    k.addEventListener("click",()=>{imagenes.splice(i,1);drawThumbs();save();imgMsg("");});
+    t.appendChild(k);
+
+    strip.appendChild(t);
+  });
+}
+
+/* ============================================================
+   Panel lateral
+   ============================================================ */
+function buildRail(){
+  const rail=el("aside","rail noprint");
+
+  const prog=el("div","card");
+  prog.innerHTML='<h3>Avance</h3>';
+  const pb=el("div","body");
+  pb.innerHTML='<span class="fill"><i id="fillbar"></i></span><div class="kv"><span class="k">Campos completados</span><span class="v" id="progtxt">0</span></div>';
+  prog.appendChild(pb);
+  rail.appendChild(prog);
+
+  const calc=el("div","card");
+  calc.innerHTML='<h3>Valores derivados</h3>';
+  const cb=el("div","body");cb.id="railcalc";
+  calc.appendChild(cb);
+  rail.appendChild(calc);
+
+  const fl=el("div","card");
+  fl.innerHTML='<h3>Puntos de atención</h3>';
+  const fb=el("div","body");fb.id="railflags";
+  fl.appendChild(fb);
+  rail.appendChild(fl);
+
+  const act=el("div","card");
+  const ar=el("div","btnrow");
+  const gen=el("button","btn","Generar el reporte");
+  gen.type="button";
+  gen.addEventListener("click",()=>{renderReport();window.scrollTo(0,0);});
+  const clr=el("button","btn ghost","Vaciar el formulario");
+  clr.type="button";
+  clr.addEventListener("click",async()=>{
+    if(!confirm("Se borrarán todos los datos capturados. ¿Continuar?"))return;
+    data={};imagenes=[];await clearDraft();renderForm();window.scrollTo(0,0);
+  });
+  ar.appendChild(gen);ar.appendChild(clr);
+  act.appendChild(ar);
+  act.appendChild(el("p","disclaimer","Herramienta de documentación. Los valores derivados y los puntos de atención son cálculos y umbrales orientativos tomados de la literatura; no sustituyen la interpretación del estudio ni la decisión del Heart Team."));
+  rail.appendChild(act);
+
+  return rail;
+}
+
+const RAIL_KEYS=[
+  ["dArea","Ø derivado del área","mm"],
+  ["dPerim","Ø derivado del perímetro","mm"],
+  ["exc","Excentricidad",""],
+  ["senoProm","Ø sinusal medio","mm"],
+  ["areaIdx","Área indexada","cm²/m²"],
+  ["rafePct","Rafe / Ø anular","%"],
+];
+
+function refresh(){
+  const derived={};
+  SCHEMA.forEach(s=>s.fields.forEach(f=>{
+    if(f.type==="derived"){
+      const val=f.fn(numeric());
+      derived[f.k]=val;
+      const node=document.getElementById("f_"+f.k);
+      if(node){
+        if(val===null||val===undefined||!isFinite(val)){node.textContent="—";node.classList.add("empty");}
+        else{node.textContent=fmt(val,decFor(f.k));node.classList.remove("empty");}
+      }
+    }
+  }));
+
+  const rc=document.getElementById("railcalc");
+  if(rc){
+    rc.innerHTML="";
+    let any=false;
+    RAIL_KEYS.forEach(([k,label,unit])=>{
+      if(!visibleKey(k))return;
+      const v=derived[k];
+      const row=el("div","kv");
+      const has=(v!==null&&v!==undefined&&isFinite(v));
+      if(has)any=true;
+      row.innerHTML='<span class="k">'+esc(label)+'</span><span class="v'+(has?"":" empty")+'">'+
+        (has?esc(fmt(v,decFor(k))+(unit?" "+unit:"")):"—")+'</span>';
+      rc.appendChild(row);
+    });
+    if(!any&&rc.children.length===0)rc.appendChild(el("p","quiet","Los cálculos aparecerán conforme capture las medidas."));
+  }
+
+  const rf=document.getElementById("railflags");
+  if(rf){
+    rf.innerHTML="";
+    const v=numeric();
+    const hits=FLAGS.filter(f=>(!f.bav||mode==="bav")&&f.test(v));
+    if(!hits.length){
+      rf.appendChild(el("p","quiet","Sin umbrales alcanzados con los datos capturados hasta ahora."));
+    }else{
+      hits.forEach(h=>{
+        const l=el("div","flagline");
+        l.innerHTML='<span class="dot"></span><span>'+esc(h.txt)+' <em>'+esc(h.tag)+'</em></span>';
+        rf.appendChild(l);
+      });
+    }
+  }
+
+  const total=sections().reduce((n,s)=>n+s.fields.filter(f=>f.type!=="derived").length,0);
+  let done=0;
+  sections().forEach(s=>s.fields.forEach(f=>{
+    if(f.type==="derived")return;
+    if(f.type==="checks"){if((data[f.k]||[]).length)done++;return;}
+    if(data[f.k]!=null&&String(data[f.k]).trim()!=="")done++;
+  }));
+  const bar=document.getElementById("fillbar");
+  const txt=document.getElementById("progtxt");
+  if(bar)bar.style.width=(total?Math.round(100*done/total):0)+"%";
+  if(txt)txt.textContent=done+" / "+total;
+}
+
+function visibleKey(k){
+  return sections().some(s=>s.fields.some(f=>f.k===k));
+}
+function numeric(){
+  const o={};
+  Object.keys(data).forEach(k=>{o[k]=data[k];});
+  return o;
+}
+
+/* ============================================================
+   Pantalla 3 — reporte
+   ============================================================ */
+function reportSections(){
+  const out=[];
+  sections().forEach(sec=>{
+    if(sec.id==="id"||sec.id==="firma")return;
+    const rows=[];
+    sec.fields.forEach(f=>{
+      if(f.type==="derived"){
+        const v=f.fn(numeric());
+        if(v!==null&&v!==undefined&&isFinite(v))rows.push({label:f.label,value:fmt(v,decFor(f.k))+(f.unit?" "+f.unit:""),calc:true});
+        return;
+      }
+      if(f.type==="checks"){
+        const items=data[f.k]||[];
+        if(items.length)rows.push({label:f.label,value:items.join(" · "),block:true});
+        return;
+      }
+      const raw=data[f.k];
+      if(raw==null||String(raw).trim()==="")return;
+      const val=(f.type==="num")?String(raw).replace(".",",")+(f.unit?" "+f.unit:""):String(raw);
+      rows.push({label:f.label,value:val,block:f.type==="textarea"});
+    });
+    if(rows.length)out.push({letter:sec.letter,title:sec.title,rows});
+  });
+  return out;
+}
+
+function renderReport(){
+  mastsub.textContent="Reporte listo. Revíselo antes de imprimirlo o descargarlo.";
+  mastright.innerHTML="";mastright.appendChild(userChip());
+
+  const shell=el("div","sheet-shell");
+
+  const bar=el("div","bar noprint");
+  const back=el("button","linkish","← Volver al formulario");
+  back.type="button";
+  back.addEventListener("click",()=>{renderForm();window.scrollTo(0,0);});
+  bar.appendChild(back);
+  const acts=el("div");
+  acts.style.cssText="display:flex;gap:10px;flex-wrap:wrap";
+  const p=el("button","btn","Imprimir o guardar en PDF");
+  p.type="button";p.style.width="auto";p.style.padding="9px 18px";
+  p.addEventListener("click",()=>window.print());
+  const d=el("button","btn ghost","Descargar como Word");
+  d.type="button";d.style.width="auto";d.style.padding="9px 18px";
+  d.addEventListener("click",downloadDoc);
+  const cp=el("button","btn ghost","Copiar como texto");
+  cp.type="button";cp.style.width="auto";cp.style.padding="9px 18px";
+  cp.addEventListener("click",()=>copyText(cp));
+  acts.appendChild(p);acts.appendChild(d);acts.appendChild(cp);
+  bar.appendChild(acts);
+  shell.appendChild(bar);
+
+  const sheet=el("div","sheet");
+  sheet.id="sheet";
+  sheet.innerHTML=sheetHTML();
+  shell.appendChild(sheet);
+
+  app.innerHTML="";app.appendChild(shell);
+  renderFooter();
+}
+
+function sheetHTML(){
+  const v=numeric();
+  const secs=reportSections();
+  const fecha=data.fecha?data.fecha.split("-").reverse().join("/"):"—";
+  const b=bsa(v);
+
+  let h='<h2>Reporte de TC para planificación de TAVI</h2>'+
+    '<p class="sub">Raíz aórtica medida en reconstrucción sistólica'+(data.fase?" ("+esc(data.fase)+")":"")+
+    '. Morfología '+(mode==="bav"?"bicúspide":"tricúspide")+'.</p>';
+
+  h+='<div class="idgrid">'+
+      idcell("Paciente",data.nombre)+
+      idcell("Registro",data.registro)+
+      idcell("Fecha",fecha)+
+      idcell("Edad",data.edad?data.edad+" años":"")+
+      idcell("Sexo",data.sexo)+
+      idcell("Superficie corporal",b?fmt(b,2)+" m²":"")+
+    '</div>';
+
+  if(!secs.length){
+    h+='<p class="empty-state">Todavía no hay mediciones capturadas. Vuelva al formulario para completarlas.</p>';
+    return h;
+  }
+
+  secs.forEach(s=>{
+    h+='<div class="rsec"><h3>'+esc(s.letter)+' · '+esc(s.title)+'</h3><table class="rt"><tbody>';
+    s.rows.forEach(r=>{
+      if(r.block){
+        h+='<tr'+(r.calc?' class="calc"':'')+'><td colspan="2"><strong style="font-weight:600">'+esc(r.label)+'</strong><br>'+esc(r.value)+'</td></tr>';
+      }else{
+        h+='<tr'+(r.calc?' class="calc"':'')+'><td>'+esc(r.label)+(r.calc?' <span style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7A6C6E"> calculado</span>':'')+'</td><td class="n">'+esc(r.value)+'</td></tr>';
+      }
+    });
+    h+='</tbody></table></div>';
+  });
+
+  const hits=FLAGS.filter(f=>(!f.bav||mode==="bav")&&f.test(v));
+  if(hits.length){
+    h+='<div class="rsec"><h3>Puntos de atención</h3><table class="rt"><tbody>';
+    hits.forEach(x=>{h+='<tr><td>'+esc(x.txt)+'</td><td class="n">'+esc(x.tag)+'</td></tr>';});
+    h+='</tbody></table></div>';
+  }
+
+  if(imagenes.length){
+    h+='<div class="rsec"><h3>Imágenes</h3><div class="rimgs">';
+    imagenes.forEach(function(it,i){
+      h+='<figure class="rimg"><img src="'+it.src+'" alt="Imagen '+(i+1)+'">'+
+         '<figcaption>Figura '+(i+1)+(it.cap?'. '+esc(it.cap):'')+'</figcaption></figure>';
+    });
+    h+='</div></div>';
+  }
+
+  h+=signHTML();
+
+  h+='<p class="rnote">Los valores marcados como calculados se derivan de las mediciones capturadas: Ø derivado del área = √(4·A/π); Ø derivado del perímetro = P/π; índice de excentricidad = 1 − (Ø mínimo / Ø máximo); superficie corporal por la fórmula de Mosteller. Los puntos de atención corresponden a umbrales orientativos descritos en la literatura y no constituyen una indicación ni una contraindicación por sí mismos.</p>';
+  return h;
+}
+
+
+function signHTML(){
+  const linea2=[data.especialidad,data.colegiado?("Reg. "+data.colegiado):""].filter(Boolean).join(" · ");
+  return '<div class="signblock">'+
+    '<div class="signline">'+
+      '<div class="who">'+(data.medico?esc(data.medico):"&nbsp;")+'</div>'+
+      (linea2?'<div class="what">'+esc(linea2)+'</div>':'')+
+      (data.institucion?'<div class="what">'+esc(data.institucion)+'</div>':'')+
+      '<div class="what" style="margin-top:2px">Médico que interpreta el estudio</div>'+
+    '</div>'+
+  '</div>';
+}
+
+function idcell(label,val){
+  return '<div><span>'+esc(label)+'</span><strong>'+(val?esc(val):"—")+'</strong></div>';
+}
+
+/* ---------- exportación ---------- */
+function downloadDoc(){
+  const style='<style>'+
+    'body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#1E1416}'+
+    'h2{font-family:Georgia,serif;font-size:16pt;margin:0 0 2pt}'+
+    '.sub{color:#7A6C6E;font-size:9.5pt;margin:0 0 14pt}'+
+    'h3{font-size:9.5pt;letter-spacing:1pt;text-transform:uppercase;color:#990011;margin:14pt 0 4pt}'+
+    'table{width:100%;border-collapse:collapse}'+
+    'td{padding:3pt 0;border-bottom:0.5pt dotted #C9BDBE;font-size:10.5pt;vertical-align:top}'+
+    'td.n{text-align:right;font-weight:bold;white-space:nowrap}'+
+    '.idgrid td{border:0;padding:2pt 10pt 2pt 0;font-size:10pt}'+
+    '.rnote{font-size:8.5pt;color:#7A6C6E;border-top:0.5pt solid #C9BDBE;padding-top:8pt;margin-top:16pt;line-height:1.4}'+
+    '</style>';
+  const body=document.getElementById("sheet").innerHTML
+    .replace(/<div class="idgrid">/g,'<table class="idgrid"><tr>')
+    .replace(/<\/div>\s*(?=<div class="rsec")/,'</tr></table>')
+    .replace(/<div><span>/g,'<td><span style="font-size:8pt;letter-spacing:.5pt;text-transform:uppercase;color:#7A6C6E">')
+    .replace(/<\/span><strong>/g,'</span><br><strong>')
+    .replace(/<\/strong><\/div>/g,'</strong></td>');
+  const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'+
+    '<head><meta charset="utf-8">'+style+'</head><body>'+body+'</body></html>';
+  const blob=new Blob(["\ufeff"+html],{type:"application/msword"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="reporte-tc-tavi-"+(slug(data.nombre)||"paciente")+".doc";
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+
+function slug(s){
+  return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40);
+}
+
+function copyText(btn){
+  const v=numeric();
+  let t="REPORTE DE TC PARA PLANIFICACIÓN DE TAVI\n";
+  t+="Morfología "+(mode==="bav"?"bicúspide":"tricúspide")+(data.fase?" · reconstrucción "+data.fase:"")+"\n";
+  t+="Paciente: "+(data.nombre||"—")+"   Registro: "+(data.registro||"—")+"   Fecha: "+(data.fecha||"—")+"\n";
+  const b=bsa(v);
+  t+="Edad: "+(data.edad||"—")+"   Sexo: "+(data.sexo||"—")+"   SC: "+(b?fmt(b,2)+" m²":"—")+"\n";
+  reportSections().forEach(s=>{
+    t+="\n"+s.letter+" · "+s.title.toUpperCase()+"\n";
+    s.rows.forEach(r=>{t+="  "+r.label+": "+r.value+"\n";});
+  });
+  const hits=FLAGS.filter(f=>(!f.bav||mode==="bav")&&f.test(v));
+  if(hits.length){
+    t+="\nPUNTOS DE ATENCIÓN\n";
+    hits.forEach(x=>{t+="  "+x.txt+" ("+x.tag+")\n";});
+  }
+  if(imagenes.length){
+    t+="\nIMÁGENES ADJUNTAS\n";
+    imagenes.forEach((it,i)=>{t+="  Figura "+(i+1)+(it.cap?": "+it.cap:"")+"\n";});
+  }
+  if(data.medico){
+    t+="\n_______________________________\n";
+    t+=data.medico+"\n";
+    const l2=[data.especialidad,data.colegiado?("Reg. "+data.colegiado):""].filter(Boolean).join(" · ");
+    if(l2)t+=l2+"\n";
+    if(data.institucion)t+=data.institucion+"\n";
+    t+="Médico que interpreta el estudio\n";
+  }
+  const done=()=>{const o=btn.textContent;btn.textContent="Copiado";setTimeout(()=>btn.textContent=o,1600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done,()=>fallbackCopy(t,done));
+  }else fallbackCopy(t,done);
+}
+function fallbackCopy(t,cb){
+  const ta=document.createElement("textarea");
+  ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand("copy");cb();}catch(e){}
+  document.body.removeChild(ta);
+}
+
+/* ============================================================ */
+(async function(){
+  // Si venimos desde InfoEasyRad ya autenticado, usar ese correo y no volver a pedirlo
+  try{
+    const params=new URLSearchParams(location.search);
+    const uParam=params.get("u");
+    if(uParam&&validEmail(uParam)){
+      await store.set("tavi:usuario",uParam);
+    }
+  }catch(e){}
+  const r=await Promise.all([loadUser(),loadDraft()]);
+  usuario=r[0]||"";
+  const draft=r[1];
+  if(usuario&&validEmail(usuario))renderGate(draft);
+  else renderEntry(draft);
+})();
+
+})();
+</script>
+</body>
+</html>
