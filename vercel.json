@@ -3,24 +3,8 @@
   "cleanUrls": false,
   "rewrites": [
     {
-      "source": "/(.*)\\.html",
-      "destination": "/$1.html"
-    },
-    {
       "source": "^/tavi$",
-      "destination": "/tavi.html"
-    },
-    {
-      "source": "^/privacy$",
-      "destination": "/privacy.html"
-    },
-    {
-      "source": "^/terms$",
-      "destination": "/terms.html"
-    },
-    {
-      "source": "^/cardiometro$",
-      "destination": "/cardiometro.html"
+      "destination": "/api/tavi"
     },
     {
       "source": "^/$",
