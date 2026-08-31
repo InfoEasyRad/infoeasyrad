@@ -9,7 +9,7 @@ module.exports = (req, res) => {
     res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
     res.status(200).send(content);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to serve index.html', details: err.message });
+    console.error('Error serving index.html:', err);
+    res.status(500).json({ error: 'Failed to serve index.html', msg: err.message });
   }
 };
