@@ -1333,10 +1333,33 @@ function mostrarHub(){
   if(a)a.style.display='none';
   if(h){h.style.display='flex';window.scrollTo(0,0);}
 }
+
+function regresarAlHub(){
+  const hubScreen = document.getElementById('hubScreen');
+  const editorScreen = document.getElementById('editorScreen');
+  if(editorScreen) editorScreen.style.display = 'none';
+  if(hubScreen) hubScreen.style.display = 'grid';
+  
+  // Limpiar algunos estados si es necesario
+  if(window.sessionStorage) sessionStorage.removeItem('editorState');
+}
+
 function abrirInfoEasy(){
   const h=document.getElementById('hubScreen');
   if(h)h.style.display='none';
+  
+  // Agregar botón de regreso si no existe
+  if(!document.getElementById('back-to-hub-btn')){
+    const btn = document.createElement('a');
+    btn.id = 'back-to-hub-btn';
+    btn.href = '#';
+    btn.textContent = '← InfoEasyRad';
+    btn.style.cssText = 'display:inline-flex;align-items:center;gap:5px;color:#8592A1;font-size:12.5px;text-decoration:none;margin:16px;border-bottom:1px solid rgba(133,146,161,.5);padding-bottom:2px;position:fixed;top:0;left:0;z-index:1000;background:#F3F5F7;padding:12px;';
+    btn.onclick = (e) => { e.preventDefault(); regresarAlHub(); };
+    document.body.insertBefore(btn, document.body.firstChild);
+  }
 }
+
 function abrirTavi(){
   const email=(usuarioActual&&usuarioActual.email)||localStorage.getItem('ier_email_saved')||'';
   window.location.href='/tavi'+(email?('?u='+encodeURIComponent(email)):'');
