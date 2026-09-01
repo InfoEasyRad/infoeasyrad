@@ -1094,7 +1094,7 @@ function updateBSA(){
   const h = state.patient.height, w = state.patient.weight;
   const out = document.getElementById('bsaOut');
   if(h && w && h>0 && w>0){
-    state.patient.bsa = Math.sqrt((h*w)/3600);
+    state.patient.bsa = 0.007184 * Math.pow(h, 0.725) * Math.pow(w, 0.425);
     out.textContent = state.patient.bsa.toFixed(2)+' m²';
   } else {
     state.patient.bsa = null;
