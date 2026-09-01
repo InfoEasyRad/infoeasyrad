@@ -419,7 +419,7 @@
             </div>
           </div>
           <div class="bsa-readout">
-            <span>BSA (Mosteller)</span>
+            <span>BSA (DuBois)</span>
             <b id="bsaOut" class="mono">—</b>
           </div>
           <div class="field" style="margin-top:12px;">
@@ -1421,7 +1421,7 @@ function renderReport(){
     + '<div><span>Sexo</span><b>'+(p.sex==='H'?'Hombre':'Mujer')+'</b></div>'
     + '<div><span>Edad</span><b>'+(p.age||'—')+(p.age?' años':'')+'</b></div>'
     + '<div><span>Talla / Peso</span><b>'+(p.height||'—')+' cm / '+(p.weight||'—')+' kg</b></div>'
-    + '<div><span>BSA (Mosteller)</span><b>'+(p.bsa? p.bsa.toFixed(2)+' m²':'—')+'</b></div>'
+    + '<div><span>BSA (DuBois)</span><b>'+(p.bsa? p.bsa.toFixed(2)+' m²':'—')+'</b></div>'
     + '<div><span>Indicación</span><b style="font-family:var(--sans); font-weight:600;">'+(p.indication||'—')+'</b></div>'
     + '</div>'
     + (hasAnything? bodyHTML : '<div class="report-empty">No hay datos capturados todavía. Vuelve a la pestaña de captura para ingresar las medidas del estudio.</div>')
