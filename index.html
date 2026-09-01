@@ -1346,58 +1346,34 @@ function regresarAlHub(){
   if(backBtn) backBtn.remove();
 }
 
-function abrirInfoEasy(){
-  const h=document.getElementById('hubScreen');
-  if(h)h.style.display='none';
+function regresarAlHub(){
+  const hubScreen = document.getElementById('hubScreen');
+  const btn = document.getElementById('back-to-hub-btn');
   
-  // Pequeña pausa para asegurar que el DOM está listo
-  setTimeout(() => {
-    if(!document.getElementById('back-to-hub-btn')){
-      const btn = document.createElement('button');
-      btn.id = 'back-to-hub-btn';
-      btn.textContent = '← InfoEasyRad';
-      btn.style.cssText = `
-        position: fixed;
-        top: 16px;
-        left: 16px;
-        z-index: 99999;
-        background: rgba(255, 255, 255, 0.98);
-        color: #8592A1;
-        border: 1px solid rgba(133, 146, 161, 0.3);
-        border-radius: 6px;
-        padding: 10px 14px;
-        font-size: 13px;
-        font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
-      `;
-      
-      btn.onmouseover = () => {
-        btn.style.background = 'rgba(255, 255, 255, 1)';
-        btn.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
-      };
-      
-      btn.onmouseout = () => {
-        btn.style.background = 'rgba(255, 255, 255, 0.98)';
-        btn.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
-      };
-      
-      btn.onclick = (e) => {
-        e.preventDefault();
-        const hubScreen = document.getElementById('hubScreen');
-        const editorScreen = document.getElementById('editorScreen');
-        if(editorScreen) editorScreen.style.display = 'none';
-        if(hubScreen) hubScreen.style.display = 'grid';
-        btn.remove();
-      };
-      
-      document.body.appendChild(btn);
-    }
-  }, 100);
+  // Restaurar hub
+  if(hubScreen) {
+    hubScreen.style.display = 'grid';
+  }
+  
+  // Ocultar botón
+  if(btn) {
+    btn.style.display = 'none';
+  }
+  
+  return false;
+}
+
+function abrirInfoEasy(){
+  const h = document.getElementById('hubScreen');
+  const btn = document.getElementById('back-to-hub-btn');
+  
+  // Ocultar hub
+  if(h) h.style.display = 'none';
+  
+  // Mostrar botón de regreso
+  if(btn) {
+    btn.style.display = 'block';
+  }
 }
 function abrirTavi(){
   const email=(usuarioActual&&usuarioActual.email)||localStorage.getItem('ier_email_saved')||'';
@@ -2452,5 +2428,9 @@ function clearAllHistorial(){
 })();
 
 </script>
+<a id="back-to-hub-btn" href="#" onclick="regresarAlHub();return false;" 
+   style="display:none;position:fixed;top:16px;left:16px;z-index:99999;background:rgba(255,255,255,0.98);color:#8592A1;border:1px solid rgba(133,146,161,0.3);border-radius:6px;padding:10px 14px;font-size:13px;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.1);transition:all 0.2s ease;">
+   ← InfoEasyRad
+</a>
 </body>
 </html>
