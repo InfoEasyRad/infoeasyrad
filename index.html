@@ -560,6 +560,9 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 </head>
 <body>
 <!-- ── MODAL PRECIOS ──────────────────────────────────────── -->
+<div id="editor-header" style="display:none;background:#FFFFFF;padding:20px 24px;border-bottom:1px solid #E7EBEF;position:sticky;top:0;z-index:100;box-shadow:0 1px 2px rgba(20,30,40,0.06);">
+  <a href="#" id="back-link-2" onclick="regresarAlHub();return false;" style="display:inline-flex;align-items:center;gap:5px;color:#8592A1;font-size:12.5px;text-decoration:none;margin-bottom:8px;border-bottom:1px solid rgba(133,146,161,.5);padding-bottom:2px;">← InfoEasyRad</a>
+</div>
 <div class="pricing-overlay" id="pricingOverlay" onclick="closePricingIfOutside(event)">
   <div class="pricing-box" style="position:relative">
     <button class="pricing-close" onclick="closePricing()">✕</button>
@@ -1337,15 +1340,27 @@ function mostrarHub(){
 
 function regresarAlHub(){
   const hubScreen = document.getElementById('hubScreen');
-  const editorScreen = document.getElementById('editorScreen');
-  if(editorScreen) editorScreen.style.display = 'none';
-  if(hubScreen) hubScreen.style.display = 'grid';
+  const editorHeader = document.getElementById('editor-header');
   
-  // Remover el botón de regreso
-  const backBtn = document.getElementById('back-to-hub-btn');
-  if(backBtn) backBtn.remove();
+  if(hubScreen) {
+    hubScreen.style.display = 'grid';
+  }
+  if(editorHeader) {
+    editorHeader.style.display = 'none';
+  }
+  
+  return false;
 }
 
+function abrirInfoEasy(){
+  const h = document.getElementById('hubScreen');
+  const editorHeader = document.getElementById('editor-header');
+  
+  if(h) h.style.display = 'none';
+  if(editorHeader) {
+    editorHeader.style.display = 'block';
+  }
+}
 function regresarAlHub(){
   const hubScreen = document.getElementById('hubScreen');
   const btn = document.getElementById('back-to-hub-btn');
