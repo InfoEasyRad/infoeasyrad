@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "",
-  "outputDirectory": ".",
+  "outputDirectory": "public",
   "public": true,
   "rewrites": [
     {
