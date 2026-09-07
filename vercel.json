@@ -1,15 +1,28 @@
 {
   "version": 2,
   "outputDirectory": "public",
-  "public": true,
-  "rewrites": [
+  "functions": {
+    "api/**": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
     {
-      "source": "/tavi",
-      "destination": "/tavi.html"
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "status": 200
     },
     {
-      "source": "/cardiometro",
-      "destination": "/cardiometro.html"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/tavi",
+      "dest": "/tavi.html"
+    },
+    {
+      "src": "/cardiometro",
+      "dest": "/cardiometro.html"
     }
   ]
 }
