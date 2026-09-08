@@ -1,28 +1,3 @@
 {
-  "version": 2,
-  "outputDirectory": "public",
-  "functions": {
-    "api/**": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "status": 200
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/tavi",
-      "dest": "/tavi.html"
-    },
-    {
-      "src": "/cardiometro",
-      "dest": "/cardiometro.html"
-    }
-  ]
+  "version": 2
 }
