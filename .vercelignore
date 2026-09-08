@@ -1,2 +1,10 @@
-# Ignora funciones serverless problemáticas
+# Ignora TODO lo relacionado con funciones serverless
 api/
+api_disabled/
+functions/
+.env
+.env.local
+.env.*.local
+node_modules/
+.git/
+.gitignore
