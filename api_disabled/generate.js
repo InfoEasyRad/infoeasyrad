@@ -1,0 +1,93 @@
+// /api/generate.js — Genera el informe radiológico usando OpenAI (key server-side)
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
+
+const LIMITES = { trial: null, gratis: 5, basico: 60, pro: 300, clinica: null, starter: 60, ilimitado: null };
+
+// Verifica el access token de Supabase y devuelve el usuario autenticado (o null)
+async function verificarToken(req) {
+  const h = req.headers['authorization'] || '';
+  const token = h.startsWith('Bearer ') ? h.slice(7) : null;
+  if (!token) return null;
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data || !data.user) return null;
+  return data.user;
+}
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
+
+  const { system_prompt, transcripcion, modalidad } = req.body;
+  if (!system_prompt || !transcripcion) {
+    return res.status(400).json({ error: 'Faltan parámetros: system_prompt, transcripcion' });
+  }
+
+  try {
+    // Identidad derivada del token, nunca del body
+    const authUser = await verificarToken(req);
+    if (!authUser) return res.status(401).json({ error: 'no_autorizado', mensaje: 'Sesión inválida o expirada' });
+
+    const { data: usuario, error: errUser } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('email', authUser.email.toLowerCase())
+      .single();
+
+    if (errUser) throw new Error('Usuario no encontrado');
+
+    const mesActual = new Date().toISOString().slice(0, 7);
+    if (usuario.mes_actual !== mesActual) {
+      await supabase.from('usuarios').update({ informes_mes: 0, mes_actual: mesActual }).eq('id', usuario.id);
+      usuario.informes_mes = 0;
+    }
+
+    const limite = LIMITES[usuario.plan];
+    if (limite !== null && usuario.informes_mes >= limite) {
+      return res.status(403).json({
+        error: 'limite_alcanzado',
+        mensaje: `Alcanzaste el límite de ${limite} informes este mes. Actualizá tu plan para continuar.`,
+        plan: usuario.plan,
+        informes_mes: usuario.informes_mes
+      });
+    }
+
+    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: 'gpt-4o', max_tokens: 2000, temperature: 0.3,
+        messages: [{ role: 'system', content: system_prompt }, { role: 'user', content: transcripcion }]
+      })
+    });
+
+    if (!openaiRes.ok) {
+      const errOpenAI = await openaiRes.json();
+      throw new Error('Error OpenAI: ' + (errOpenAI.error?.message || openaiRes.status));
+    }
+
+    const openaiData = await openaiRes.json();
+    const informe = openaiData.choices[0].message.content;
+
+    await supabase.from('usuarios').update({ informes_mes: usuario.informes_mes + 1 }).eq('id', usuario.id);
+    await supabase.from('informes').insert({ usuario_id: usuario.id, modalidad: modalidad || 'CCTA' });
+
+    return res.status(200).json({
+      informe,
+      informes_mes: usuario.informes_mes + 1,
+      limite_mensual: limite,
+      restantes: limite === null ? null : limite - usuario.informes_mes - 1
+    });
+
+  } catch (e) {
+    console.error('Error generate:', e);
+    return res.status(500).json({ error: e.message });
+  }
+};
