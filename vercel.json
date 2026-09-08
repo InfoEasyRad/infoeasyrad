@@ -1,3 +1,21 @@
 {
-  "version": 2
+  "version": 2,
+  "public": true,
+  "outputDirectory": "public",
+  "buildCommand": "echo 'Static site'",
+  "devCommand": "echo 'Static site'",
+  "rewrites": [
+    {
+      "source": "/tavi",
+      "destination": "/tavi.html"
+    },
+    {
+      "source": "/cardiometro",
+      "destination": "/cardiometro.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
