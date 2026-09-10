@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Reportes - Obstrucción Crónica Coronaria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section {
+            background: #f0f4f8;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .form-section h2 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #2a5298;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            grid-column: 1 / -1;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.4);
+        }
+
+        .btn-clear {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #d0d0d0;
+        }
+
+        .report-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .report-header {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .report-title {
+            color: #2a5298;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .report-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-label {
+            color: #2a5298;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .report-value {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .score-box h3 {
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .score-interpretation {
+            font-size: 0.9em;
+            margin-top: 8px;
+            opacity: 0.95;
+        }
+
+        .copy-button {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .copy-button.copied {
+            background: #6c757d;
+        }
+
+        .conclusion-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .conclusion-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .conclusion-box p {
+            color: #856404;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .difficulty-leve {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty-moderada {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-severa {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: #2a5298;
+            border-bottom-color: #2a5298;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .note-field {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .scoring-tables {
+            margin-top: 40px;
+            border-top: 3px solid #2a5298;
+            padding-top: 30px;
+        }
+
+        .scoring-tables h3 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.9em;
+        }
+
+        tr:hover {
+            background: #f5f8fb;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .score-column {
+            text-align: center;
+            font-weight: 600;
+            color: #2a5298;
+        }
+
+        .score-present {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .score-absent {
+            background: #f8f9fa;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .difficulty-scale {
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .difficulty-scale p {
+            margin: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .difficulty-scale strong {
+            color: #2a5298;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" style="position: absolute; top: 20px; left: 20px; display:inline-flex;align-items:center;gap:5px;color:#2a5298;font-size:12.5px;text-decoration:none;border-bottom:1px solid rgba(42,82,152,.5);padding-bottom:2px;z-index:100">← InfoEasyRad</a>
+<div class="container">
+        <div class="header">
+            <h1>📋 Generador de Reportes OCC</h1>
+            <p>Obstrucción Crónica de Arterias Coronarias - CCTA</p>
+        </div>
+
+        <div class="content">
+            <!-- FORMULARIO -->
+            <div>
+                <form id="ctaForm">
+                    <div class="tabs">
+                        <button type="button" class="tab-button active" data-tab="datos-paciente">Datos Paciente</button>
+                        <button type="button" class="tab-button" data-tab="diagnostico">Diagnóstico</button>
+                        <button type="button" class="tab-button" data-tab="caracteristicas">Características</button>
+                        <button type="button" class="tab-button" data-tab="prediccion">Predicción</button>
+                    </div>
+
+                    <!-- TAB: DATOS PACIENTE -->
+                    <div id="datos-paciente" class="tab-content active">
+                        <div class="form-section">
+                            <h2>👤 Datos del Paciente</h2>
+
+                            <div class="form-group">
+                                <label>Nombre/Identificador</label>
+                                <input type="text" id="pacienteName" placeholder="Ej: Juan Pérez o ID-12345">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Edad</label>
+                                <input type="number" id="edad" min="1" max="120" placeholder="Años">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Fecha del Estudio</label>
+                                <input type="text" id="fechaEstudio" placeholder="DD/MM/YYYY">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Médico Solicitante</label>
+                                <input type="text" id="medicoSolicitante" placeholder="Nombre del cardiólogo">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Protocolo/ID Estudio</label>
+                                <input type="text" id="protocoloId" placeholder="Número de estudio">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: DIAGNOSTICO -->
+                    <div id="diagnostico" class="tab-content">
+                        <div class="form-section">
+                            <h2>🔍 Confirmación Diagnóstica</h2>
+
+                            <div class="form-group">
+                                <label>Arteria Afectada</label>
+                                <select id="arteriaAfectada">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="LAD">LAD (Descendente Anterior)</option>
+                                    <option value="LCx">LCx (Circunfleja)</option>
+                                    <option value="RCA">RCA (Coronaria Derecha)</option>
+                                    <option value="Otra">Otra</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Localización en la Arteria</label>
+                                <select id="localizacion">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="proximal">Proximal</option>
+                                    <option value="media">Media</option>
+                                    <option value="distal">Distal</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirmación de OCC vs EST</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="radio" name="diagConfirm" value="CTO" id="ctoDiag" checked>
+                                        <label for="ctoDiag">OCC Confirmada</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="radio" name="diagConfirm" value="STO">
+                                        <label for="STO">Estenosis Subtotal</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="radio" name="diagConfirm" value="Dudoso">
+                                        <label for="Dudoso">Dudoso</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Signos que Respaldan OCC</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="signRAG" value="RAG">
+                                        <label for="signRAG">Gradiente Atenuación Invertido (RAG)</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="signColat" value="Colaterales">
+                                        <label for="signColat">Colaterales Visibles</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="signLineal" value="Lineal">
+                                        <label for="signLineal">Realce Lineal (Microcanales)</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="signTag" value="TAG">
+                                        <label for="signTag">TAG Alterado</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: CARACTERISTICAS -->
+                    <div id="caracteristicas" class="tab-content">
+                        <div class="form-section">
+                            <h2>📏 Características Morfológicas</h2>
+
+                            <div class="form-group">
+                                <label>Longitud de la Oclusión (mm)</label>
+                                <input type="number" id="longitud" min="0" placeholder="Ej: 15">
+                                <div class="hint">Puntos de corte: 15-20 mm = mayor dificultad</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Morfología del Estump Proximal</label>
+                                <select id="stumpProximal">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="tapered">Tapered (En punta)</option>
+                                    <option value="blunt">Blunt (Romo)</option>
+                                    <option value="invisible">Invisible/Ambiguo</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Morfología del Estump Distal</label>
+                                <select id="stumpDistal">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="tapered">Tapered (En punta)</option>
+                                    <option value="blunt">Blunt (Romo)</option>
+                                    <option value="invisible">Invisible/Ambiguo</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Bending (Flexión) >45°</label>
+                                <select id="bending">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="no">No presente</option>
+                                    <option value="leve">Leve (<45°)</option>
+                                    <option value="severa">Severa (>45°)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Calcificación</label>
+                                <select id="calcificacion">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="no">No</option>
+                                    <option value="leve">Leve (<50% area transversal)</option>
+                                    <option value="moderada">Moderada (>50% area)</option>
+                                    <option value="severa">Severa (>50% + central)</option>
+                                </select>
+                                <div class="hint">Severidad estimada del área</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Remodelamiento Segmentario</label>
+                                <select id="remodelamiento">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="positivo">Positivo</option>
+                                    <option value="no-positivo">No positivo</option>
+                                    <option value="colapso">Colapso</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Ramas Laterales Proximales (<3mm)</label>
+                                <select id="ramaProximal">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="no">No presente</option>
+                                    <option value="si">Presente</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Microcanales / Realce Lineal</label>
+                                <select id="microcanales">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="no">No visible</option>
+                                    <option value="si">Presente</option>
+                                    <option value="extenso">Extenso</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PREDICCION -->
+                    <div id="prediccion" class="tab-content">
+                        <div class="form-section">
+                            <h2>🎯 Evaluación Pronóstica</h2>
+
+                            <div class="form-group">
+                                <label>Múltiples Oclusiones (≥2)</label>
+                                <select id="multipleOclusiones">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="no">No</option>
+                                    <option value="si">Sí</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tiempo de Oclusión Conocido</label>
+                                <select id="tiempoOclusionConocido">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="si"><12 meses conocido</option>
+                                    <option value="no">≥12 meses o desconocido</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Intento Previo Fallido de PCI</label>
+                                <select id="intentoPrevio">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="no">No</option>
+                                    <option value="si">Sí</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Colaterales Viables (Retrógrada)</label>
+                                <select id="colatViables">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="buenas">Buenas</option>
+                                    <option value="moderadas">Moderadas</option>
+                                    <option value="pobres">Pobres/Ausentes</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Estrategia Recomendada</label>
+                                <select id="estrategia">
+                                    <option value="">-- Seleccionar --</option>
+                                    <option value="anteograda">Anteógrada</option>
+                                    <option value="retrograda">Retrógrada</option>
+                                    <option value="hibrida">Híbrida</option>
+                                    <option value="no-recomendada">No recomendada</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Observaciones Adicionales</label>
+                                <textarea id="observaciones" class="note-field" placeholder="Hallazgos adicionales, comorbilidades vasculares, etc."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOTONES -->
+                    <div class="form-section">
+                        <div class="button-group">
+                            <button type="button" class="btn-generate" onclick="generarReporte()">Generar Reporte</button>
+                            <button type="button" class="btn-clear" onclick="limpiarFormulario()">Limpiar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- REPORTE -->
+            <div id="reportContainer" class="report-section">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p>Completa el formulario y haz clic en "Generar Reporte"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar tabs
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const tabName = e.target.getAttribute('data-tab');
+                
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                document.getElementById(tabName).classList.add('active');
+                e.target.classList.add('active');
+            });
+        });
+
+        function calcularScores() {
+            let ctRector = 0;
+            let jCto = 0;
+            const scores = {};
+
+            // 1. Oclusión múltiple
+            if (document.getElementById('multipleOclusiones').value === 'si') {
+                ctRector += 1;
+                scores.multipleOclusiones = { presente: true, ctRector: 1, jCto: 0 };
+            } else {
+                scores.multipleOclusiones = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            // 2. Cabo/extremo obtuso (Blunt stump)
+            const stumpProx = document.getElementById('stumpProximal').value;
+            if (stumpProx === 'blunt' || stumpProx === 'invisible') {
+                ctRector += 1;
+                jCto += 1;
+                scores.caboObtuso = { presente: true, ctRector: 1, jCto: 1 };
+            } else {
+                scores.caboObtuso = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            // 3. Calcificación severa
+            const calcif = document.getElementById('calcificacion').value;
+            if (calcif === 'severa') {
+                ctRector += 1;
+                jCto += 1;
+                scores.calcificacion = { presente: true, ctRector: 1, jCto: 1 };
+            } else {
+                scores.calcificacion = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            // 4. Angulación >45°
+            const bending = document.getElementById('bending').value;
+            if (bending === 'severa') {
+                ctRector += 1;
+                jCto += 1;
+                scores.angulacion = { presente: true, ctRector: 1, jCto: 1 };
+            } else {
+                scores.angulacion = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            // 5. Segundo intento
+            if (document.getElementById('intentoPrevio').value === 'si') {
+                ctRector += 1;
+                jCto += 1;
+                scores.segundoIntento = { presente: true, ctRector: 1, jCto: 1 };
+            } else {
+                scores.segundoIntento = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            // 6. Duración >12 meses
+            if (document.getElementById('tiempoOclusionConocido').value === 'no') {
+                ctRector += 1;
+                scores.duracion = { presente: true, ctRector: 1, jCto: 0 };
+            } else {
+                scores.duracion = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            // 7. Longitud ≥20mm
+            const longitud = parseFloat(document.getElementById('longitud').value);
+            if (!isNaN(longitud) && longitud >= 20) {
+                jCto += 1;
+                scores.longitud = { presente: true, ctRector: 0, jCto: 1 };
+            } else {
+                scores.longitud = { presente: false, ctRector: 0, jCto: 0 };
+            }
+
+            return { ctRector, jCto, scores };
+        }
+
+        function determinarDificultadTexto(puntos) {
+            if (puntos === 0) return { texto: 'FÁCIL', clase: 'difficulty-leve' };
+            if (puntos === 1) return { texto: 'INTERMEDIO', clase: 'difficulty-moderada' };
+            if (puntos === 2) return { texto: 'DIFÍCIL', clase: 'difficulty-moderada' };
+            return { texto: 'MUY DIFÍCIL', clase: 'difficulty-severa' };
+        }
+
+        function generarReporte() {
+            // Recopilar datos
+            const datos = {
+                paciente: document.getElementById('pacienteName').value || 'No especificado',
+                edad: document.getElementById('edad').value || 'No especificado',
+                fecha: document.getElementById('fechaEstudio').value || new Date().toLocaleDateString('es-ES'),
+                medico: document.getElementById('medicoSolicitante').value || 'No especificado',
+                protocolo: document.getElementById('protocoloId').value || 'No especificado',
+                arteria: document.getElementById('arteriaAfectada').value || 'No especificada',
+                localizacion: document.getElementById('localizacion').value || 'No especificada',
+                diagnostico: document.querySelector('input[name="diagConfirm"]:checked').value,
+                longitud: document.getElementById('longitud').value,
+                stumpProximal: document.getElementById('stumpProximal').value,
+                stumpDistal: document.getElementById('stumpDistal').value,
+                bending: document.getElementById('bending').value,
+                calcificacion: document.getElementById('calcificacion').value,
+                remodelamiento: document.getElementById('remodelamiento').value,
+                ramaProximal: document.getElementById('ramaProximal').value,
+                microcanales: document.getElementById('microcanales').value,
+                multipleOclusiones: document.getElementById('multipleOclusiones').value,
+                tiempoOclusionConocido: document.getElementById('tiempoOclusionConocido').value,
+                intentoPrevio: document.getElementById('intentoPrevio').value,
+                colatViables: document.getElementById('colatViables').value,
+                estrategia: document.getElementById('estrategia').value,
+                observaciones: document.getElementById('observaciones').value
+            };
+
+            // Calcular puntuación
+            const { ctRector, jCto, scores } = calcularScores();
+            const dificultadCT = determinarDificultadTexto(ctRector);
+            const dificultadJ = determinarDificultadTexto(jCto);
+
+            // Generar signos positivos
+            let signosPositivos = [];
+            if (document.getElementById('signRAG').checked) signosPositivos.push('Gradiente de Atenuación Invertido (RAG)');
+            if (document.getElementById('signColat').checked) signosPositivos.push('Colaterales Visibles');
+            if (document.getElementById('signLineal').checked) signosPositivos.push('Realce Lineal/Microcanales');
+            if (document.getElementById('signTag').checked) signosPositivos.push('TAG Alterado');
+
+            // Construir HTML del reporte
+            let html = `
+                <div class="report-header">
+                    <div class="report-title">📋 REPORTE DE OBSTRUCCIÓN CRÓNICA CORONARIA (OCC)</div>
+                    <div class="report-value">CCTA - Angiografía Coronaria por TC</div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-label">DATOS DEL PACIENTE</div>
+                    <div class="report-value">
+                        <strong>Paciente:</strong> ${datos.paciente}<br>
+                        <strong>Edad:</strong> ${datos.edad} años<br>
+                        <strong>Fecha del Estudio:</strong> ${datos.fecha}<br>
+                        <strong>Médico Solicitante:</strong> ${datos.medico}<br>
+                        <strong>Protocolo/ID:</strong> ${datos.protocolo}
+                    </div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-label">LOCALIZACIÓN DE LA LESIÓN</div>
+                    <div class="report-value">
+                        <strong>Arteria Afectada:</strong> ${datos.arteria}<br>
+                        <strong>Localización:</strong> ${datos.localizacion}
+                    </div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-label">DIAGNÓSTICO</div>
+                    <div class="report-value">
+                        <strong>Confirmación:</strong> ${datos.diagnostico === 'CTO' ? 'Oclusión Crónica Total (OCC) Confirmada' : datos.diagnostico === 'STO' ? 'Estenosis Subtotal' : 'Diagnóstico Dudoso'}
+                    </div>
+                </div>
+
+                ${signosPositivos.length > 0 ? `
+                <div class="report-item">
+                    <div class="report-label">SIGNOS POSITIVOS PARA OCC</div>
+                    <div class="report-value">
+                        ${signosPositivos.map(s => `✓ ${s}`).join('<br>')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <div class="report-item">
+                    <div class="report-label">CARACTERÍSTICAS MORFOLÓGICAS</div>
+                    <div class="report-value">
+                        <strong>Longitud:</strong> ${datos.longitud ? datos.longitud + ' mm' : 'No medida'}<br>
+                        <strong>Estump Proximal:</strong> ${datos.stumpProximal || 'No especificado'}<br>
+                        <strong>Estump Distal:</strong> ${datos.stumpDistal || 'No especificado'}<br>
+                        <strong>Bending (>45°):</strong> ${datos.bending || 'No especificado'}<br>
+                        <strong>Calcificación:</strong> ${datos.calcificacion || 'No especificada'}<br>
+                        <strong>Remodelamiento:</strong> ${datos.remodelamiento || 'No especificado'}<br>
+                        <strong>Rama Proximal (<3mm):</strong> ${datos.ramaProximal === 'si' ? 'PRESENTE ⚠️' : 'No presente'}<br>
+                        <strong>Microcanales:</strong> ${datos.microcanales || 'No especificado'}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                    <div class="score-box">
+                        <h3>CT-RECTOR Score</h3>
+                        <div class="score-value">${ctRector}</div>
+                        <div class="score-interpretation">
+                            <span class="difficulty-badge ${dificultadCT.clase}">${dificultadCT.texto}</span>
+                        </div>
+                    </div>
+                    <div class="score-box">
+                        <h3>J-CTO Score</h3>
+                        <div class="score-value">${jCto}</div>
+                        <div class="score-interpretation">
+                            <span class="difficulty-badge ${dificultadJ.clase}">${dificultadJ.texto}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-label">EVALUACIÓN PRONÓSTICA</div>
+                    <div class="report-value">
+                        <strong>Múltiples Oclusiones:</strong> ${datos.multipleOclusiones === 'si' ? 'SÍ ⚠️' : 'No'}<br>
+                        <strong>Tiempo Conocido:</strong> ${datos.tiempoOclusionConocido === 'si' ? '<12 meses' : '≥12 meses o desconocido'}<br>
+                        <strong>Intento Previo Fallido:</strong> ${datos.intentoPrevio === 'si' ? 'SÍ' : 'No'}<br>
+                        <strong>Colaterales (Retrógrada):</strong> ${datos.colatViables || 'No evaluadas'}
+                    </div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-label">ESTRATEGIA RECOMENDADA DE PCI</div>
+                    <div class="report-value">
+                        ${datos.estrategia === 'anteograda' ? '<strong>ANTEÓGRADA</strong><br>Indicada cuando: Calcificación leve, estump tapered, lesión corta, sin rama proximal' : 
+                          datos.estrategia === 'retrograda' ? '<strong>RETRÓGRADA</strong><br>Indicada cuando: Lesión larga ≥20mm, calcificación severa, estump blunt, colaterales viables' :
+                          datos.estrategia === 'hibrida' ? '<strong>HÍBRIDA</strong><br>Combinación de estrategias anteógrada y retrógrada' :
+                          '<strong>NO RECOMENDADA</strong><br>Valorar alternativas terapéuticas'}
+                    </div>
+                </div>
+
+                ${datos.observaciones ? `
+                <div class="conclusion-box">
+                    <h4>📝 Observaciones Adicionales</h4>
+                    <p>${datos.observaciones}</p>
+                </div>
+                ` : ''}
+
+                <div class="conclusion-box">
+                    <h4>💡 Conclusión Clínica</h4>
+                    <p>
+                        Se identifica ${datos.diagnostico === 'CTO' ? 'oclusión crónica' : 'lesión significativa'} 
+                        en ${datos.arteria}. CT-RECTOR: ${ctRector} (${dificultadCT.texto}), J-CTO: ${jCto} (${dificultadJ.texto}). 
+                        Se recomienda abordaje <strong>${datos.estrategia}</strong>. 
+                        ${datos.ramaProximal === 'si' ? 'NOTA: Presencia de rama proximal puede afectar la selección de estrategia.' : ''}
+                    </p>
+                </div>
+
+                <div class="scoring-tables">
+                    <h3>📊 TABLA DE PUNTUACIÓN DE DIFICULTAD - CT-RECTOR y J-CTO</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TIPO DE OCLUSIÓN</th>
+                                <th>DEFINICIÓN</th>
+                                <th class="score-column">PRESENTE / AUSENTE</th>
+                                <th class="score-column">CT RECTOR</th>
+                                <th class="score-column">J-CTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Oclusión múltiple</strong></td>
+                                <td>Presencia de 2 o más interrupciones de opacificación de contraste, separadas por un segmento > 5 mm</td>
+                                <td class="score-column">${scores.multipleOclusiones.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">${scores.multipleOclusiones.ctRector}</td>
+                                <td class="score-column">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Cabo o extremo obtuso</strong></td>
+                                <td>Zona de interrupción abrupta en el segmento de entrada o salida y ausencia de extremo cónico (Blunt stump)</td>
+                                <td class="score-column">${scores.caboObtuso.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">${scores.caboObtuso.ctRector}</td>
+                                <td class="score-column">${scores.caboObtuso.jCto}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Calcificación severa</strong></td>
+                                <td>Presencia de calcificación que involucre más del 50% del área de sección transversal del vaso en cualquier extremo</td>
+                                <td class="score-column">${scores.calcificacion.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">${scores.calcificacion.ctRector}</td>
+                                <td class="score-column">${scores.calcificacion.jCto}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Angulación >45°</strong></td>
+                                <td>Presencia de angulación >45° en cualquier extremo o en el trayecto de la oclusión (Bending)</td>
+                                <td class="score-column">${scores.angulacion.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">${scores.angulacion.ctRector}</td>
+                                <td class="score-column">${scores.angulacion.jCto}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. Segundo Intento</strong></td>
+                                <td>Angioplastia coronaria percutánea previa fallida</td>
+                                <td class="score-column">${scores.segundoIntento.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">${scores.segundoIntento.ctRector}</td>
+                                <td class="score-column">${scores.segundoIntento.jCto}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>6. Duración (>12 meses)</strong></td>
+                                <td>Duración de la obstrucción crónica >12 meses o desconocida</td>
+                                <td class="score-column">${scores.duracion.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">${scores.duracion.ctRector}</td>
+                                <td class="score-column">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>7. Longitud (≥20 mm)</strong></td>
+                                <td>Mayor o igual de 20 mm</td>
+                                <td class="score-column">${scores.longitud.presente ? '<span class="score-present">Presente</span>' : '<span class="score-absent">Ausente</span>'}</td>
+                                <td class="score-column">-</td>
+                                <td class="score-column">${scores.longitud.jCto}</td>
+                            </tr>
+                            <tr style="font-weight: bold; background: #f0f4f8;">
+                                <td colspan="3" style="text-align: right;">TOTAL:</td>
+                                <td class="score-column">${ctRector}</td>
+                                <td class="score-column">${jCto}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="difficulty-scale">
+                        <h4 style="color: #2a5298; margin-bottom: 12px;">Interpretación de Dificultad:</h4>
+                        <p><strong>CT-RECTOR y J-CTO:</strong></p>
+                        <p>• <span class="score-present">0 puntos</span> = <strong>FÁCIL</strong></p>
+                        <p>• <span class="score-present" style="background: #fff3cd; color: #856404;">1 punto</span> = <strong>INTERMEDIO</strong></p>
+                        <p>• <span class="score-present" style="background: #f8d7da; color: #721c24;">2 puntos</span> = <strong>DIFÍCIL</strong></p>
+                        <p>• <span class="score-present" style="background: #f8d7da; color: #721c24;">>3 puntos</span> = <strong>MUY DIFÍCIL</strong></p>
+                        <p style="margin-top: 12px; font-size: 0.85em; color: #666;"><em>Referencia: Opolski M et al. JACC Cardiovasc Interv 2015;8:257-267</em></p>
+                    </div>
+                </div>
+            `;
+
+            // Mostrar reporte
+            const container = document.getElementById('reportContainer');
+            container.innerHTML = html;
+
+            // Agregar botón de copiar
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-button';
+            copyBtn.textContent = '📋 Copiar Reporte';
+            copyBtn.onclick = () => copiarReporte(html, copyBtn);
+            container.appendChild(copyBtn);
+
+            // Scroll al reporte
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copiarReporte(html, button) {
+            // Crear texto plano del reporte
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const texto = temp.innerText;
+
+            // Copiar al portapapeles
+            navigator.clipboard.writeText(texto).then(() => {
+                button.textContent = '✅ ¡Copiado!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '📋 Copiar Reporte';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Estás seguro de que deseas limpiar todos los datos?')) {
+                document.getElementById('ctaForm').reset();
+                document.getElementById('reportContainer').innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p>Completa el formulario y haz clic en "Generar Reporte"</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Permitir Enter para generar reporte
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                generarReporte();
+            }
+        });
+    </script>
+</body>
+</html>
