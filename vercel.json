@@ -4,7 +4,14 @@
     {
       "source": "/occ",
       "destination": "/occ.html"
+    },
+    {
+      "source": "/tavi",
+      "destination": "/tavi.html"
+    },
+    {
+      "source": "/cardiometro",
+      "destination": "/cardiometro.html"
     }
-  ],
-  "buildId": "1789019924"
+  ]
 }
