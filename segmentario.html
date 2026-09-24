@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A7B5C">
+<meta name="description" content="Informe estructurado de cardiopatías congénitas por análisis secuencial segmentario (TC y RM cardiaca).">
+<title>Análisis Secuencial Segmentario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --ground:#F1F5F3; --surface:#FFFFFF; --surface-2:#F6F9F8; --paper:#FFFFFF;
+  --ink:#13211C; --ink-2:#2D3C36; --muted:#56675F; --line:#D4DFDA; --line-strong:#B5C6BE;
+  --accent:#0A7B5C; --accent-strong:#075C45; --accent-soft:#E0F0E9; --on-accent:#FFFFFF;
+  --mr:#2B5A9B; --mr-soft:#E3EBF6; --ml:#AA3834; --ml-soft:#F5E3E1;
+  --tr:#6B4FA0; --tr-soft:#ECE6F5;
+  --warn:#875705; --warn-soft:#FBF0D8; --warn-line:#E6CB8E;
+  --ok:#0A7B5C;
+  --shadow:0 1px 2px rgba(16,40,32,.05),0 6px 18px rgba(16,40,32,.05);
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0B1310; --surface:#121C18; --surface-2:#17231F; --paper:#15201C;
+    --ink:#E2ECE8; --ink-2:#C3D1CB; --muted:#8FA29A; --line:#24332E; --line-strong:#35483F;
+    --accent:#3BBD90; --accent-strong:#72D7B1; --accent-soft:#12302A; --on-accent:#05241A;
+    --mr:#88AAE2; --mr-soft:#18253A; --ml:#E6918A; --ml-soft:#35201F;
+    --tr:#B9A2E6; --tr-soft:#261F36;
+    --warn:#EDC26C; --warn-soft:#2A2213; --warn-line:#5B4720;
+    --ok:#3BBD90;
+    --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0B1310; --surface:#121C18; --surface-2:#17231F; --paper:#15201C;
+  --ink:#E2ECE8; --ink-2:#C3D1CB; --muted:#8FA29A; --line:#24332E; --line-strong:#35483F;
+  --accent:#3BBD90; --accent-strong:#72D7B1; --accent-soft:#12302A; --on-accent:#05241A;
+  --mr:#88AAE2; --mr-soft:#18253A; --ml:#E6918A; --ml-soft:#35201F;
+  --tr:#B9A2E6; --tr-soft:#261F36;
+  --warn:#EDC26C; --warn-soft:#2A2213; --warn-line:#5B4720;
+  --ok:#3BBD90;
+  --shadow:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent-strong)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- app bar ---------- */
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.appbar-in{max-width:1360px;margin:0 auto;padding-inline:16px;padding-block:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.badge{width:34px;height:34px;border-radius:9px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font:700 14px/1 var(--sans);letter-spacing:.02em;flex:none}
+.brand-t{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.brand-t b{font-size:15px}
+.brand-t small{font-size:12.5px;color:var(--muted)}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.tabs button{border:0;background:transparent;padding:6px 14px;border-radius:7px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.hub{font-size:14px;text-decoration:none;color:var(--muted);white-space:nowrap}
+.hub:hover{color:var(--accent-strong)}
+
+/* ---------- page ---------- */
+.wrap{max-width:1360px;margin:0 auto;padding-inline:16px;padding-block:22px 64px}
+.intro{display:flex;gap:18px 32px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+.eyebrow{font:500 11.5px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-strong);margin:0 0 6px}
+.intro h1{font-size:clamp(22px,2.6vw,28px);line-height:1.15;margin:0 0 6px;letter-spacing:-.01em;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:62ch}
+.intro-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.intro-actions select{width:auto;min-width:230px}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:22px;align-items:start}
+.form{display:flex;flex-direction:column;gap:16px;min-width:0}
+.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 74px);max-height:calc(100vh - 90px);overflow:auto;overscroll-behavior:contain;padding-bottom:6px;min-width:0;scrollbar-width:thin}
+@media (max-width:1040px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static;max-height:none;overflow:visible}
+}
+
+/* ---------- step cards ---------- */
+.step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px 20px}
+.step-h{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:baseline;margin-bottom:14px}
+.step-n{font:500 11.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-strong);background:var(--accent-soft);border-radius:5px;padding:5px 7px;align-self:center}
+.step-h h2{font-size:18px;margin:0;line-height:1.25}
+.step-h p{grid-column:1 / -1;margin:6px 0 0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.fields{display:grid;gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px 18px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 18px}
+.sub{border-top:1px dashed var(--line-strong);padding-top:14px;margin-top:2px;display:grid;gap:14px}
+.sub-t{font-size:14px;font-weight:600;margin:0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.sub-t small{font-weight:400;color:var(--muted);font-size:12.5px}
+.field{min-width:0}
+.flabel{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative;display:inline-flex}
+.chip input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.chip span{display:flex;flex-direction:column;justify-content:center;gap:1px;min-height:38px;padding:6px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);cursor:pointer;transition:background-color .12s,border-color .12s}
+.chip b{font-weight:600;font-size:14px;line-height:1.2}
+.chip small{font-size:11.5px;color:var(--muted);line-height:1.2}
+.chip:hover span{border-color:var(--line-strong)}
+.chip input:checked + span{background:var(--accent-soft);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.chip input:checked + span b{color:var(--accent-strong)}
+.chip input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+.chip-rows{display:grid;gap:8px}
+.chip-row{display:grid;grid-template-columns:104px 1fr;gap:8px;align-items:center}
+.chip-g{font:500 10.5px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:520px){.chip-row{grid-template-columns:1fr;gap:4px}}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;font-size:14px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-height:38px;color:var(--ink)}
+textarea{resize:vertical;line-height:1.45}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.unit{display:flex;align-items:center;gap:6px}
+.unit input{flex:1;min-width:0}
+.unit span{font-size:13px;color:var(--muted)}
+.check{display:flex;gap:9px;align-items:flex-start;font-size:14px;cursor:pointer;line-height:1.35}
+.check input{width:17px;height:17px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+details.prefs{border-top:1px dashed var(--line-strong);padding-top:12px}
+details.prefs summary{cursor:pointer;font-size:14px;font-weight:600;list-style:none;display:flex;gap:8px;align-items:center}
+details.prefs summary::-webkit-details-marker{display:none}
+details.prefs summary::before{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;margin-right:2px}
+details.prefs[open] summary::before{transform:rotate(45deg)}
+details.prefs summary small{font-weight:400;color:var(--muted)}
+details.prefs .fields{margin-top:14px}
+
+/* lesiones */
+.les-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:4px 18px}
+.les{padding:8px 0;border-bottom:1px solid var(--line)}
+.les-d{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:8px 0 2px 26px}
+.les-d .wide{grid-column:1 / -1}
+
+/* ---------- side panel ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+@media (max-width:520px){.formula{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.appbar{position:static}.tabs{margin-left:0}.brand{flex:1 1 100%}.hub{margin-left:auto}}
+.card-h h3{margin:0;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.vp{font:500 15px/1 var(--mono);color:var(--accent-strong);background:var(--accent-soft);border-radius:6px;padding:6px 9px;white-space:nowrap}
+.formula{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.fcell{background:var(--surface);padding:9px 10px 10px;min-width:0}
+.fk{font:500 10px/1.2 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.fk i{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block;flex:none}
+.fcell.abn .fk i{background:var(--warn)}
+.fv{font-weight:600;font-size:14.5px;margin-top:4px;line-height:1.2;overflow-wrap:anywhere}
+.fs{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.25;overflow-wrap:anywhere}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.schema-wrap svg{width:100%;height:auto;display:block;max-width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--muted);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;border:1.5px solid;display:inline-block}
+.sw.mr{background:var(--mr-soft);border-color:var(--mr)}
+.sw.ml{background:var(--ml-soft);border-color:var(--ml)}
+.sw.dash{border:0;width:18px;height:0;border-top:2px dashed var(--ink-2);border-radius:0}
+.s-cap{font:600 9.5px var(--sans);letter-spacing:.08em;text-transform:uppercase;fill:var(--muted);text-anchor:middle}
+.s-row{font:500 10px var(--sans);fill:var(--muted);text-anchor:start;dominant-baseline:central}
+.s-t{font:600 12.5px var(--sans);fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.s-small{font:500 9px var(--sans);fill:var(--muted);text-anchor:middle;dominant-baseline:central}
+.sb{stroke-width:1.5}
+.s-mr{fill:var(--mr-soft);stroke:var(--mr)}
+.s-ml{fill:var(--ml-soft);stroke:var(--ml)}
+.s-tr{fill:var(--tr-soft);stroke:var(--tr)}
+.s-q{fill:var(--surface-2);stroke:var(--line-strong);stroke-dasharray:4 3}
+.s-l{stroke:var(--ink-2);stroke-width:2;fill:none;stroke-linecap:round}
+.s-l.dash{stroke-dasharray:5 4}
+.s-l.thin{stroke-width:1.4;stroke-dasharray:3 3}
+.s-l.warn{stroke:var(--warn)}
+.s-x{stroke:var(--warn);stroke-width:2;stroke-linecap:round}
+.s-band{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks li{font-size:13px;line-height:1.4;padding:8px 10px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line);display:grid;gap:6px}
+.checks li.warn{background:var(--warn-soft);border-color:var(--warn-line)}
+.pill{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;justify-self:start}
+.warn .pill{background:var(--warn);color:var(--surface)}
+.info .pill{background:var(--accent-soft);color:var(--accent-strong)}
+.ok-line{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2)}
+.ok-line i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.fix{justify-self:start;border:1px solid var(--line-strong);background:var(--surface);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer}
+.fix:hover{border-color:var(--accent);color:var(--accent-strong)}
+
+/* report */
+.toolbar{display:flex;flex-wrap:wrap;gap:6px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);font-size:13.5px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn svg{width:15px;height:15px;flex:none}
+.btn:hover{border-color:var(--accent);color:var(--accent-strong)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-strong);border-color:var(--accent-strong);color:var(--on-accent)}
+.standalone-only{display:none !important}
+html.standalone .standalone-only{display:inline-flex !important}
+.stale{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:13px;background:var(--warn-soft);border:1px solid var(--warn-line);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.edit-note{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:26px 28px 30px;font-family:var(--serif);font-size:15px;line-height:1.55;color:var(--ink);overflow-wrap:anywhere}
+.paper.editing{outline:2px dashed var(--accent);outline-offset:3px}
+.paper:focus{outline:2px dashed var(--accent);outline-offset:3px}
+.r-title{font:700 14px/1.3 var(--sans);letter-spacing:.09em;text-align:center;margin:0}
+.r-sub{text-align:center;font-style:italic;color:var(--muted);margin:2px 0 16px}
+.r-kv{margin:0 0 3px}
+.r-h{font:700 12px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--accent-strong);border-bottom:1px solid var(--line);padding-bottom:5px;margin:18px 0 8px}
+.r-h2{font:600 14px/1.3 var(--sans);margin:12px 0 5px}
+.r-item,.r-p{margin:0 0 6px;padding-left:14px}
+.r-bullet{margin:0 0 5px;padding-left:30px;text-indent:-14px}
+.r-bullet::before{content:"•";display:inline-block;width:14px;text-indent:0}
+.r-ol{margin:0 0 6px;padding-left:24px;text-indent:-20px}
+.r-n{font-weight:600;display:inline-block;min-width:20px;text-indent:0}
+.r-sign{margin-top:28px}
+.r-sign p{margin:0}
+.r-sign p:first-child{font-weight:600}
+.r-kv strong,.r-item strong{font-weight:600}
+
+.float-cta{display:none}
+@media (max-width:1040px){
+  .float-cta{display:inline-flex;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:9px 14px;border-radius:8px;font-size:13.5px;z-index:40;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+
+/* ---------- guide ---------- */
+.guide{max-width:940px}
+.guide h1{font-size:clamp(22px,2.6vw,28px);margin:0 0 6px;text-wrap:balance}
+.guide h2{font-size:19px;margin:34px 0 10px;padding-top:4px;text-wrap:balance}
+.guide h3{font-size:15px;margin:20px 0 8px}
+.guide p,.guide li{max-width:72ch}
+.guide p{margin:0 0 10px}
+.guide ul{margin:0 0 10px;padding-left:20px}
+.guide li{margin-bottom:4px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin:10px 0 14px}
+.tbl table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+.tbl th,.tbl td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl thead th{font:600 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+.tbl tbody th{font-weight:600;font-size:13.5px;color:var(--ink-2);white-space:nowrap}
+.th-r{color:var(--mr) !important}
+.th-l{color:var(--ml) !important}
+.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 14px;margin:12px 0;font-size:14px}
+.note p:last-child{margin-bottom:0}
+.refs li{font-size:14px;color:var(--ink-2)}
+.kbd{font:500 13px var(--mono);background:var(--accent-soft);color:var(--accent-strong);padding:1px 5px;border-radius:4px}
+
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+
+@media print{
+  .appbar,.intro,.form,.duo,.side > .card:not(.report-card),.toolbar,.stale,.edit-note,.float-cta,.toast,#view-guia{display:none !important}
+  body,.report-card,.paper{background:#fff !important;color:#000 !important}
+  .wrap{padding:0;max-width:none}
+  .layout{display:block}
+  .side{position:static;max-height:none;overflow:visible}
+  .report-card{border:0;padding:0}
+  .report-card .card-h{display:none}
+  .paper{border:0;padding:0;font-size:11.5pt}
+  .r-h{color:#0A7B5C !important}
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="appbar-in">
+    <div class="brand">
+      <span class="badge" aria-hidden="true">IR</span>
+      <span class="brand-t"><b>InfoEasyRad</b><small>Análisis secuencial segmentario</small></span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button role="tab" id="tab-informe" aria-selected="true" aria-controls="view-informe">Informe</button>
+      <button role="tab" id="tab-guia" aria-selected="false" aria-controls="view-guia">Criterios</button>
+    </nav>
+    <a class="hub" href="/">← Hub</a>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="view-informe" role="tabpanel" aria-labelledby="tab-informe">
+  <div class="intro">
+    <div>
+      <p class="eyebrow">Cardiopatías congénitas · TC y RM cardiaca</p>
+      <h1>Informe por análisis secuencial segmentario</h1>
+      <p class="lede">Elegí los hallazgos de cada paso. El informe se redacta solo, con la nomenclatura de tipos y modos de conexión, y se revisa la coherencia entre segmentos.</p>
+    </div>
+    <div class="intro-actions">
+      <select id="preset" aria-label="Cargar una plantilla">
+        <option value="">Cargar plantilla…</option>
+      </select>
+      <button class="btn" id="btn-new" type="button">Nuevo informe</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <form class="form" id="form" autocomplete="off" novalidate>
+
+      <section class="step" aria-labelledby="h-estudio">
+        <div class="step-h">
+          <span class="step-n">Estudio</span>
+          <h2 id="h-estudio">Datos del estudio</h2>
+        </div>
+        <div class="fields">
+          <div class="field" data-field="modalidad"></div>
+          <div class="grid2">
+            <div class="field" data-field="nombre"></div>
+            <div class="grid3" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+              <div class="field" data-field="edad"></div>
+              <div class="field" data-field="expediente"></div>
+              <div class="field" data-field="fecha"></div>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field" data-field="indicacion"></div>
+            <div class="field" data-field="cirugias"></div>
+          </div>
+          <div class="field" data-field="tecnica"></div>
+          <details class="prefs" id="prefs">
+            <summary>Preferencias de redacción y firma <small id="prefs-sum"></small></summary>
+            <div class="fields">
+              <div class="grid2">
+                <div class="field" data-field="redaccion"></div>
+                <div class="field" data-field="nomen"></div>
+              </div>
+              <div class="field" data-field="vp"></div>
+              <div class="grid2">
+                <div class="field" data-field="firmaNombre"></div>
+                <div class="field" data-field="firmaCargo"></div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="h-p1">
+        <div class="step-h">
+          <span class="step-n">Paso 1</span>
+          <h2 id="h-p1">Situs</h2>
+          <p>Cada aurícula se define por la morfología de su orejuela, no por su posición. El situs bronquial guarda una relación constante con el auricular.</p>
+        </div>
+        <div class="fields">
+          <div class="field" data-field="situsA"></div>
+          <div class="field" data-field="situsB"></div>
+          <div class="sub">
+            <p class="sub-t">Situs abdominal <small>tríada hepato-cavo-atrial</small></p>
+            <div class="field" data-field="higado"></div>
+            <div class="grid2">
+              <div class="field" data-field="estomago"></div>
+              <div class="field" data-field="aortaVci"></div>
+            </div>
+            <div class="field" data-field="bazo"></div>
+          </div>
+          <div class="sub">
+            <p class="sub-t">Conexiones venosas <small>sistémicas y pulmonares</small></p>
+            <div class="grid2">
+              <div class="field" data-field="vcs"></div>
+              <div class="field" data-field="vci"></div>
+            </div>
+            <div class="field" data-field="supra"></div>
+            <div class="grid2">
+              <div class="field" data-field="vvpp"></div>
+              <div class="field" data-field="vvppDet"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="h-p2">
+        <div class="step-h">
+          <span class="step-n">Paso 2</span>
+          <h2 id="h-p2">Unión auriculoventricular</h2>
+          <p>El tipo dice qué aurícula conecta con qué ventrículo; el modo, a través de qué válvulas. Por la ley del 50%, una válvula cabalgante pertenece al ventrículo que recibe la mayor parte de su orificio.</p>
+        </div>
+        <div class="fields">
+          <div class="field" data-field="loop"></div>
+          <div class="grid2">
+            <div class="field" data-field="vdev"></div>
+            <div class="field" data-field="rudim"></div>
+          </div>
+          <div class="sub">
+            <div class="field" data-field="avTipo"></div>
+            <div class="field" data-field="avDE"></div>
+          </div>
+          <div class="sub">
+            <div class="field" data-field="avModo"></div>
+            <div class="field" data-field="avLado"></div>
+            <div class="grid2">
+              <div class="field" data-field="avPct"></div>
+              <div class="field" data-field="avStraddle"></div>
+            </div>
+            <div class="field" data-field="avComun"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="h-p3">
+        <div class="step-h">
+          <span class="step-n">Paso 3</span>
+          <h2 id="h-p3">Unión ventriculoarterial</h2>
+          <p>La aorta es el vaso que se arquea y da origen a las coronarias; la pulmonar, el que se bifurca. La ley del 50% también define la doble salida.</p>
+        </div>
+        <div class="fields">
+          <div class="field" data-field="vaTipo"></div>
+          <div class="field" data-field="vaDS"></div>
+          <div class="grid2">
+            <div class="field" data-field="vaUnica"></div>
+            <div class="field" data-field="ramasTA"></div>
+          </div>
+          <div class="field" data-field="vaOrigen"></div>
+          <div class="sub">
+            <div class="field" data-field="vaModo"></div>
+            <div class="field" data-field="vaVaso"></div>
+            <div class="grid2">
+              <div class="field" data-field="vaPct"></div>
+              <div class="field" data-field="vaHacia"></div>
+            </div>
+          </div>
+          <div class="sub">
+            <div class="grid2">
+              <div class="field" data-field="relacion"></div>
+              <div class="field" data-field="infund"></div>
+            </div>
+            <div class="grid2">
+              <div class="field" data-field="arco"></div>
+              <div class="field" data-field="arcoRam"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="h-p4">
+        <div class="step-h">
+          <span class="step-n">Paso 4</span>
+          <h2 id="h-p4">Lesiones asociadas</h2>
+          <p>Alteraciones valvulares, estenosis o atresia de una válvula o arteria, hipoplasias, interrupciones y comunicaciones en cualquier nivel del corazón.</p>
+        </div>
+        <div class="les-list" id="les-list"></div>
+      </section>
+
+      <section class="step" aria-labelledby="h-p5">
+        <div class="step-h">
+          <span class="step-n">Paso 5</span>
+          <h2 id="h-p5">Particularidades adicionales</h2>
+          <p>Posición del corazón en el tórax, origen y distribución de las arterias coronarias y datos complementarios.</p>
+        </div>
+        <div class="fields">
+          <div class="grid2">
+            <div class="field" data-field="posicion"></div>
+            <div class="field" data-field="apex"></div>
+          </div>
+          <div class="sub">
+            <p class="sub-t">Arterias coronarias</p>
+            <div class="field" data-field="coron"></div>
+            <div class="grid2">
+              <div class="field" data-field="coronTipo"></div>
+              <div class="field" data-field="trayecto"></div>
+            </div>
+            <div class="field" data-field="dominancia"></div>
+            <div class="field" data-field="coronDet"></div>
+          </div>
+          <div class="sub">
+            <p class="sub-t">Función ventricular <small>opcional</small></p>
+            <div class="grid3">
+              <div class="field" data-field="fevi"></div>
+              <div class="field" data-field="fevd"></div>
+            </div>
+            <div class="field" data-field="funcDet"></div>
+          </div>
+          <div class="sub">
+            <div class="field" data-field="extra"></div>
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <aside class="side" aria-label="Resumen e informe">
+      <section class="card">
+        <div class="card-h">
+          <h3>Fórmula segmentaria</h3>
+          <span class="vp" id="vp" title="Notación de Van Praagh {situs, asa, grandes arterias}"></span>
+        </div>
+        <div class="formula" id="formula"></div>
+      </section>
+
+      <div class="duo">
+        <section class="card schema-wrap">
+          <div class="card-h"><h3>Esquema</h3></div>
+          <svg id="schema" viewBox="0 0 330 236" role="img" aria-label="Esquema de conexiones"></svg>
+          <div class="legend">
+            <span><i class="sw mr"></i>Morfología derecha</span>
+            <span><i class="sw ml"></i>Morfología izquierda</span>
+            <span><i class="sw dash"></i>Imperforado · cabalgamiento</span>
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-h"><h3>Coherencia</h3></div>
+          <ul class="checks" id="checks"></ul>
+        </section>
+      </div>
+
+      <section class="card report-card" id="panel-report">
+        <div class="card-h">
+          <h3>Informe</h3>
+          <div class="toolbar">
+            <button class="btn primary" type="button" id="btn-copy"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8.5" rx="1.5"/><path d="M10.5 5.5V3.5A1.5 1.5 0 0 0 9 2H4A1.5 1.5 0 0 0 2.5 3.5V9A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>Copiar</button>
+            <button class="btn" type="button" id="btn-edit"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M11 2.5l2.5 2.5L6 12.5H3.5V10z"/></svg><span>Editar texto</span></button>
+            <button class="btn standalone-only" type="button" id="btn-docx"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M3 13.5h10"/></svg>Word</button>
+            <button class="btn standalone-only" type="button" id="btn-txt">.txt</button>
+            <button class="btn standalone-only" type="button" id="btn-print">Imprimir</button>
+          </div>
+        </div>
+        <div class="stale" id="stale" hidden>
+          <span>Cambiaste el formulario mientras editabas el texto.</span>
+          <button class="fix" type="button" id="btn-regen">Regenerar desde el formulario</button>
+        </div>
+        <p class="edit-note" id="edit-note" hidden>Editando: hacé clic en el texto para corregirlo. Lo que copies o descargues incluye tus cambios.</p>
+        <article class="paper" id="report" aria-live="polite"></article>
+      </section>
+    </aside>
+  </div>
+  <button class="btn primary float-cta" type="button" id="btn-goto">Ver informe</button>
+</section>
+
+<section id="view-guia" role="tabpanel" aria-labelledby="tab-guia" hidden>
+  <div class="guide">
+    <p class="eyebrow">Referencia rápida</p>
+    <h1>Criterios del sistema secuencial segmentario</h1>
+    <p class="lede">Cinco pasos: situs auricular, unión auriculoventricular, unión ventriculoarterial, lesiones asociadas y particularidades adicionales. Resumen de Cano-Zárate y Meave-González (2014) y Guzzo de León (2008).</p>
+
+    <h2>1. Segmento auricular</h2>
+    <p>Cada estructura se define por sus características morfológicas propias y no por su posición espacial ni por sus relaciones con estructuras vecinas.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Criterio</th><th class="th-r">Aurícula morfológicamente derecha</th><th class="th-l">Aurícula morfológicamente izquierda</th></tr></thead>
+      <tbody>
+        <tr><th>Orejuela</th><td>Base ancha, forma triangular, contorno obtuso</td><td>Base estrecha, alargada, «digitiforme» o en gancho, contorno dentado</td></tr>
+        <tr><th>Interior</th><td>Cresta terminal y músculos pectíneos</td><td>Componente venoso liso</td></tr>
+        <tr><th>Retorno habitual</th><td>Ambas venas cavas; tríada hepato-cavo-atrial</td><td>Venas pulmonares (no asegura la morfología)</td></tr>
+        <tr><th>Posición en solitus</th><td>Anterior y derecha</td><td>Posterior e izquierda</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Tipos de situs auricular</h3>
+    <ul>
+      <li><b>Solitus:</b> aurícula morfológicamente derecha a la derecha e izquierda a la izquierda.</li>
+      <li><b>Inversus:</b> imagen en espejo del solitus. Solitus e inversus conservan la lateralización corporal.</li>
+      <li><b>Dextromorfismo</b> (isomerismo derecho): dos aurículas con orejuela de morfología derecha.</li>
+      <li><b>Levomorfismo</b> (isomerismo izquierdo): dos aurículas con orejuela de morfología izquierda.</li>
+    </ul>
+    <h3>Situs bronquial</h3>
+    <p>Existe una relación constante entre el situs bronquial y el auricular; en la radiografía penetrada, la morfología bronquial permite inferir el situs con alto grado de certeza.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Criterio</th><th class="th-r">Bronquio morfológicamente derecho</th><th class="th-l">Bronquio morfológicamente izquierdo</th></tr></thead>
+      <tbody>
+        <tr><th>Longitud</th><td>Corto</td><td>Largo</td></tr>
+        <tr><th>Bifurcación</th><td>Proximal (temprana)</td><td>Distal (tardía)</td></tr>
+        <tr><th>Relación arterial</th><td>Eparterial: la arteria pulmonar cursa anterior</td><td>Hipoarterial: la arteria pulmonar cursa superior</td></tr>
+        <tr><th>Pulmón</th><td>Trilobulado</td><td>Bilobulado</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Isomerismos: hallazgos esperables</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Hallazgo</th><th class="th-r">Dextromorfismo (isomerismo derecho)</th><th class="th-l">Levomorfismo (isomerismo izquierdo)</th></tr></thead>
+      <tbody>
+        <tr><th>Bronquios y pulmones</th><td>Ambos derechos: cortos, trilobulados</td><td>Ambos izquierdos: largos, bilobulados</td></tr>
+        <tr><th>Bazo</th><td>Habitualmente ausente (asplenia)</td><td>Múltiples bazos a la izquierda (poliesplenia)</td></tr>
+        <tr><th>Hígado</th><td>Frecuentemente central, «en herradura»</td><td>Frecuentemente central</td></tr>
+        <tr><th>Vasos abdominales</th><td>Aorta y VCI del mismo lado; VCI ligeramente anterior</td><td>VCI interrumpida; ácigos o hemiácigos posterior a la aorta; suprahepáticas directas a la aurícula</td></tr>
+        <tr><th>ECG</th><td>Posible doble nodo sinusal</td><td>Ritmo auricular bajo o nodal</td></tr>
+        <tr><th>Conexión AV biventricular</th><td colspan="2">Ambigua: una conexión resulta concordante y la otra discordante. Lo ambiguo es la conexión, no el situs.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>2. Segmento ventricular y unión auriculoventricular</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Criterio</th><th class="th-r">Ventrículo morfológicamente derecho</th><th class="th-l">Ventrículo morfológicamente izquierdo</th></tr></thead>
+      <tbody>
+        <tr><th>Trabeculación</th><td>Gruesa; banda moderadora del septum a la pared libre</td><td>Fina; superficie septal lisa</td></tr>
+        <tr><th>Válvula AV</th><td>Tricúspide, de inserción más apical</td><td>Mitral, de inserción más basal</td></tr>
+        <tr><th>Continuidad fibrosa</th><td>Sin continuidad tricúspide-pulmonar (infundíbulo muscular)</td><td>Continuidad mitroaórtica</td></tr>
+      </tbody>
+    </table></div>
+    <p>Cada ventrículo lleva consigo su válvula auriculoventricular. <b>Asa D</b> (topología de mano derecha): solo la mano derecha apoyada en la superficie septal del VD deja el pulgar en la tricúspide y los dedos en el tracto de salida. <b>Asa L</b>: lo mismo ocurre con la mano izquierda.</p>
+    <h3>Tipos de conexión auriculoventricular</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Grupo</th><th>Tipo</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><th rowspan="3">Biventricular</th><td>Concordante</td><td>AD morfológica → VD morfológico; AI → VI</td></tr>
+        <tr><td>Discordante</td><td>AD morfológica → VI morfológico; AI → VD</td></tr>
+        <tr><td>Ambigua</td><td>Isomerismo auricular con cada aurícula conectada a un ventrículo</td></tr>
+        <tr><th rowspan="2">Univentricular</th><td>Doble entrada</td><td>Ambos orificios AV (&gt;50% de cada uno) o &gt;75% de una válvula común se relacionan con un ventrículo (derecho, izquierdo o indeterminado)</td></tr>
+        <tr><td>Ausencia de conexión</td><td>Derecha (atresia tricuspídea clásica) o izquierda (atresia mitral): el surco AV fibroadiposo separa la aurícula del ventrículo</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Modos de conexión auriculoventricular</h3>
+    <ul>
+      <li><b>Perforado:</b> paso libre de las aurículas a los ventrículos.</li>
+      <li><b>Imperforado:</b> válvula sin orificio con conexión preservada; atresia tricuspídea o mitral «verdadera».</li>
+      <li><b>Cabalgado:</b> la válvula cabalga sobre el septum interventricular; se asigna al ventrículo que recibe más del 50% de su orificio.</li>
+      <li><b>Común:</b> una sola válvula conecta ambas aurículas con los ventrículos (canal auriculoventricular).</li>
+    </ul>
+    <div class="note"><p><b>Tipo o modo.</b> La ausencia de conexión y la doble entrada son <em>tipos</em>; la imperforación y el cabalgamiento son <em>modos</em>. Una válvula imperforada mantiene la conexión entre aurícula y ventrículo; en la ausencia de conexión, una aguja que perfore el piso de la aurícula sale del corazón.</p></div>
+
+    <h2>3. Unión ventriculoarterial</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Tipo</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><th>Concordante</th><td>Arteria pulmonar desde el VD y aorta desde el VI</td></tr>
+        <tr><th>Discordante</th><td>Aorta desde el VD y arteria pulmonar desde el VI</td></tr>
+        <tr><th>Doble salida</th><td>Ambas arterias emergen mayoritariamente (&gt;50%) del mismo ventrículo</td></tr>
+        <tr><th>Vía de salida única</th><td>Tronco arterial común con válvula truncal única; aorta solitaria con atresia pulmonar; pulmonar solitaria con atresia aórtica; o tronco arterial solitario sin vestigio pulmonar intrapericárdico</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Modos:</b> perforado, imperforado (atresia valvular con conexión preservada) y cabalgado (la arteria se asigna al ventrículo sobre el que cabalga más del 50%).</p>
+    <p><b>Identificación:</b> todo vaso que sale del corazón y se arquea es la aorta, que da origen a las coronarias; todo vaso que se bifurca es la arteria pulmonar.</p>
+
+    <h2>4 y 5. Lesiones asociadas y particularidades</h2>
+    <ul>
+      <li>Lesiones asociadas: alteraciones valvulares, estenosis o atresia de una válvula o arteria, hipoplasia, interrupción o comunicación en cualquier nivel.</li>
+      <li>Posición: lo normal es levocardia con levoápex. La dextrocardia es la malposición más frecuente (0.1% en una serie hospitalaria); la mesocardia es menos común.</li>
+      <li>Coronarias: origen y distribución, por ejemplo origen anómalo de la coronaria izquierda desde el tronco pulmonar (ALCAPA).</li>
+    </ul>
+
+    <h2>Apoyo de otros métodos</h2>
+    <ul>
+      <li><b>Radiografía penetrada:</b> muestra la morfología bronquial. Con arco aórtico derecho, la sombra traqueal se desplaza a la izquierda.</li>
+      <li><b>ECG, vector P:</b> solitus, eje cercano a +60°; inversus, hacia abajo y a la derecha (+120° a +150°); levomorfismo, ritmo bajo o nodal con P negativa en DII, DIII y aVF.</li>
+      <li><b>ECG, vector 1:</b> asa D, r en V1 y q en V6; asa L, patrón inverso. Con conexión AV concordante los vectores P y 1 divergen; con discordante convergen.</li>
+    </ul>
+
+    <h2>Notación de Van Praagh</h2>
+    <p>Complemento que el módulo agrega a las conclusiones cuando está activado: <span class="kbd">{situs, asa, grandes arterias}</span>. Situs S, I o A (isomerismo); asa D, L o X; grandes arterias S (normal), I (normal invertida), D, L o A (malposición anterior). Ejemplos: normal <span class="kbd">{S,D,S}</span>, D-TGA <span class="kbd">{S,D,D}</span>, transposición corregida <span class="kbd">{S,L,L}</span>, situs inversus totalis <span class="kbd">{I,L,I}</span>.</p>
+
+    <h2>Notas de nomenclatura</h2>
+    <div class="note">
+      <p><b>Posición normal de la válvula aórtica.</b> El texto de Guzzo (2008) describe la válvula aórtica «posterior e izquierda» respecto de la pulmonar. El módulo usa la relación anatómica habitual: válvula aórtica posterior y a la derecha de la pulmonar, con cruce en espiral.</p>
+      <p><b>Umbral del cabalgamiento.</b> Cano-Zárate (2014) define el modo cabalgado con «por lo menos 50%» del orificio sobre el septum. El módulo aplica la ley del 50% de Anderson citada por Guzzo: si más del 50% de una válvula se relaciona con el ventrículo contralateral, cambia el tipo de conexión (doble entrada o doble salida) y se muestra una advertencia.</p>
+    </div>
+
+    <h2>Fuentes</h2>
+    <ul class="refs">
+      <li>Cano-Zárate R, Meave-González A. Análisis por tomografía y resonancia magnética de las cardiopatías congénitas a través del sistema secuencial segmentario. <i>Anales de Radiología México</i> 2014;13:117-127.</li>
+      <li>Guzzo de León D. Análisis secuencial segmentario para el diagnóstico de cardiopatías congénitas: el aporte de la radiología, del electrocardiograma y de la ecocardiografía. <i>Rev Urug Cardiol</i> 2008;23:21-48.</li>
+    </ul>
+  </div>
+</section>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>window.IER_STANDALONE = true;</script>
+<script>
+(function(){
+'use strict';
+var STANDALONE = !!window.IER_STANDALONE;
+if (STANDALONE) document.documentElement.classList.add('standalone');
+
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+const low = s => s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+const dot = s => { s = String(s || '').trim(); return s && !/[.!?…]$/.test(s) ? s + '.' : s; };
+const num = v => { const n = parseFloat(String(v).replace(',', '.')); return isFinite(n) ? n : null; };
+const fmtN = v => { const n = num(v); return n == null ? '' : String(n).replace('.', ','); };
+function todayISO(){ const d = new Date(), p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+function fmtDate(iso){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || ''); }
+
+/* ---------------- options ---------------- */
+const TEC = {
+  tc: 'Angiotomografía cardiaca sincronizada con el electrocardiograma, con administración intravenosa de medio de contraste yodado; se realizaron reconstrucciones multiplanares, de máxima intensidad de proyección y volumétricas.',
+  rm: 'Resonancia magnética cardiaca con secuencias de cine SSFP en los ejes cardiacos, secuencias de sangre negra y angiografía por resonancia magnética con gadolinio; se realizaron reconstrucciones multiplanares y volumétricas.'
+};
+const TITULO = { tc: 'Angiotomografía cardiaca', rm: 'Resonancia magnética cardiaca' };
+const VN = { VI: 'izquierdo', VD: 'derecho', indet: 'de morfología indeterminada' };
+
+const LES = [
+  { id:'cia', label:'Comunicación interauricular', mm:true,
+    tipos:[['secundum','Ostium secundum','tipo ostium secundum'],['primum','Ostium primum','tipo ostium primum'],['sv_sup','Seno venoso superior','tipo seno venoso superior'],['sv_inf','Seno venoso inferior','tipo seno venoso inferior'],['sc','Seno coronario','tipo seno coronario'],['fop','Foramen oval permeable','a nivel del foramen oval permeable'],['comun','Aurícula común','con aurícula común (ausencia del septum interauricular)']],
+    txt:(o,tp)=>'Comunicación interauricular ' + tp + mmT(o) },
+  { id:'civ', label:'Comunicación interventricular', mm:true,
+    tipos:[['perimembranosa','Perimembranosa','perimembranosa'],['muscular','Muscular','muscular'],['entrada','De entrada (canal AV)','de entrada (tipo canal auriculoventricular)'],['salida','De salida','de salida (infundibular)'],['dcsa','Subarterial doblemente relacionada','subarterial doblemente relacionada'],['multiples','Múltiples','múltiples']],
+    rels:[['','Relación arterial…',''],['subaortica','Subaórtica','subaórtica'],['subpulmonar','Subpulmonar','subpulmonar'],['doble','Doblemente relacionada','doblemente relacionada'],['remota','No relacionada (remota)','no relacionada (remota)']],
+    txt:(o,tp)=>'Comunicación interventricular ' + tp + (o.rel ? ', ' + relPhrase(o.rel) : '') + mmT(o) },
+  { id:'pca', label:'Conducto arterioso permeable', mm:true, txt:o=>'Conducto arterioso permeable' + mmT(o) },
+  { id:'ep', label:'Estenosis pulmonar',
+    tipos:[['valvular','Valvular','valvular'],['infundibular','Infundibular','subvalvular (infundibular)'],['inf_valv','Infundibular y valvular','infundibular y valvular'],['supra','Supravalvular','supravalvular'],['ramas','De ramas','de ramas pulmonares']],
+    txt:(o,tp)=>'Estenosis pulmonar ' + tp },
+  { id:'ap', label:'Atresia pulmonar',
+    tipos:[['civ','Con CIV','con comunicación interventricular'],['si','Septum íntegro','con septum interventricular íntegro']],
+    txt:(o,tp)=>'Atresia pulmonar ' + tp },
+  { id:'hrp', label:'Hipoplasia de ramas pulmonares' },
+  { id:'mapca', label:'Colaterales aortopulmonares mayores' },
+  { id:'ea', label:'Estenosis aórtica',
+    tipos:[['valvular','Valvular','valvular'],['subvalvular','Subvalvular','subvalvular'],['supra','Supravalvular','supravalvular']],
+    txt:(o,tp)=>'Estenosis aórtica ' + tp },
+  { id:'bav', label:'Válvula aórtica bivalva' },
+  { id:'coa', label:'Coartación de aorta', mm:true, mmPh:'Diám. mínimo',
+    txt:o=>'Coartación de aorta' + (fmtN(o.mm) ? ', con diámetro mínimo de ' + fmtN(o.mm) + ' mm' : '') },
+  { id:'iaa', label:'Interrupción del arco aórtico',
+    tipos:[['a','Tipo A','tipo A (distal a la subclavia izquierda)'],['b','Tipo B','tipo B (entre carótida y subclavia izquierdas)'],['c','Tipo C','tipo C (entre tronco braquiocefálico y carótida izquierda)']],
+    txt:(o,tp)=>'Interrupción del arco aórtico ' + tp },
+  { id:'ebstein', label:'Anomalía de Ebstein' },
+  { id:'anillo', label:'Anillo vascular' },
+  { id:'otra', label:'Otra lesión', detOnly:true, txt:o=>o.det || '' }
+];
+function mmT(o){ const v = fmtN(o.mm); return v ? ', de ' + v + ' mm' : ''; }
+function relPhrase(r){ const f = LES[1].rels.find(x => x[0] === r); return f ? f[2] : ''; }
+
+const FIELDS = {
+  modalidad:{type:'chips', label:'Modalidad', opts:[['tc','Angio-TC cardiaca','sincronizada con ECG'],['rm','RM cardiaca','cine, sangre negra y angio-RM']]},
+  nombre:{type:'text', label:'Paciente', ph:'Apellidos, nombre'},
+  edad:{type:'text', label:'Edad', ph:'p. ej., 6 meses'},
+  expediente:{type:'text', label:'Expediente', ph:'N.º'},
+  fecha:{type:'date', label:'Fecha'},
+  indicacion:{type:'text', label:'Indicación clínica', ph:'p. ej., cianosis neonatal, soplo sistólico'},
+  cirugias:{type:'text', label:'Cirugías o intervenciones previas', ph:'p. ej., Blalock-Taussig, Glenn, switch arterial'},
+  tecnica:{type:'textarea', label:'Técnica', rows:3},
+  redaccion:{type:'chips', label:'Redacción de hallazgos', opts:[['detallada','Detallada','con criterios morfológicos'],['concisa','Concisa','solo diagnósticos']]},
+  nomen:{type:'chips', label:'Nomenclatura del isomerismo', opts:[['inc','Dextro / levomorfismo','INC, México'],['anderson','Isomerismo derecho / izquierdo','Anderson']]},
+  vp:{type:'chips', label:'Notación de Van Praagh en conclusiones', opts:[['si','Incluir'],['no','Omitir']]},
+  firmaNombre:{type:'text', label:'Médico informante', ph:'Dr. Nombre Apellido'},
+  firmaCargo:{type:'text', label:'Especialidad o cargo', ph:'Radiólogo · Imagen cardiovascular'},
+
+  situsA:{type:'chips', label:'Situs auricular', opts:[['solitus','Solitus','AD a la derecha'],['inversus','Inversus','imagen en espejo'],['dextro','Dextromorfismo','isomerismo derecho'],['levo','Levomorfismo','isomerismo izquierdo'],['indet','Indeterminado','']]},
+  situsB:{type:'chips', label:'Situs bronquial', opts:[['solitus','Solitus','BD corto, eparterial'],['inversus','Inversus','imagen en espejo'],['dextro','Dextromorfismo','dos bronquios derechos'],['levo','Levomorfismo','dos bronquios izquierdos'],['nv','No valorado','']]},
+  higado:{type:'chips', label:'Hígado', opts:[['derecho','Derecho'],['izquierdo','Izquierdo'],['central','Central o simétrico'],['nv','No incluido']]},
+  estomago:{type:'chips', label:'Cámara gástrica', opts:[['izquierdo','Izquierda'],['derecho','Derecha'],['nv','No incluida']]},
+  bazo:{type:'chips', label:'Bazo', opts:[['unico_izq','Único izquierdo'],['unico_der','Único derecho'],['ausente','Asplenia'],['multiple','Poliesplenia'],['nv','No incluido']]},
+  aortaVci:{type:'select', label:'Aorta abdominal y VCI', opts:[['normal','Aorta a la izquierda, VCI a la derecha'],['inversa','Aorta a la derecha, VCI a la izquierda'],['ipsi_vci','Mismo lado, VCI anterior a la aorta'],['ipsi_acigos','Mismo lado, ácigos posterior a la aorta'],['nv','No valorada']]},
+  vcs:{type:'select', label:'Vena cava superior', opts:[['unica','Única, a la aurícula morf. derecha'],['bilateral_sc','Bilateral: izquierda persistente al seno coronario'],['bilateral_ai','Bilateral: izquierda persistente a la aurícula izquierda'],['bilateral_iso','Bilateral: cada una a su aurícula'],['izquierda','Izquierda única'],['nv','No valorada']]},
+  vci:{type:'select', label:'Vena cava inferior', opts:[['normal','A la aurícula morf. derecha'],['acigos','Interrumpida, continuación ácigos'],['hemiacigos','Interrumpida, continuación hemiácigos'],['nv','No valorada']]},
+  supra:{type:'check', label:'Venas suprahepáticas con drenaje directo en la aurícula'},
+  vvpp:{type:'select', label:'Venas pulmonares', opts:[['normal','Cuatro venas a la aurícula morf. izquierda'],['parcial','Conexión anómala parcial'],['total_supra','Conexión anómala total supracardiaca'],['total_card','Conexión anómala total cardiaca'],['total_infra','Conexión anómala total infracardiaca'],['total_mixta','Conexión anómala total mixta'],['nv','No valoradas']]},
+  vvppDet:{type:'text', label:'Detalle del drenaje pulmonar', ph:'p. ej., vena vertical a la innominada', show:S=>!['normal','nv'].includes(S.vvpp)},
+
+  loop:{type:'chips', label:'Topología ventricular (asa)', opts:[['D','Asa D','mano derecha'],['L','Asa L','mano izquierda'],['X','Indeterminada','']]},
+  vdev:{type:'select', label:'Desarrollo ventricular', opts:[['balanceados','Ventrículos balanceados'],['hipo_vd','Hipoplasia del VD'],['hipo_vi','Hipoplasia del VI'],['vd_rud','VI dominante, VD rudimentario'],['vi_rud','VD dominante, VI rudimentario'],['unico_indet','Ventrículo único indeterminado']]},
+  rudim:{type:'select', label:'Posición de la cámara rudimentaria', opts:[['anterosup_der','Anterosuperior derecha'],['anterosup_izq','Anterosuperior izquierda'],['posteroinf','Posteroinferior'],['no_id','No identificada']], show:S=>['vd_rud','vi_rud'].includes(S.vdev)},
+  avTipo:{type:'chips', label:'Tipo de conexión auriculoventricular', groups:[
+    {g:'Biventricular', opts:[['concordante','Concordante','AD→VD · AI→VI'],['discordante','Discordante','AD→VI · AI→VD'],['ambigua','Ambigua','con isomerismo']]},
+    {g:'Univentricular', opts:[['doble_entrada','Doble entrada','a un ventrículo'],['ausencia_der','Ausencia derecha','atresia tricuspídea clásica'],['ausencia_izq','Ausencia izquierda','atresia mitral']]}]},
+  avDE:{type:'chips', label:'Ventrículo de doble entrada', opts:[['VI','Izquierdo'],['VD','Derecho'],['indet','Indeterminado']], show:S=>S.avTipo==='doble_entrada'},
+  avModo:{type:'chips', label:'Modo de conexión auriculoventricular', opts:[['perforado','Perforado','válvulas permeables'],['imperforado','Imperforado','atresia verdadera'],['cabalgado','Cabalgado','sobre el septum'],['comun','Común','válvula AV única']]},
+  avLado:{type:'chips', label:'Válvula afectada', opts:[['derecha','Válvula AV derecha'],['izquierda','Válvula AV izquierda']], show:S=>['imperforado','cabalgado'].includes(S.avModo)},
+  avPct:{type:'number', label:'Orificio sobre el ventrículo contralateral', unit:'%', show:S=>S.avModo==='cabalgado'},
+  avStraddle:{type:'check', label:'Cuerdas tendinosas en ambos ventrículos (straddling)', show:S=>S.avModo==='cabalgado'},
+  avComun:{type:'chips', label:'Distribución de la válvula común', opts:[['balanceada','Balanceada'],['dom_vd','Predominio sobre el VD'],['dom_vi','Predominio sobre el VI']], show:S=>S.avModo==='comun'},
+
+  vaTipo:{type:'chips', label:'Tipo de conexión ventriculoarterial', opts:[['concordante','Concordante','VD→AP · VI→Ao'],['discordante','Discordante','VD→Ao · VI→AP'],['doble_salida','Doble salida','ambas de un ventrículo'],['unica','Vía de salida única','un solo tronco']]},
+  vaDS:{type:'chips', label:'Ventrículo de doble salida', opts:[['VD','Derecho'],['VI','Izquierdo'],['indet','Indeterminado']], show:S=>S.vaTipo==='doble_salida'},
+  vaUnica:{type:'select', label:'Tipo de vía única', opts:[['tronco','Tronco arterial común (tronco arterioso)'],['aorta_sol','Aorta solitaria con atresia pulmonar'],['pulm_sol','Pulmonar solitaria con atresia aórtica'],['solitario','Tronco arterial solitario']], show:S=>S.vaTipo==='unica'},
+  ramasTA:{type:'select', label:'Origen de las ramas pulmonares', opts:[['nv','No especificar'],['t1','Tronco pulmonar corto (Collett-Edwards I)'],['t2','Independientes, pared posterior (II)'],['t3','Desde las paredes laterales (III)']], show:S=>S.vaTipo==='unica'&&S.vaUnica==='tronco'},
+  vaOrigen:{type:'chips', label:'El tronco emerge', opts:[['cabalga','Cabalgando sobre el septum'],['VD','Del VD'],['VI','Del VI']], show:S=>S.vaTipo==='unica'},
+  vaModo:{type:'chips', label:'Modo de conexión ventriculoarterial', opts:[['perforado','Perforado','válvulas permeables'],['ao_imperf','Aórtica imperforada','atresia valvular'],['ap_imperf','Pulmonar imperforada','atresia valvular'],['cabalgado','Cabalgado','sobre el septum']]},
+  vaVaso:{type:'chips', label:'Válvula cabalgante', opts:[['aorta','Aórtica'],['pulmonar','Pulmonar'],['tronco','Truncal']], show:S=>S.vaModo==='cabalgado'},
+  vaPct:{type:'number', label:'Circunferencia sobre el ventrículo', unit:'%', show:S=>S.vaModo==='cabalgado'},
+  vaHacia:{type:'chips', label:'Cabalga sobre', opts:[['VD','Ventrículo derecho'],['VI','Ventrículo izquierdo']], show:S=>S.vaModo==='cabalgado'},
+  relacion:{type:'select', label:'Relación de las grandes arterias', opts:[['normal','Normal: aorta posterior y derecha, en espiral'],['inversa','En espejo: aorta posterior e izquierda'],['D','Aorta anterior y derecha (D-malposición)'],['L','Aorta anterior e izquierda (L-malposición)'],['anterior','Aorta directamente anterior'],['lado_der','Lado a lado, aorta a la derecha'],['lado_izq','Lado a lado, aorta a la izquierda'],['na','No aplica (vía única)']]},
+  infund:{type:'select', label:'Infundíbulo (cono)', opts:[['subpulmonar','Subpulmonar'],['subaortico','Subaórtico'],['bilateral','Bilateral'],['ausente','Ausente o bilateralmente deficiente'],['nv','No especificar']]},
+  arco:{type:'chips', label:'Arco aórtico', opts:[['izquierdo','Izquierdo'],['derecho','Derecho'],['doble','Doble'],['nv','No valorado']]},
+  arcoRam:{type:'select', label:'Ramificación del arco', opts:[['habitual','Ramificación habitual'],['espejo','En imagen en espejo'],['sca_der','Subclavia derecha aberrante'],['sca_izq','Subclavia izquierda aberrante']], show:S=>['izquierdo','derecho'].includes(S.arco)},
+
+  posicion:{type:'chips', label:'Posición en el tórax', opts:[['levo','Levocardia'],['dextro','Dextrocardia'],['meso','Mesocardia']]},
+  apex:{type:'chips', label:'Orientación del ápex', opts:[['levo','Levoápex'],['dextro','Dextroápex'],['meso','Mesoápex']]},
+  coron:{type:'chips', label:'Origen y distribución', opts:[['habitual','Habitual'],['anomala','Anómala'],['nv','No valoradas']]},
+  coronTipo:{type:'select', label:'Anomalía', opts:[['alcapa','Coronaria izquierda desde la AP (ALCAPA)'],['arcapa','Coronaria derecha desde la AP (ARCAPA)'],['ci_sd','Coronaria izquierda desde el seno derecho'],['cd_si','Coronaria derecha desde el seno izquierdo'],['cx_sd','Circunfleja desde el seno derecho o la CD'],['unica','Arteria coronaria única'],['fistula','Fístula coronaria']], show:S=>S.coron==='anomala'},
+  trayecto:{type:'select', label:'Trayecto', opts:[['interarterial','Interarterial'],['retroaortico','Retroaórtico'],['prepulmonar','Prepulmonar'],['subpulmonar','Subpulmonar (intraseptal)']], show:S=>S.coron==='anomala'&&['ci_sd','cd_si','cx_sd','unica'].includes(S.coronTipo)},
+  dominancia:{type:'chips', label:'Dominancia', opts:[['derecha','Derecha'],['izquierda','Izquierda'],['codominancia','Codominancia'],['nv','No especificar']], show:S=>S.coron!=='nv'},
+  coronDet:{type:'text', label:'Detalle coronario', ph:'p. ej., patrón de Leiden 1LCx-2R', show:S=>S.coron!=='nv'},
+  fevi:{type:'number', label:'FEVI', unit:'%'},
+  fevd:{type:'number', label:'FEVD', unit:'%'},
+  funcDet:{type:'text', label:'Comentario de función', ph:'p. ej., volúmenes indexados, movilidad'},
+  extra:{type:'textarea', label:'Hallazgos extracardiacos', rows:2, ph:'p. ej., vía aérea, parénquima pulmonar, esqueleto'}
+};
+
+const PERSIST = ['redaccion','nomen','vp','firmaNombre','firmaCargo'];
+const DEFAULTS = () => ({
+  modalidad:'tc', nombre:'', edad:'', expediente:'', fecha:todayISO(), indicacion:'', cirugias:'', tecnica:TEC.tc,
+  redaccion:'detallada', nomen:'inc', vp:'si', firmaNombre:'', firmaCargo:'',
+  situsA:'solitus', situsB:'solitus', higado:'derecho', estomago:'izquierdo', bazo:'unico_izq', aortaVci:'normal',
+  vcs:'unica', vci:'normal', supra:false, vvpp:'normal', vvppDet:'',
+  loop:'D', vdev:'balanceados', rudim:'anterosup_der',
+  avTipo:'concordante', avDE:'VI', avModo:'perforado', avLado:'derecha', avPct:'', avStraddle:false, avComun:'balanceada',
+  vaTipo:'concordante', vaDS:'VD', vaUnica:'tronco', vaOrigen:'cabalga', ramasTA:'nv',
+  vaModo:'perforado', vaVaso:'aorta', vaPct:'', vaHacia:'VD',
+  relacion:'normal', infund:'subpulmonar', arco:'izquierdo', arcoRam:'habitual',
+  les:{},
+  posicion:'levo', apex:'levo',
+  coron:'habitual', coronTipo:'alcapa', trayecto:'interarterial', dominancia:'derecha', coronDet:'',
+  fevi:'', fevd:'', funcDet:'', extra:''
+});
+
+const PRESETS = [
+  ['normal','Corazón con segmentos normales', {}],
+  ['dtga','Transposición de grandes arterias (D-TGA)', {vaTipo:'discordante', relacion:'D', infund:'subaortico', les:{cia:{on:true,tipo:'secundum'}, pca:{on:true}}}],
+  ['cctga','Transposición congénitamente corregida', {loop:'L', avTipo:'discordante', vaTipo:'discordante', relacion:'L', infund:'subaortico', les:{civ:{on:true,tipo:'perimembranosa'}, ep:{on:true,tipo:'infundibular'}}}],
+  ['tof','Tetralogía de Fallot', {vaModo:'cabalgado', vaVaso:'aorta', vaPct:'40', vaHacia:'VD', les:{civ:{on:true,tipo:'perimembranosa',rel:'subaortica'}, ep:{on:true,tipo:'inf_valv'}}}],
+  ['dsvd','Doble salida del ventrículo derecho', {vaTipo:'doble_salida', vaDS:'VD', relacion:'lado_der', infund:'bilateral', les:{civ:{on:true,tipo:'perimembranosa',rel:'subaortica'}}}],
+  ['tronco','Tronco arterioso común', {vaTipo:'unica', vaUnica:'tronco', vaOrigen:'cabalga', ramasTA:'t1', relacion:'na', infund:'nv', les:{civ:{on:true,tipo:'salida'}}}],
+  ['atresiaT','Atresia tricuspídea clásica', {avTipo:'ausencia_der', vdev:'hipo_vd', les:{cia:{on:true,tipo:'secundum'}, civ:{on:true,tipo:'muscular'}, ep:{on:true,tipo:'infundibular'}}}],
+  ['devi','Doble entrada al ventrículo izquierdo', {loop:'L', vdev:'vd_rud', rudim:'anterosup_izq', avTipo:'doble_entrada', avDE:'VI', vaTipo:'discordante', relacion:'L', infund:'subaortico', les:{civ:{on:true,tipo:'muscular',det:'foramen bulboventricular'}}}],
+  ['canal','Canal auriculoventricular completo', {avModo:'comun', avComun:'balanceada', les:{cia:{on:true,tipo:'primum'}, civ:{on:true,tipo:'entrada'}}}],
+  ['isoDer','Dextromorfismo (isomerismo derecho)', {situsA:'dextro', situsB:'dextro', higado:'central', estomago:'derecho', bazo:'ausente', aortaVci:'ipsi_vci', vcs:'bilateral_iso', vvpp:'total_supra', avTipo:'ambigua', avModo:'comun', avComun:'dom_vd', vaTipo:'doble_salida', vaDS:'VD', relacion:'D', infund:'bilateral', posicion:'dextro', apex:'dextro', les:{ep:{on:true,tipo:'valvular'}}}],
+  ['isoIzq','Levomorfismo (isomerismo izquierdo)', {situsA:'levo', situsB:'levo', higado:'central', estomago:'derecho', bazo:'multiple', aortaVci:'ipsi_acigos', vci:'acigos', supra:true, vcs:'bilateral_iso', avTipo:'ambigua', les:{cia:{on:true,tipo:'primum'}}}],
+  ['inversus','Situs inversus totalis', {situsA:'inversus', situsB:'inversus', higado:'izquierdo', estomago:'derecho', bazo:'unico_der', aortaVci:'inversa', loop:'L', relacion:'inversa', arco:'derecho', arcoRam:'espejo', posicion:'dextro', apex:'dextro'}]
+];
+
+/* ---------------- state ---------------- */
+let S = DEFAULTS();
+let tecEdited = false;
+let editing = false;
+function loadPrefs(){
+  try { const p = JSON.parse(localStorage.getItem('ier-seg-prefs') || '{}'); PERSIST.forEach(k => { if (typeof p[k] === 'string') S[k] = p[k]; }); } catch (e) {}
+}
+function savePrefs(){
+  try { const p = {}; PERSIST.forEach(k => p[k] = S[k]); localStorage.setItem('ier-seg-prefs', JSON.stringify(p)); } catch (e) {}
+}
+const LS = id => S.les[id] || {};
+const isIso = () => S.situsA === 'dextro' || S.situsA === 'levo';
+
+/* ---------------- form rendering ---------------- */
+function chipHTML(k, opts){
+  return '<div class="chips" role="radiogroup" aria-labelledby="lbl-' + k + '">' + opts.map(o =>
+    '<label class="chip"><input type="radio" name="' + k + '" id="' + k + '-' + o[0] + '" value="' + o[0] + '" data-k="' + k + '"><span><b>' + esc(o[1]) + '</b>' + (o[2] ? '<small>' + esc(o[2]) + '</small>' : '') + '</span></label>'
+  ).join('') + '</div>';
+}
+function fieldHTML(k){
+  const d = FIELDS[k];
+  switch (d.type) {
+    case 'chips':
+      if (d.groups) {
+        return '<span class="flabel" id="lbl-' + k + '">' + esc(d.label) + '</span><div class="chip-rows">' + d.groups.map(g =>
+          '<div class="chip-row"><span class="chip-g">' + esc(g.g) + '</span>' + chipHTML(k, g.opts) + '</div>').join('') + '</div>';
+      }
+      return '<span class="flabel" id="lbl-' + k + '">' + esc(d.label) + '</span>' + chipHTML(k, d.opts);
+    case 'select':
+      return '<label class="flabel" for="' + k + '">' + esc(d.label) + '</label><select id="' + k + '" data-k="' + k + '">' + d.opts.map(o => '<option value="' + o[0] + '">' + esc(o[1]) + '</option>').join('') + '</select>';
+    case 'check':
+      return '<label class="check"><input type="checkbox" id="' + k + '" data-k="' + k + '"><span>' + esc(d.label) + '</span></label>';
+    case 'textarea':
+      return '<label class="flabel" for="' + k + '">' + esc(d.label) + '</label><textarea id="' + k + '" data-k="' + k + '" rows="' + (d.rows || 2) + '"' + (d.ph ? ' placeholder="' + esc(d.ph) + '"' : '') + '></textarea>';
+    case 'number':
+      return '<label class="flabel" for="' + k + '">' + esc(d.label) + '</label><div class="unit"><input type="number" inputmode="decimal" min="0" max="100" step="1" id="' + k + '" data-k="' + k + '"><span>' + esc(d.unit || '') + '</span></div>';
+    default:
+      return '<label class="flabel" for="' + k + '">' + esc(d.label) + '</label><input type="' + (d.type === 'date' ? 'date' : 'text') + '" id="' + k + '" data-k="' + k + '"' + (d.ph ? ' placeholder="' + esc(d.ph) + '"' : '') + '>';
+  }
+}
+function renderForm(){
+  $$('[data-field]').forEach(el => { el.innerHTML = fieldHTML(el.dataset.field); });
+  $('#les-list').innerHTML = LES.map(d => {
+    let h = '<div class="les" data-les-row="' + d.id + '"><label class="check"><input type="checkbox" id="les-' + d.id + '" data-les="' + d.id + '" data-lk="on"><span>' + esc(d.label) + '</span></label><div class="les-d" id="les-' + d.id + '-d" hidden>';
+    if (d.tipos) h += '<select id="les-' + d.id + '-tipo" data-les="' + d.id + '" data-lk="tipo" aria-label="Tipo de ' + esc(low(d.label)) + '">' + d.tipos.map(t => '<option value="' + t[0] + '">' + esc(t[1]) + '</option>').join('') + '</select>';
+    if (d.rels) h += '<select id="les-' + d.id + '-rel" data-les="' + d.id + '" data-lk="rel" aria-label="Relación con las grandes arterias">' + d.rels.map(t => '<option value="' + t[0] + '">' + esc(t[1]) + '</option>').join('') + '</select>';
+    if (d.mm) h += '<div class="unit"><input type="number" inputmode="decimal" min="0" step="0.1" id="les-' + d.id + '-mm" data-les="' + d.id + '" data-lk="mm" placeholder="' + esc(d.mmPh || 'Tamaño') + '" aria-label="' + esc(d.mmPh || 'Tamaño') + ' en milímetros"><span>mm</span></div>';
+    h += '<input type="text" class="wide" id="les-' + d.id + '-det" data-les="' + d.id + '" data-lk="det" placeholder="' + (d.detOnly ? 'Describí la lesión' : 'Detalle (opcional)') + '" aria-label="Detalle">';
+    return h + '</div></div>';
+  }).join('');
+  const sel = $('#preset');
+  PRESETS.forEach(p => { const o = document.createElement('option'); o.value = p[0]; o.textContent = p[1]; sel.appendChild(o); });
+}
+function syncDOM(){
+  Object.keys(FIELDS).forEach(k => {
+    const d = FIELDS[k], v = S[k];
+    if (d.type === 'chips') { $$('input[name="' + k + '"]').forEach(r => { r.checked = r.value === v; }); }
+    else if (d.type === 'check') { const el = document.getElementById(k); if (el) el.checked = !!v; }
+    else { const el = document.getElementById(k); if (el) el.value = v == null ? '' : v; }
+  });
+  LES.forEach(d => {
+    const o = LS(d.id);
+    $('#les-' + d.id).checked = !!o.on;
+    if (d.tipos) $('#les-' + d.id + '-tipo').value = o.tipo || d.tipos[0][0];
+    if (d.rels) $('#les-' + d.id + '-rel').value = o.rel || '';
+    if (d.mm) $('#les-' + d.id + '-mm').value = o.mm || '';
+    $('#les-' + d.id + '-det').value = o.det || '';
+  });
+}
+function applyVisibility(){
+  $$('[data-field]').forEach(el => { const d = FIELDS[el.dataset.field]; el.hidden = !!(d.show && !d.show(S)); });
+  LES.forEach(d => { $('#les-' + d.id + '-d').hidden = !LS(d.id).on; });
+  const ps = [S.redaccion === 'detallada' ? 'detallada' : 'concisa', S.nomen === 'inc' ? 'dextro/levomorfismo' : 'isomerismo', S.firmaNombre ? 'firma: ' + S.firmaNombre : 'sin firma'];
+  $('#prefs-sum').textContent = '· ' + ps.join(' · ');
+}
+
+/* ---------------- vocabulary helpers ---------------- */
+function iso(k){
+  const inc = S.nomen === 'inc';
+  if (k === 'dextro') return inc ? 'dextromorfismo auricular (isomerismo derecho)' : 'isomerismo auricular derecho (dextromorfismo)';
+  return inc ? 'levomorfismo auricular (isomerismo izquierdo)' : 'isomerismo auricular izquierdo (levomorfismo)';
+}
+function isoB(k){
+  const inc = S.nomen === 'inc';
+  if (k === 'dextro') return inc ? 'dextromorfismo bronquial' : 'isomerismo bronquial derecho';
+  return inc ? 'levomorfismo bronquial' : 'isomerismo bronquial izquierdo';
+}
+function valveMorph(side){
+  if (S.loop === 'D') return side === 'derecha' ? 'tricúspide' : 'mitral';
+  if (S.loop === 'L') return side === 'derecha' ? 'mitral' : 'tricúspide';
+  return '';
+}
+function avValve(side){ const m = valveMorph(side); return 'válvula auriculoventricular ' + side + (m ? ' (' + m + ')' : ''); }
+function atresiaName(m){ return m === 'tricúspide' ? 'tricuspídea' : m === 'mitral' ? 'mitral' : ''; }
+function viscClass(){
+  const h = S.higado, e = S.estomago, b = S.bazo;
+  if (h === 'nv' && e === 'nv' && b === 'nv') return 'nv';
+  if (h === 'central' || b === 'ausente' || b === 'multiple') return 'heterotaxia';
+  const sol = (h === 'derecho' || h === 'nv') && (e === 'izquierdo' || e === 'nv') && (b === 'unico_izq' || b === 'nv');
+  const inv = (h === 'izquierdo' || h === 'nv') && (e === 'derecho' || e === 'nv') && (b === 'unico_der' || b === 'nv');
+  return sol ? 'solitus' : inv ? 'inversus' : 'heterotaxia';
+}
+function expectedAV(){
+  if (!['solitus','inversus'].includes(S.situsA) || !['D','L'].includes(S.loop) || S.vdev === 'unico_indet') return null;
+  return (S.situsA === 'solitus') === (S.loop === 'D') ? 'concordante' : 'discordante';
+}
+function dominantV(){
+  if (['vd_rud','hipo_vd'].includes(S.vdev)) return 'izquierdo';
+  if (['vi_rud','hipo_vi'].includes(S.vdev)) return 'derecho';
+  return null;
+}
+function vpNotation(){
+  const a = {solitus:'S', inversus:'I', dextro:'A', levo:'A', indet:'?'}[S.situsA];
+  const v = S.vdev === 'unico_indet' ? 'X' : S.loop;
+  const g = S.vaTipo === 'unica' ? '–' : ({normal:'S', inversa:'I', D:'D', L:'L', anterior:'A', lado_der:'D', lado_izq:'L', na:'–'}[S.relacion]);
+  return '{' + a + ',' + v + ',' + g + '}';
+}
+
+/* ---------------- report text ---------------- */
+function txtSitusA(det){
+  switch (S.situsA) {
+    case 'solitus': return det ? 'Solitus. Aurícula morfológicamente derecha situada a la derecha, con orejuela de base ancha y forma triangular; aurícula morfológicamente izquierda situada a la izquierda y posterior, con orejuela alargada, de base estrecha y digitiforme.' : 'Solitus.';
+    case 'inversus': return det ? 'Inversus (imagen en espejo). Aurícula morfológicamente derecha, con orejuela de base ancha y forma triangular, situada a la izquierda; aurícula morfológicamente izquierda, con orejuela alargada, de base estrecha y digitiforme, situada a la derecha.' : 'Inversus.';
+    case 'dextro': return cap(iso('dextro')) + (det ? '. Ambas orejuelas con morfología derecha, de base ancha y forma triangular.' : '.');
+    case 'levo': return cap(iso('levo')) + (det ? '. Ambas orejuelas con morfología izquierda, alargadas, de base estrecha y digitiformes.' : '.');
+    default: return 'Indeterminado. La morfología de las orejuelas no permite establecerlo con certeza en el presente estudio.';
+  }
+}
+function txtSitusB(det){
+  let t;
+  switch (S.situsB) {
+    case 'solitus': t = det ? 'Solitus. Bronquio principal derecho corto, de bifurcación proximal, con la arteria pulmonar derecha de trayecto anterior (eparterial); bronquio principal izquierdo largo, de bifurcación distal, con la arteria pulmonar izquierda de trayecto superior (hipoarterial).' : 'Solitus.'; break;
+    case 'inversus': t = det ? 'Inversus (imagen en espejo). Bronquio de morfología derecha, corto y de bifurcación proximal, situado a la izquierda; bronquio de morfología izquierda, largo y de bifurcación distal, situado a la derecha.' : 'Inversus.'; break;
+    case 'dextro': t = cap(isoB('dextro')) + (det ? '. Ambos bronquios principales con morfología derecha, cortos y de bifurcación proximal, con ambas arterias pulmonares de trayecto anterior a los bronquios.' : '.'); break;
+    case 'levo': t = cap(isoB('levo')) + (det ? '. Ambos bronquios principales con morfología izquierda, largos y de bifurcación distal, con ambas arterias pulmonares de trayecto superior a los bronquios.' : '.'); break;
+    default: return null;
+  }
+  if (S.situsA !== 'indet') t += S.situsB === S.situsA ? ' Concordante con el situs auricular.' : ' Discordante con el situs auricular.';
+  return t;
+}
+function txtAbd(){
+  const vc = viscClass();
+  if (vc === 'nv' && S.aortaVci === 'nv') return 'Vísceras abdominales no incluidas en el campo de visión.';
+  const p = [];
+  if (S.higado !== 'nv') p.push({derecho:'hígado a la derecha', izquierdo:'hígado a la izquierda', central:'hígado central y simétrico'}[S.higado]);
+  if (S.estomago !== 'nv') p.push({izquierdo:'cámara gástrica a la izquierda', derecho:'cámara gástrica a la derecha'}[S.estomago]);
+  if (S.bazo !== 'nv') p.push({unico_izq:'bazo único izquierdo', unico_der:'bazo único derecho', ausente:'sin tejido esplénico identificable (asplenia)', multiple:'múltiples bazos (poliesplenia)'}[S.bazo]);
+  let t = '';
+  if (p.length) {
+    t = cap(p.length > 1 ? p.slice(0, -1).join(', ') + ' y ' + p[p.length - 1] : p[0]);
+    if (vc !== 'nv') t += ' (' + {solitus:'situs visceral solitus', inversus:'situs visceral inversus', heterotaxia:'heterotaxia visceral'}[vc] + ')';
+    t += '.';
+  }
+  const av = {normal:'Aorta abdominal a la izquierda y vena cava inferior a la derecha de la columna.', inversa:'Aorta abdominal a la derecha y vena cava inferior a la izquierda de la columna.', ipsi_vci:'Aorta abdominal y vena cava inferior del mismo lado de la columna, con la vena cava anterior a la aorta.', ipsi_acigos:'Aorta abdominal y vena ácigos del mismo lado de la columna, con la vena posterior a la aorta.'}[S.aortaVci];
+  if (av) t += (t ? ' ' : '') + av;
+  return t;
+}
+function venParts(onlyAbn){
+  const p = [];
+  const vcs = {unica:'vena cava superior única, con drenaje en la aurícula morfológicamente derecha', bilateral_sc:'vena cava superior bilateral, con vena cava superior izquierda persistente que drena en el seno coronario', bilateral_ai:'vena cava superior bilateral, con vena cava superior izquierda persistente que drena en el techo de la aurícula izquierda', bilateral_iso:'venas cavas superiores bilaterales, cada una con drenaje en la aurícula ipsilateral', izquierda:'vena cava superior izquierda única'}[S.vcs];
+  if (vcs && !(onlyAbn && S.vcs === 'unica')) p.push(vcs);
+  const vci = {normal:'vena cava inferior con drenaje en la aurícula morfológicamente derecha', acigos:'vena cava inferior interrumpida en su segmento hepático, con continuación ácigos hacia la vena cava superior', hemiacigos:'vena cava inferior interrumpida en su segmento hepático, con continuación hemiácigos'}[S.vci];
+  if (vci && !(onlyAbn && S.vci === 'normal')) p.push(vci);
+  if (S.supra) p.push('venas suprahepáticas con drenaje directo en la aurícula');
+  const vp = {normal:'cuatro venas pulmonares con drenaje en la aurícula morfológicamente izquierda', parcial:'conexión anómala parcial de venas pulmonares', total_supra:'conexión anómala total de venas pulmonares, tipo supracardiaco', total_card:'conexión anómala total de venas pulmonares, tipo cardiaco', total_infra:'conexión anómala total de venas pulmonares, tipo infracardiaco', total_mixta:'conexión anómala total de venas pulmonares, tipo mixto'}[S.vvpp];
+  if (vp && !(onlyAbn && S.vvpp === 'normal')) p.push(vp + (S.vvppDet.trim() && S.vvpp !== 'normal' ? ' (' + S.vvppDet.trim().replace(/\.$/, '') + ')' : ''));
+  return p;
+}
+function txtLoop(det){
+  if (S.vdev === 'unico_indet') return 'No aplicable (ventrículo único de morfología indeterminada).';
+  if (S.loop === 'X') return 'Indeterminada.';
+  const hand = S.loop === 'D' ? 'Asa ventricular D (topología de mano derecha)' : 'Asa ventricular L (topología de mano izquierda)';
+  if (!det) return hand + '.';
+  return hand + '. Ventrículo morfológicamente derecho a la ' + (S.loop === 'D' ? 'derecha' : 'izquierda') + ' del ventrículo morfológicamente izquierdo.';
+}
+function txtMorfV(det){
+  const rud = {anterosup_der:'anterosuperior derecha', anterosup_izq:'anterosuperior izquierda', posteroinf:'posteroinferior', no_id:'no identificada'}[S.rudim];
+  const dev = {
+    balanceados:'Ventrículos de tamaño balanceado.',
+    hipo_vd:'Hipoplasia del ventrículo derecho.',
+    hipo_vi:'Hipoplasia del ventrículo izquierdo.',
+    vd_rud:'Ventrículo izquierdo dominante con ventrículo derecho rudimentario' + (S.rudim === 'no_id' ? '.' : ' de localización ' + rud + '.'),
+    vi_rud:'Ventrículo derecho dominante con ventrículo izquierdo rudimentario' + (S.rudim === 'no_id' ? '.' : ' de localización ' + rud + '.'),
+    unico_indet:'Ventrículo único de morfología indeterminada, sin cámara rudimentaria identificable.'
+  }[S.vdev];
+  if (!det) return S.vdev === 'balanceados' ? null : dev;
+  if (S.vdev === 'unico_indet') return dev;
+  return 'El ventrículo morfológicamente derecho se identifica por su trabeculación gruesa, la banda moderadora y la inserción septal más apical de su válvula auriculoventricular; el ventrículo morfológicamente izquierdo presenta superficie septal lisa, finamente trabeculada, con inserción valvular más basal. ' + dev;
+}
+function txtAVTipo(det){
+  const v = VN[S.avDE];
+  switch (S.avTipo) {
+    case 'concordante': return det ? 'Biventricular concordante. La aurícula morfológicamente derecha conecta con el ventrículo morfológicamente derecho y la aurícula morfológicamente izquierda con el ventrículo morfológicamente izquierdo.' : 'Biventricular concordante.';
+    case 'discordante': return det ? 'Biventricular discordante. La aurícula morfológicamente derecha conecta con el ventrículo morfológicamente izquierdo y la aurícula morfológicamente izquierda con el ventrículo morfológicamente derecho.' : 'Biventricular discordante.';
+    case 'ambigua': return det ? 'Biventricular ambigua, en relación con el isomerismo auricular. Cada aurícula conecta con un ventrículo distinto, de modo que una conexión resulta concordante y la otra discordante.' : 'Biventricular ambigua (isomerismo auricular).';
+    case 'doble_entrada':
+      if (!det) return 'Univentricular por doble entrada al ventrículo ' + v + '.';
+      return 'Univentricular por doble entrada al ventrículo ' + v + '. ' + (S.avModo === 'comun' ? 'Más del 75% de la válvula auriculoventricular común se relaciona con dicho ventrículo.' : 'Ambos orificios auriculoventriculares se relacionan en más del 50% con dicho ventrículo.');
+    case 'ausencia_der': case 'ausencia_izq': {
+      const side = S.avTipo === 'ausencia_der' ? 'derecha' : 'izquierda', other = side === 'derecha' ? 'izquierda' : 'derecha';
+      const at = atresiaName(valveMorph(side));
+      const label = 'Univentricular por ausencia de conexión auriculoventricular ' + side + (at ? ' (atresia ' + at + (side === 'derecha' && at === 'tricuspídea' ? ' clásica' : ' por ausencia de conexión') + ')' : '');
+      if (!det) return label + '.';
+      const dom = dominantV();
+      return label + '. La aurícula ' + side + ' carece de conexión con la masa ventricular y está separada de ella por el tejido fibroadiposo del surco auriculoventricular; la aurícula ' + other + ' conecta con ' + (dom ? 'el ventrículo morfológicamente ' + dom : 'la masa ventricular') + '.';
+    }
+  }
+  return '';
+}
+function txtAVModo(){
+  const absent = S.avTipo === 'ausencia_der' || S.avTipo === 'ausencia_izq';
+  switch (S.avModo) {
+    case 'perforado': return absent ? 'Perforado. La válvula auriculoventricular única es permeable.' : 'Perforado. Ambas válvulas auriculoventriculares son permeables.';
+    case 'imperforado': {
+      const at = atresiaName(valveMorph(S.avLado));
+      return 'Imperforado. ' + cap(avValve(S.avLado)) + ' imperforada, con conexión auriculoventricular anatómicamente preservada (atresia ' + (at ? at + ' ' : '') + 'por válvula imperforada)' + (absent ? '.' : '; válvula auriculoventricular contralateral permeable.');
+    }
+    case 'cabalgado': {
+      const p = fmtN(S.avPct);
+      return 'Cabalgado. La ' + avValve(S.avLado) + ' cabalga sobre el septum interventricular' + (p ? ', con aproximadamente ' + p + '% de su orificio sobre el ventrículo contralateral' : '') + (S.avStraddle ? ', con inserción de cuerdas tendinosas en ambos ventrículos (straddling)' : '') + '.';
+    }
+    case 'comun': return 'Común. Válvula auriculoventricular única con un solo orificio' + {balanceada:', balanceada entre ambos ventrículos', dom_vd:', con predominio sobre el ventrículo derecho (desbalanceada)', dom_vi:', con predominio sobre el ventrículo izquierdo (desbalanceada)'}[S.avComun] + '.';
+  }
+  return '';
+}
+function origenTxt(){ return {cabalga:'que cabalga sobre el septum interventricular', VD:'que emerge del ventrículo morfológicamente derecho', VI:'que emerge del ventrículo morfológicamente izquierdo'}[S.vaOrigen]; }
+function txtVATipo(det){
+  switch (S.vaTipo) {
+    case 'concordante': return det ? 'Concordante. La arteria pulmonar emerge del ventrículo morfológicamente derecho y la aorta del ventrículo morfológicamente izquierdo.' : 'Concordante.';
+    case 'discordante': return det ? 'Discordante. La aorta emerge del ventrículo morfológicamente derecho y la arteria pulmonar del ventrículo morfológicamente izquierdo.' : 'Discordante.';
+    case 'doble_salida': return 'Doble salida del ventrículo ' + VN[S.vaDS] + (det ? '. Ambas grandes arterias emergen en su totalidad o en más del 50% de su circunferencia valvular de dicho ventrículo.' : '.');
+    case 'unica': {
+      const o = origenTxt();
+      const ramas = {nv:'', t1:'; las ramas pulmonares nacen de un tronco pulmonar corto (tipo I de Collett-Edwards)', t2:'; las ramas pulmonares nacen de forma independiente de la pared posterior del tronco (tipo II)', t3:'; las ramas pulmonares nacen de las paredes laterales del tronco (tipo III)'}[S.ramasTA];
+      switch (S.vaUnica) {
+        case 'tronco': return det ? 'Vía de salida única por tronco arterial común (tronco arterioso), con válvula truncal única, ' + o + ' y da origen a las arterias coronarias, a la circulación sistémica y a las arterias pulmonares' + ramas + '.' : 'Vía de salida única: tronco arterial común' + ramas + '.';
+        case 'aorta_sol': return 'Vía de salida única aórtica, ' + o + ', con atresia pulmonar sin conexión ventriculoarterial pulmonar identificable.';
+        case 'pulm_sol': return 'Vía de salida única pulmonar, ' + o + ', con atresia aórtica sin conexión ventriculoarterial aórtica identificable.';
+        case 'solitario': return 'Vía de salida única por tronco arterial solitario, ' + o + ', sin vestigio identificable de arteria pulmonar intrapericárdica.';
+      }
+    }
+  }
+  return '';
+}
+const VASO = {aorta:'aórtica', pulmonar:'pulmonar', tronco:'truncal'};
+function txtVAModo(){
+  switch (S.vaModo) {
+    case 'perforado': return S.vaTipo === 'unica' ? 'Perforado. La válvula arterial única es permeable.' : 'Perforado. Ambas válvulas semilunares son permeables.';
+    case 'ao_imperf': return 'Imperforado. Válvula aórtica imperforada (atresia aórtica valvular), con conexión ventriculoarterial anatómicamente preservada; válvula pulmonar permeable.';
+    case 'ap_imperf': return 'Imperforado. Válvula pulmonar imperforada (atresia pulmonar valvular), con conexión ventriculoarterial anatómicamente preservada; válvula aórtica permeable.' + (LS('pca').on ? ' La arteria pulmonar se opacifica a través del conducto arterioso permeable.' : '');
+    case 'cabalgado': {
+      const p = fmtN(S.vaPct);
+      return 'Cabalgado. La válvula ' + VASO[S.vaVaso] + ' cabalga sobre el septum interventricular' + (p ? ', con aproximadamente ' + p + '% de su circunferencia sobre el ventrículo ' + VN[S.vaHacia] : ' hacia el ventrículo ' + VN[S.vaHacia]) + '.';
+    }
+  }
+  return '';
+}
+function txtRel(det){
+  if (S.vaTipo === 'unica' || S.relacion === 'na') return null;
+  const t = {
+    normal: det ? 'Normal. Válvula aórtica posterior y a la derecha de la pulmonar, con cruce en espiral de ambos troncos.' : 'Normal.',
+    inversa: 'En imagen en espejo de la normal. Válvula aórtica posterior y a la izquierda de la pulmonar, con cruce en espiral.',
+    D: 'Aorta anterior y a la derecha de la arteria pulmonar (D-malposición), con trayecto paralelo de ambos troncos.',
+    L: 'Aorta anterior y a la izquierda de la arteria pulmonar (L-malposición), con trayecto paralelo de ambos troncos.',
+    anterior: 'Aorta directamente anterior a la arteria pulmonar, con trayecto paralelo de ambos troncos.',
+    lado_der: 'Grandes arterias lado a lado, con la aorta a la derecha de la arteria pulmonar.',
+    lado_izq: 'Grandes arterias lado a lado, con la aorta a la izquierda de la arteria pulmonar.'
+  }[S.relacion];
+  return det ? t + ' La aorta se identifica como el vaso que se arquea y da origen a las arterias coronarias; la arteria pulmonar, como el vaso que se bifurca en ramas derecha e izquierda.' : t;
+}
+function txtInf(){
+  return {subpulmonar:'Subpulmonar, con continuidad fibrosa mitroaórtica.', subaortico:'Subaórtico, con continuidad fibrosa mitropulmonar.', bilateral:'Bilateral (subaórtico y subpulmonar), sin continuidad fibrosa entre las válvulas semilunares y auriculoventriculares.', ausente:'Ausente o bilateralmente deficiente, con continuidad fibrosa de ambas válvulas semilunares con la válvula auriculoventricular.', nv:null}[S.infund];
+}
+function arcoTxt(){
+  if (S.arco === 'nv') return null;
+  if (S.arco === 'doble') return 'doble arco aórtico';
+  const ram = {habitual:', con ramificación habitual', espejo:', con ramificación en imagen en espejo', sca_der:', con arteria subclavia derecha aberrante', sca_izq:', con arteria subclavia izquierda aberrante'}[S.arcoRam];
+  return 'arco aórtico ' + S.arco + ram;
+}
+function lesList(){
+  return LES.filter(d => LS(d.id).on).map(d => {
+    const o = LS(d.id);
+    const tp = d.tipos ? (d.tipos.find(t => t[0] === (o.tipo || d.tipos[0][0])) || d.tipos[0])[2] : '';
+    let t = d.txt ? d.txt(o, tp) : d.label;
+    if (!d.detOnly && o.det && o.det.trim()) t += '; ' + o.det.trim().replace(/\.$/, '');
+    return t.trim().replace(/\.$/, '');
+  }).filter(Boolean);
+}
+function posTxt(det){
+  const pos = det ? {levo:'Levocardia (corazón en el hemitórax izquierdo)', dextro:'Dextrocardia (corazón en el hemitórax derecho)', meso:'Mesocardia (corazón en posición central)'}[S.posicion] : {levo:'Levocardia', dextro:'Dextrocardia', meso:'Mesocardia'}[S.posicion];
+  const apx = det ? {levo:'ápex dirigido hacia la izquierda (levoápex)', dextro:'ápex dirigido hacia la derecha (dextroápex)', meso:'ápex en la línea media (mesoápex)'}[S.apex] : {levo:'levoápex', dextro:'dextroápex', meso:'mesoápex'}[S.apex];
+  return pos + ' con ' + apx + '.';
+}
+function coronAnom(){
+  const tr = ['ci_sd','cd_si','cx_sd','unica'].includes(S.coronTipo) ? {interarterial:', con trayecto interarterial entre la aorta y la arteria pulmonar', retroaortico:', con trayecto retroaórtico', prepulmonar:', con trayecto prepulmonar', subpulmonar:', con trayecto subpulmonar (intraseptal)'}[S.trayecto] : '';
+  return {alcapa:'origen anómalo de la arteria coronaria izquierda desde el tronco de la arteria pulmonar (ALCAPA)', arcapa:'origen anómalo de la arteria coronaria derecha desde la arteria pulmonar (ARCAPA)', ci_sd:'origen anómalo de la arteria coronaria izquierda desde el seno coronario derecho', cd_si:'origen anómalo de la arteria coronaria derecha desde el seno coronario izquierdo', cx_sd:'origen anómalo de la arteria circunfleja desde el seno coronario derecho o la coronaria derecha', unica:'arteria coronaria única', fistula:'fístula coronaria'}[S.coronTipo] + tr;
+}
+function txtCoron(){
+  if (S.coron === 'nv') return 'No valoradas en el presente estudio.';
+  const dom = {derecha:', con dominancia derecha', izquierda:', con dominancia izquierda', codominancia:', codominantes', nv:''}[S.dominancia];
+  let t = S.coron === 'habitual' ? 'Origen y distribución habituales' + dom + '.' : cap(coronAnom()) + dom + '.';
+  if (S.coronDet.trim()) t += ' ' + dot(cap(S.coronDet.trim()));
+  return t;
+}
+function txtFunc(){
+  const a = fmtN(S.fevi), b = fmtN(S.fevd);
+  let t = '';
+  if (a && b) t = 'Fracción de eyección del ventrículo izquierdo de ' + a + '% y del ventrículo derecho de ' + b + '%.';
+  else if (a) t = 'Fracción de eyección del ventrículo izquierdo de ' + a + '%.';
+  else if (b) t = 'Fracción de eyección del ventrículo derecho de ' + b + '%.';
+  if (S.funcDet.trim()) t += (t ? ' ' : '') + dot(cap(S.funcDet.trim()));
+  return t || null;
+}
+
+/* ---------------- diagnosis patterns & conclusions ---------------- */
+function patterns(){
+  const P = [];
+  if (S.situsA === 'dextro') P.push(iso('dextro') + ' en el contexto de heterotaxia' + (S.bazo === 'ausente' ? ' con asplenia' : ''));
+  if (S.situsA === 'levo') P.push(iso('levo') + ' en el contexto de heterotaxia' + (S.bazo === 'multiple' ? ' con poliesplenia' : '') + (['acigos','hemiacigos'].includes(S.vci) ? ' e interrupción de la vena cava inferior' : ''));
+  const conc = S.avTipo === 'concordante' && S.vaTipo === 'concordante';
+  if (S.situsA === 'inversus' && conc) P.push(viscClass() === 'inversus' ? 'situs inversus totalis con conexiones segmentarias concordantes (corazón en imagen en espejo)' : 'situs inversus auricular con conexiones segmentarias concordantes');
+  if (S.avTipo === 'concordante' && S.vaTipo === 'discordante') P.push('transposición de grandes arterias' + (S.situsA === 'solitus' && S.loop === 'D' && S.relacion === 'D' ? ' (D-TGA)' : ''));
+  if (S.avTipo === 'discordante' && S.vaTipo === 'discordante') P.push('transposición congénitamente corregida de grandes arterias (doble discordancia auriculoventricular y ventriculoarterial)');
+  if (S.avTipo === 'discordante' && S.vaTipo === 'concordante') P.push('discordancia auriculoventricular aislada (inversión ventricular aislada)');
+  if (S.avTipo === 'doble_entrada') P.push('doble entrada al ventrículo ' + VN[S.avDE] + ' (corazón funcionalmente univentricular)');
+  if (S.avTipo === 'ausencia_der') { const at = atresiaName(valveMorph('derecha')); P.push(at === 'tricuspídea' ? 'atresia tricuspídea clásica (ausencia de conexión auriculoventricular derecha)' : 'ausencia de conexión auriculoventricular derecha'); }
+  if (S.avTipo === 'ausencia_izq') { const at = atresiaName(valveMorph('izquierda')); P.push(at === 'mitral' ? 'atresia mitral por ausencia de conexión auriculoventricular izquierda' : 'ausencia de conexión auriculoventricular izquierda'); }
+  if (S.avModo === 'imperforado' && !S.avTipo.startsWith('ausencia')) { const at = atresiaName(valveMorph(S.avLado)); P.push((at ? 'atresia ' + at : 'atresia de la válvula auriculoventricular ' + S.avLado) + ' por válvula imperforada'); }
+  if (S.avModo === 'comun') {
+    const cia = LS('cia'), civ = LS('civ');
+    const full = cia.on && (cia.tipo || 'secundum') === 'primum' && civ.on && civ.tipo === 'entrada';
+    P.push((full ? 'defecto completo de la tabicación auriculoventricular (canal auriculoventricular completo)' : 'defecto de la tabicación auriculoventricular con válvula auriculoventricular común') + (S.avComun !== 'balanceada' ? ', desbalanceado' : ''));
+  }
+  if (S.vaTipo === 'doble_salida') { const civ = LS('civ'); P.push('doble salida del ventrículo ' + VN[S.vaDS] + (civ.on && civ.rel ? ' con comunicación interventricular ' + relPhrase(civ.rel) : '')); }
+  if (S.vaTipo === 'unica') P.push({tronco:'tronco arterioso común', aorta_sol:'atresia pulmonar con vía de salida única aórtica', pulm_sol:'atresia aórtica con vía de salida única pulmonar', solitario:'tronco arterial solitario'}[S.vaUnica]);
+  const civ = LS('civ'), ep = LS('ep'), ap = LS('ap');
+  const p = num(S.vaPct);
+  if (S.vaTipo === 'concordante' && S.vaModo === 'cabalgado' && S.vaVaso === 'aorta' && S.vaHacia === 'VD' && !(p != null && p > 50) && civ.on) {
+    if (ep.on) P.push('tetralogía de Fallot');
+    else if (ap.on) P.push('atresia pulmonar con comunicación interventricular (tetralogía de Fallot con atresia pulmonar)');
+  }
+  if (S.vaModo === 'ap_imperf' && S.vaTipo !== 'unica') P.push('atresia pulmonar valvular (válvula pulmonar imperforada)');
+  if (S.vaModo === 'ao_imperf' && S.vaTipo !== 'unica') P.push('atresia aórtica valvular (válvula aórtica imperforada)');
+  return P;
+}
+function isAllNormal(){
+  return S.situsA === 'solitus' && ['solitus','nv'].includes(S.situsB) && ['solitus','nv'].includes(viscClass()) && ['normal','nv'].includes(S.aortaVci)
+    && ['unica','nv'].includes(S.vcs) && ['normal','nv'].includes(S.vci) && !S.supra && ['normal','nv'].includes(S.vvpp)
+    && S.loop === 'D' && S.vdev === 'balanceados' && S.avTipo === 'concordante' && S.avModo === 'perforado'
+    && S.vaTipo === 'concordante' && S.vaModo === 'perforado' && S.relacion === 'normal' && ['subpulmonar','nv'].includes(S.infund)
+    && (S.arco === 'nv' || (S.arco === 'izquierdo' && S.arcoRam === 'habitual')) && S.posicion === 'levo' && S.apex === 'levo'
+    && lesList().length === 0 && ['habitual','nv'].includes(S.coron);
+}
+function concSitus(){
+  let s = {solitus:'Situs solitus', inversus:'Situs inversus', dextro:cap(iso('dextro')), levo:cap(iso('levo')), indet:'Situs auricular indeterminado'}[S.situsA];
+  if (S.situsB !== 'nv' && S.situsA !== 'indet') {
+    s += S.situsB === S.situsA ? ' con situs bronquial concordante' : ' con ' + ({solitus:'situs bronquial solitus', inversus:'situs bronquial inversus', dextro:isoB('dextro'), levo:isoB('levo')}[S.situsB]) + ' (discordante)';
+  }
+  const vc = viscClass();
+  if (vc === 'heterotaxia') s += '; heterotaxia visceral' + (S.bazo === 'ausente' ? ' con asplenia' : S.bazo === 'multiple' ? ' con poliesplenia' : '');
+  else if (vc === 'inversus' && S.situsA !== 'inversus') s += '; situs visceral inversus';
+  else if (vc === 'solitus' && S.situsA === 'inversus') s += '; situs visceral solitus';
+  return s + '; ' + low(posTxt(false));
+}
+function concConex(){
+  const uni = S.vdev === 'unico_indet';
+  const av = {concordante:'concordante', discordante:'discordante', ambigua:'ambigua', doble_entrada:'univentricular por doble entrada al ventrículo ' + VN[S.avDE], ausencia_der:'univentricular por ausencia de conexión derecha', ausencia_izq:'univentricular por ausencia de conexión izquierda'}[S.avTipo];
+  const loop = uni ? '' : S.loop === 'X' ? ' (topología ventricular indeterminada)' : ' (asa ' + S.loop + ')';
+  const p = fmtN(S.avPct);
+  const avM = {perforado:'', imperforado:', con ' + avValve(S.avLado) + ' imperforada', cabalgado:', con cabalgamiento de la ' + avValve(S.avLado) + (p ? ' de aproximadamente ' + p + '%' : ''), comun:', a través de una válvula auriculoventricular común' + (S.avComun !== 'balanceada' ? ' desbalanceada' : '')}[S.avModo];
+  const va = {concordante:'concordante', discordante:'discordante', doble_salida:'de doble salida del ventrículo ' + VN[S.vaDS], unica:{tronco:'por vía de salida única (tronco arterial común)', aorta_sol:'por vía de salida única aórtica con atresia pulmonar', pulm_sol:'por vía de salida única pulmonar con atresia aórtica', solitario:'por vía de salida única (tronco arterial solitario)'}[S.vaUnica]}[S.vaTipo];
+  const q = fmtN(S.vaPct);
+  const vaM = {perforado:'', ao_imperf:', con válvula aórtica imperforada', ap_imperf:', con válvula pulmonar imperforada', cabalgado:', con cabalgamiento de la válvula ' + VASO[S.vaVaso] + (q ? ' de aproximadamente ' + q + '%' : '') + ' sobre el ventrículo ' + VN[S.vaHacia]}[S.vaModo];
+  const rel = S.vaTipo === 'unica' ? null : {normal:'relación normal de las grandes arterias', inversa:'relación de las grandes arterias en imagen en espejo', D:'aorta anterior y a la derecha (D-malposición)', L:'aorta anterior y a la izquierda (L-malposición)', anterior:'aorta directamente anterior', lado_der:'grandes arterias lado a lado y aorta a la derecha', lado_izq:'grandes arterias lado a lado y aorta a la izquierda', na:null}[S.relacion];
+  return 'Conexión auriculoventricular ' + av + loop + avM + (avM ? '; conexión' : ' y conexión') + ' ventriculoarterial ' + va + vaM + (rel ? (vaM ? '; ' : ', con ') + rel : '') + '.';
+}
+function conclusions(){
+  const C = [];
+  if (isAllNormal()) {
+    C.push('Corazón con anatomía segmentaria normal: situs solitus, levocardia con levoápex y conexiones auriculoventricular y ventriculoarterial concordantes, con relación normal de las grandes arterias.');
+    C.push('No se identifican lesiones asociadas.');
+  } else {
+    const P = patterns();
+    if (P.length) C.push('Hallazgos compatibles con ' + P.join('; ') + '.');
+    C.push(concSitus() .replace(/\.$/, '') + '.');
+    C.push(concConex());
+    const L = lesList();
+    if (L.length) C.push('Lesiones asociadas: ' + L.map(low).join('; ') + '.');
+    const V = venParts(true);
+    if (V.length) C.push(cap(V.join('; ')) + '.');
+    if (['derecho','doble'].includes(S.arco) || (S.arco === 'izquierdo' && S.arcoRam !== 'habitual')) C.push(cap(arcoTxt()) + '.');
+    if (S.coron === 'anomala') C.push(cap(coronAnom()) + '.');
+  }
+  if (S.vp === 'si') C.push('Notación segmentaria (Van Praagh): ' + vpNotation() + '.');
+  return C;
+}
+function buildReport(){
+  const det = S.redaccion === 'detallada';
+  const B = [];
+  const it = (label, text) => { if (text) B.push({t:'item', label:label, text:text}); };
+  B.push({t:'title', text:TITULO[S.modalidad].toUpperCase()});
+  B.push({t:'subtitle', text:'Análisis secuencial segmentario'});
+  if (S.nombre.trim()) B.push({t:'kv', label:'Paciente', text:S.nombre.trim()});
+  const meta = [];
+  if (S.edad.trim()) meta.push(['Edad', S.edad.trim()]);
+  if (S.expediente.trim()) meta.push(['Expediente', S.expediente.trim()]);
+  if (S.fecha) meta.push(['Fecha', fmtDate(S.fecha)]);
+  meta.forEach(m => B.push({t:'kv', label:m[0], text:m[1]}));
+  if (S.indicacion.trim()) B.push({t:'kv', label:'Indicación', text:dot(cap(S.indicacion.trim()))});
+  if (S.cirugias.trim()) B.push({t:'kv', label:'Antecedentes quirúrgicos', text:dot(cap(S.cirugias.trim()))});
+  if (S.tecnica.trim()) B.push({t:'kv', label:'Técnica', text:dot(S.tecnica.trim())});
+
+  B.push({t:'h', text:'Hallazgos'});
+  B.push({t:'h2', text:'1. Situs'});
+  it('Situs auricular', txtSitusA(det));
+  it('Situs bronquial', txtSitusB(det));
+  it('Situs abdominal', txtAbd());
+  const V = venParts(false);
+  it('Conexiones venosas', V.length ? cap(V.join('; ')) + '.' : null);
+
+  B.push({t:'h2', text:'2. Unión auriculoventricular'});
+  it('Topología ventricular', txtLoop(det));
+  it('Morfología ventricular', txtMorfV(det));
+  it('Tipo de conexión', txtAVTipo(det));
+  it('Modo de conexión', txtAVModo());
+
+  B.push({t:'h2', text:'3. Unión ventriculoarterial'});
+  it('Tipo de conexión', txtVATipo(det));
+  it('Modo de conexión', txtVAModo());
+  it('Relación de las grandes arterias', txtRel(det));
+  it('Infundíbulo', txtInf());
+  const ar = arcoTxt();
+  it('Arco aórtico', ar ? dot(cap(ar.replace(/^arco aórtico /, ''))) : null);
+
+  B.push({t:'h2', text:'4. Lesiones asociadas'});
+  const L = lesList();
+  if (L.length) L.forEach(t => B.push({t:'bullet', text:dot(t)}));
+  else B.push({t:'p', text:'No se identifican lesiones asociadas.'});
+
+  B.push({t:'h2', text:'5. Particularidades adicionales'});
+  it('Posición cardiaca', posTxt(det));
+  it('Arterias coronarias', txtCoron());
+  it('Función ventricular', txtFunc());
+  if (S.extra.trim()) it('Hallazgos extracardiacos', dot(cap(S.extra.trim())));
+
+  B.push({t:'h', text:'Conclusiones'});
+  conclusions().forEach((c, i) => B.push({t:'ol', n:i + 1, text:c}));
+  const sign = [S.firmaNombre.trim(), S.firmaCargo.trim()].filter(Boolean);
+  if (sign.length) B.push({t:'sign', lines:sign});
+  return B;
+}
+
+/* ---------------- block renderers ---------------- */
+function blocksToHTML(B){
+  return B.map(b => {
+    switch (b.t) {
+      case 'title': return '<h1 class="r-title">' + esc(b.text) + '</h1>';
+      case 'subtitle': return '<p class="r-sub">' + esc(b.text) + '</p>';
+      case 'kv': return '<p class="r-kv"><strong>' + esc(b.label) + ':</strong> ' + esc(b.text) + '</p>';
+      case 'h': return '<h2 class="r-h">' + esc(b.text) + '</h2>';
+      case 'h2': return '<h3 class="r-h2">' + esc(b.text) + '</h3>';
+      case 'item': return '<p class="r-item"><strong>' + esc(b.label) + ':</strong> ' + esc(b.text) + '</p>';
+      case 'bullet': return '<p class="r-bullet">' + esc(b.text) + '</p>';
+      case 'ol': return '<p class="r-ol"><span class="r-n">' + b.n + '.</span>' + esc(b.text) + '</p>';
+      case 'sign': return '<div class="r-sign">' + b.lines.map(l => '<p>' + esc(l) + '</p>').join('') + '</div>';
+      default: return '<p class="r-p">' + esc(b.text) + '</p>';
+    }
+  }).join('');
+}
+function blocksFromDOM(root){
+  const B = [];
+  const txt = el => (el.innerText || el.textContent || '').replace(/ /g, ' ').trim();
+  root.childNodes.forEach(node => {
+    if (node.nodeType === 3) { const t = node.textContent.trim(); if (t) B.push({t:'p', text:t}); return; }
+    if (node.nodeType !== 1) return;
+    const el = node, cl = el.classList, tag = el.tagName;
+    const all = txt(el);
+    if (!all && !cl.contains('r-sign')) return;
+    if (tag === 'H1') B.push({t:'title', text:all});
+    else if (cl.contains('r-sub')) B.push({t:'subtitle', text:all});
+    else if (tag === 'H2') B.push({t:'h', text:all});
+    else if (tag === 'H3') B.push({t:'h2', text:all});
+    else if (cl.contains('r-kv') || cl.contains('r-item')) {
+      const st = el.querySelector('strong');
+      const lab = st ? txt(st) : '';
+      if (st && all.indexOf(lab) === 0) B.push({t:cl.contains('r-kv') ? 'kv' : 'item', label:lab.replace(/:\s*$/, ''), text:all.slice(lab.length).trim()});
+      else B.push({t:'p', text:all});
+    }
+    else if (cl.contains('r-bullet')) B.push({t:'bullet', text:all.replace(/^•\s*/, '')});
+    else if (cl.contains('r-ol')) { const m = /^(\d+)\.\s*([\s\S]*)$/.exec(all); if (m) B.push({t:'ol', n:+m[1], text:m[2].trim()}); else B.push({t:'p', text:all}); }
+    else if (cl.contains('r-sign')) { const lines = $$('p', el).map(txt).filter(Boolean); if (lines.length) B.push({t:'sign', lines:lines}); }
+    else all.split(/\n+/).map(s => s.trim()).filter(Boolean).forEach(s => B.push({t:'p', text:s}));
+  });
+  return B;
+}
+function blocksToText(B){
+  const out = [];
+  B.forEach((b, i) => {
+    switch (b.t) {
+      case 'title': out.push(b.text); break;
+      case 'subtitle': out.push(b.text, ''); break;
+      case 'kv': out.push(b.label + ': ' + b.text); break;
+      case 'h': out.push('', b.text.toUpperCase() + ':'); break;
+      case 'h2': out.push('', b.text); break;
+      case 'item': out.push('• ' + b.label + ': ' + b.text); break;
+      case 'bullet': out.push('• ' + b.text); break;
+      case 'ol': out.push(b.n + '. ' + b.text); break;
+      case 'sign': out.push('', ''); b.lines.forEach(l => out.push(l)); break;
+      default: out.push(b.text);
+    }
+  });
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+function currentBlocks(){ return editing ? blocksFromDOM($('#report')) : buildReport(); }
+
+/* ---------------- DOCX (stored zip, no dependencies) ---------------- */
+const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u8){ let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipStore(files){
+  const enc = new TextEncoder(), parts = [], central = [];
+  let offset = 0;
+  const d = new Date();
+  const dosTime = (d.getHours() << 11) | (d.getMinutes() << 5) | (Math.floor(d.getSeconds() / 2));
+  const dosDate = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  files.forEach(f => {
+    const name = enc.encode(f.name), data = typeof f.data === 'string' ? enc.encode(f.data) : f.data, crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+    lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true); lh.setUint32(14, crc, true);
+    lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+    parts.push(new Uint8Array(lh.buffer), name, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+    ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true); ch.setUint32(16, crc, true);
+    ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
+    ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+    central.push(new Uint8Array(ch.buffer), name);
+    offset += 30 + name.length + data.length;
+  });
+  const cdSize = central.reduce((a, b) => a + b.length, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(4, 0, true); end.setUint16(6, 0, true);
+  end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, cdSize, true); end.setUint32(16, offset, true); end.setUint16(20, 0, true);
+  const all = parts.concat(central, [new Uint8Array(end.buffer)]);
+  const out = new Uint8Array(all.reduce((a, b) => a + b.length, 0));
+  let p = 0; all.forEach(a => { out.set(a, p); p += a.length; });
+  return out;
+}
+function blocksToDocx(B){
+  const x = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const run = (t, o) => { o = o || {}; let pr = ''; if (o.b) pr += '<w:b/>'; if (o.i) pr += '<w:i/>'; if (o.color) pr += '<w:color w:val="' + o.color + '"/>'; if (o.sz) pr += '<w:sz w:val="' + o.sz + '"/><w:szCs w:val="' + o.sz + '"/>'; return '<w:r>' + (pr ? '<w:rPr>' + pr + '</w:rPr>' : '') + '<w:t xml:space="preserve">' + x(t) + '</w:t></w:r>'; };
+  const tab = '<w:r><w:tab/></w:r>';
+  const para = (runs, o) => { o = o || {}; let pr = ''; if (o.keep) pr += '<w:keepNext/>'; if (o.border) pr += '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="2" w:color="0A7B5C"/></w:pBdr>'; pr += '<w:spacing w:before="' + (o.before || 0) + '" w:after="' + (o.after == null ? 80 : o.after) + '"/>'; if (o.ind) pr += '<w:ind w:left="' + o.ind[0] + '"' + (o.ind[1] ? ' w:hanging="' + o.ind[1] + '"' : '') + '/>'; if (o.jc) pr += '<w:jc w:val="' + o.jc + '"/>'; return '<w:p><w:pPr>' + pr + '</w:pPr>' + runs + '</w:p>'; };
+  let body = '';
+  B.forEach(b => {
+    switch (b.t) {
+      case 'title': body += para(run(b.text, {b:true, sz:28}), {jc:'center', after:20}); break;
+      case 'subtitle': body += para(run(b.text, {i:true, color:'4A5A54'}), {jc:'center', after:240}); break;
+      case 'kv': body += para(run(b.label + ': ', {b:true}) + run(b.text), {after:40}); break;
+      case 'h': body += para(run(b.text.toUpperCase(), {b:true, color:'0A7B5C'}), {before:280, after:100, keep:true, border:true}); break;
+      case 'h2': body += para(run(b.text, {b:true}), {before:160, after:60, keep:true}); break;
+      case 'item': body += para(run(b.label + ': ', {b:true}) + run(b.text), {after:80, ind:[284]}); break;
+      case 'bullet': body += para(run('•') + tab + run(b.text), {after:60, ind:[568, 284]}); break;
+      case 'ol': body += para(run(b.n + '.', {b:true}) + tab + run(b.text), {after:80, ind:[400, 400]}); break;
+      case 'sign': b.lines.forEach((l, i) => { body += para(run(l, {b:i === 0}), {before:i === 0 ? 720 : 0, after:0}); }); break;
+      default: body += para(run(b.text), {after:80, ind:[284]});
+    }
+  });
+  const W = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  const doc = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ' + W + '><w:body>' + body + '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1418" w:right="1418" w:bottom="1418" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>';
+  const styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ' + W + '><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Arial" w:cs="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="es-MX"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="80" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>';
+  const ct = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>';
+  const rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
+  const drels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+  return zipStore([
+    {name:'[Content_Types].xml', data:ct},
+    {name:'_rels/.rels', data:rels},
+    {name:'word/document.xml', data:doc},
+    {name:'word/_rels/document.xml.rels', data:drels},
+    {name:'word/styles.xml', data:styles}
+  ]);
+}
+function fileBase(){
+  const n = (S.nombre || 'estudio').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40) || 'estudio';
+  return 'Segmentario_' + n + '_' + (S.fecha || todayISO());
+}
+function download(name, blob){
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
+}
+window.IER_SEG = { buildReport: buildReport, blocksToText: blocksToText, blocksToDocx: blocksToDocx, currentBlocks: currentBlocks, state: () => S, applyPreset: id => applyPreset(id) };
+
+/* ---------------- side panel ---------------- */
+function renderFormula(){
+  const nomenInc = S.nomen === 'inc';
+  const sA = {solitus:'Solitus', inversus:'Inversus', dextro:nomenInc ? 'Dextromorfismo' : 'Isomerismo der.', levo:nomenInc ? 'Levomorfismo' : 'Isomerismo izq.', indet:'Indeterminado'}[S.situsA];
+  const sB = S.situsB === 'nv' ? 'bronquial no valorado' : 'bronquial ' + ({solitus:'solitus', inversus:'inversus', dextro:nomenInc ? 'dextromorfismo' : 'isomerismo der.', levo:nomenInc ? 'levomorfismo' : 'isomerismo izq.'}[S.situsB]);
+  const uni = S.vdev === 'unico_indet';
+  const lado = S.avLado === 'derecha' ? 'der.' : 'izq.';
+  const pA = fmtN(S.avPct), pV = fmtN(S.vaPct);
+  const cells = [
+    {k:'Situs', v:sA, s:sB, ok:S.situsA === 'solitus' && ['solitus','nv'].includes(S.situsB)},
+    {k:'Asa', v:uni ? '—' : S.loop, s:uni ? 'ventrículo único' : {D:'mano derecha', L:'mano izquierda', X:'indeterminada'}[S.loop], ok:S.loop === 'D' && !uni},
+    {k:'Conexión AV', v:{concordante:'Concordante', discordante:'Discordante', ambigua:'Ambigua', doble_entrada:'Doble entrada ' + (S.avDE === 'indet' ? 'V?' : S.avDE), ausencia_der:'Ausencia derecha', ausencia_izq:'Ausencia izquierda'}[S.avTipo],
+      s:{perforado:'modo perforado', imperforado:'imperforada ' + lado, cabalgado:'cabalgada ' + lado + (pA ? ' ' + pA + '%' : ''), comun:'válvula común'}[S.avModo], ok:S.avTipo === 'concordante' && S.avModo === 'perforado'},
+    {k:'Conexión VA', v:S.vaTipo === 'unica' ? {tronco:'Tronco común', aorta_sol:'Aorta solitaria', pulm_sol:'Pulmonar solitaria', solitario:'Tronco solitario'}[S.vaUnica] : {concordante:'Concordante', discordante:'Discordante', doble_salida:'Doble salida ' + (S.vaDS === 'indet' ? 'V?' : S.vaDS)}[S.vaTipo],
+      s:{perforado:'modo perforado', ao_imperf:'aórtica imperforada', ap_imperf:'pulmonar imperforada', cabalgado:VASO[S.vaVaso] + ' cabalgada' + (pV ? ' ' + pV + '%' : '')}[S.vaModo], ok:S.vaTipo === 'concordante' && S.vaModo === 'perforado'},
+    {k:'Grandes arterias', v:S.vaTipo === 'unica' ? 'No aplica' : {normal:'Normal', inversa:'En espejo', D:'Ao anterior-der.', L:'Ao anterior-izq.', anterior:'Ao anterior', lado_der:'Lado a lado, Ao der.', lado_izq:'Lado a lado, Ao izq.', na:'No aplica'}[S.relacion],
+      s:{subpulmonar:'cono subpulmonar', subaortico:'cono subaórtico', bilateral:'cono bilateral', ausente:'sin cono', nv:'cono no especificado'}[S.infund], ok:S.relacion === 'normal' && S.vaTipo !== 'unica'},
+    {k:'Posición', v:{levo:'Levocardia', dextro:'Dextrocardia', meso:'Mesocardia'}[S.posicion], s:{levo:'levoápex', dextro:'dextroápex', meso:'mesoápex'}[S.apex], ok:S.posicion === 'levo' && S.apex === 'levo'}
+  ];
+  $('#formula').innerHTML = cells.map(c => '<div class="fcell' + (c.ok ? '' : ' abn') + '"><div class="fk"><i aria-hidden="true"></i>' + esc(c.k) + '</div><div class="fv">' + esc(c.v) + '</div><div class="fs">' + esc(c.s) + '</div></div>').join('');
+  $('#vp').textContent = vpNotation();
+}
+
+function checks(){
+  const W = [];
+  const exp = expectedAV();
+  const bi = ['concordante','discordante'].includes(S.avTipo);
+  if (isIso() && bi) W.push({lvl:'warn', msg:'Con isomerismo auricular y conexión biventricular, el tipo de conexión auriculoventricular es ambiguo.', fix:{avTipo:'ambigua'}, fl:'Cambiar a ambigua'});
+  if (!isIso() && S.avTipo === 'ambigua') W.push({lvl:'warn', msg:'La conexión ambigua solo corresponde cuando existe isomerismo auricular.'});
+  if (exp && bi && exp !== S.avTipo) W.push({lvl:'warn', msg:'Situs ' + S.situsA + ' con asa ' + S.loop + ' corresponde a una conexión auriculoventricular ' + exp + ' en un corazón biventricular.', fix:{avTipo:exp}, fl:'Cambiar a ' + exp});
+  if (S.situsB !== 'nv' && S.situsA !== 'indet' && S.situsB !== S.situsA) W.push({lvl:'warn', msg:'El situs bronquial no concuerda con el auricular. Ambos guardan una relación constante: revisá la morfología de orejuelas y bronquios.'});
+  const vc = viscClass();
+  if (S.situsA === 'solitus' && vc === 'inversus' || S.situsA === 'inversus' && vc === 'solitus') W.push({lvl:'info', msg:'El situs visceral no acompaña al auricular: considerá heterotaxia.'});
+  const pa = num(S.avPct);
+  if (S.avModo === 'cabalgado' && pa != null && pa > 50) W.push({lvl:'warn', msg:'Cabalgamiento mayor al 50%: por la ley del 50% la válvula pertenece al ventrículo que la recibe mayoritariamente. Valorá doble entrada.'});
+  if (S.avModo === 'imperforado' && S.avTipo.startsWith('ausencia')) W.push({lvl:'warn', msg:'La ausencia de conexión es un tipo y la válvula imperforada es un modo con conexión preservada: revisá cuál describe mejor el hallazgo.'});
+  if (S.avModo === 'comun' && S.avTipo.startsWith('ausencia')) W.push({lvl:'warn', msg:'Una válvula auriculoventricular común no es compatible con ausencia de conexión.'});
+  if (S.avTipo === 'doble_entrada' && S.avModo === 'comun') W.push({lvl:'info', msg:'Con válvula común, la doble entrada requiere que más del 75% de la válvula se relacione con un ventrículo.'});
+  if (S.avTipo === 'doble_entrada' && S.vdev === 'balanceados') W.push({lvl:'info', msg:'En la doble entrada suele existir una cámara rudimentaria: especificá el desarrollo ventricular.'});
+  if (S.avTipo === 'ausencia_der' && !LS('cia').on) W.push({lvl:'info', msg:'Sin conexión auriculoventricular derecha, la aurícula derecha drena a través de una comunicación interauricular: documentala en el paso 4.'});
+  const pv = num(S.vaPct);
+  if (S.vaModo === 'cabalgado' && pv != null && pv > 50) W.push({lvl:'warn', msg:'Cabalgamiento arterial mayor al 50%: por la ley del 50% la arteria se asigna al ventrículo sobre el que cabalga. Valorá doble salida o discordancia.'});
+  if (S.vaTipo === 'unica' && ['ao_imperf','ap_imperf'].includes(S.vaModo)) W.push({lvl:'warn', msg:'Con vía de salida única, la atresia de la otra arteria ya está implícita en el tipo de conexión.', fix:{vaModo:'perforado'}, fl:'Usar modo perforado'});
+  if (S.vaTipo !== 'unica' && S.relacion === 'na') W.push({lvl:'warn', msg:'Especificá la relación espacial de las grandes arterias.'});
+  if (S.vaTipo === 'unica' && S.relacion !== 'na') W.push({lvl:'info', msg:'La relación de las grandes arterias no aplica con vía de salida única y no se incluye en el informe.', fix:{relacion:'na'}, fl:'Marcar «no aplica»'});
+  if (S.vaTipo === 'doble_salida' && !LS('civ').on) W.push({lvl:'info', msg:'La doble salida suele acompañarse de CIV: documentá su tamaño y relación con las grandes arterias.'});
+  if (S.vaTipo === 'unica' && S.vaUnica === 'tronco' && !LS('civ').on) W.push({lvl:'info', msg:'El tronco arterioso común se asocia habitualmente a CIV: documentala en el paso 4.'});
+  if (S.situsA === 'dextro' && !['ausente','nv'].includes(S.bazo)) W.push({lvl:'info', msg:'En el dextromorfismo es habitual la asplenia: verificá el bazo.'});
+  if (S.situsA === 'levo' && !['multiple','nv'].includes(S.bazo)) W.push({lvl:'info', msg:'En el levomorfismo es habitual la poliesplenia.'});
+  if (S.situsA === 'levo' && !['acigos','hemiacigos','nv'].includes(S.vci)) W.push({lvl:'info', msg:'En el levomorfismo es habitual la interrupción de la VCI con continuación ácigos y drenaje directo de las suprahepáticas.'});
+  return W;
+}
+function renderChecks(){
+  const W = checks();
+  const ul = $('#checks');
+  if (!W.length) { ul.innerHTML = '<li class="ok"><span class="ok-line"><i aria-hidden="true"></i>Análisis coherente entre segmentos.</span></li>'; return; }
+  ul.innerHTML = W.map((w, i) => '<li class="' + w.lvl + '"><span class="pill">' + (w.lvl === 'warn' ? 'Revisar' : 'Nota') + '</span><span>' + esc(w.msg) + '</span>' + (w.fix ? '<button type="button" class="fix" data-fix="' + i + '">' + esc(w.fl) + '</button>' : '') + '</li>').join('');
+  $$('[data-fix]', ul).forEach(b => b.addEventListener('click', () => { Object.assign(S, W[+b.dataset.fix].fix); syncDOM(); update(); }));
+}
+
+function drawSchema(){
+  const X = {R:118, L:250}, C = 184, Y = {a:52, v:130, g:208}, AW = 64, AH = 30;
+  const o = [];
+  o.push('<text class="s-cap" x="' + X.R + '" y="16">Derecha</text><text class="s-cap" x="' + X.L + '" y="16">Izquierda</text>');
+  o.push('<text class="s-row" x="4" y="' + Y.a + '">Aurículas</text><text class="s-row" x="4" y="' + Y.v + '">Ventrículos</text><text class="s-row" x="4" y="' + Y.g + '">Arterias</text>');
+  const cls = m => ['AD','VD','AP'].includes(m) ? 's-mr' : ['AI','VI','Ao'].includes(m) ? 's-ml' : m === 'TA' ? 's-tr' : 's-q';
+  const box = (x, y, w, h, label, c) => o.push('<rect class="sb ' + c + '" x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h + '" rx="7"/><text class="s-t" x="' + x + '" y="' + y + '">' + esc(label) + '</text>');
+  const lines = [], extras = [];
+  const L = (x1, y1, x2, y2, c) => lines.push('<line class="s-l ' + (c || '') + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>');
+  const bar = (x1, y1, x2, y2) => { const mx = (x1 + x2) / 2, my = (y1 + y2) / 2; extras.push('<line class="s-x" x1="' + (mx - 8) + '" y1="' + my + '" x2="' + (mx + 8) + '" y2="' + my + '"/>'); };
+
+  const aM = {solitus:{R:'AD', L:'AI'}, inversus:{R:'AI', L:'AD'}, dextro:{R:'AD', L:'AD'}, levo:{R:'AI', L:'AI'}, indet:{R:'?', L:'?'}}[S.situsA];
+  box(X.R, Y.a, AW, AH, aM.R, cls(aM.R)); box(X.L, Y.a, AW, AH, aM.L, cls(aM.L));
+
+  const uni = S.vdev === 'unico_indet';
+  const V = {};
+  const base = {w:80, h:42}, small = {w:46, h:28}, hypo = {w:60, h:34};
+  if (uni) { V.U = {x:C, w:176, h:42, m:'V'}; box(C, Y.v, 176, 42, 'Ventrículo único', 's-q'); }
+  else {
+    const vm = S.loop === 'D' ? {R:'VD', L:'VI'} : S.loop === 'L' ? {R:'VI', L:'VD'} : {R:'?', L:'?'};
+    const sz = m => {
+      if (m === 'VD' && S.vdev === 'vd_rud' || m === 'VI' && S.vdev === 'vi_rud') return small;
+      if (m === 'VD' && S.vdev === 'hipo_vd' || m === 'VI' && S.vdev === 'hipo_vi') return hypo;
+      if (S.avTipo === 'doble_entrada' && S.vdev === 'balanceados' && ((S.avDE === 'VI' && m === 'VD') || (S.avDE === 'VD' && m === 'VI'))) return small;
+      return base;
+    };
+    ['R','L'].forEach(s => { const z = sz(vm[s]); V[s] = {x:X[s], w:z.w, h:z.h, m:vm[s]}; box(X[s], Y.v, z.w, z.h, vm[s], cls(vm[s])); });
+  }
+  const side = m => uni ? 'U' : (V.R.m === m ? 'R' : V.L.m === m ? 'L' : null);
+  const vTop = s => Y.v - V[s].h / 2, vBot = s => Y.v + V[s].h / 2;
+  const aBot = Y.a + AH / 2;
+  const exp = expectedAV();
+  const warnAV = (isIso() && ['concordante','discordante'].includes(S.avTipo)) || (exp && ['concordante','discordante'].includes(S.avTipo) && exp !== S.avTipo);
+  const sideOf = l => l === 'derecha' ? 'R' : 'L';
+
+  // AV connections
+  let av = [], absent = null;
+  const pick = () => { const d = dominantV(); return d ? (side(d === 'izquierdo' ? 'VI' : 'VD') || null) : null; };
+  switch (S.avTipo) {
+    case 'concordante': case 'discordante': case 'ambigua':
+      av = uni ? [{f:'R', t:'U', off:-14}, {f:'L', t:'U', off:14}] : [{f:'R', t:'R'}, {f:'L', t:'L'}]; break;
+    case 'doble_entrada': {
+      let t = uni ? 'U' : (S.avDE !== 'indet' ? side(S.avDE) : null);
+      if (!t) t = V.R.w >= V.L.w ? 'R' : 'L';
+      av = [{f:'R', t:t, off:-12}, {f:'L', t:t, off:12}]; break;
+    }
+    case 'ausencia_der': absent = 'R'; av = [{f:'L', t:uni ? 'U' : (pick() || 'L')}]; break;
+    case 'ausencia_izq': absent = 'L'; av = [{f:'R', t:uni ? 'U' : (pick() || 'R')}]; break;
+  }
+  av.forEach(c => {
+    const x1 = X[c.f], x2 = (c.t === 'U' ? C : X[c.t]) + (c.off || 0), y2 = vTop(c.t);
+    const imp = S.avModo === 'imperforado' && sideOf(S.avLado) === c.f;
+    L(x1, aBot, x2, y2, (imp ? 'dash ' : '') + (warnAV ? 'warn' : ''));
+    if (imp) bar(x1, aBot, x2, y2);
+  });
+  if (absent) {
+    const x = X[absent];
+    L(x, aBot, x, aBot + 12, 'dash');
+    extras.push('<line class="s-x" x1="' + (x - 6) + '" y1="' + (aBot + 16) + '" x2="' + (x + 6) + '" y2="' + (aBot + 28) + '"/><line class="s-x" x1="' + (x + 6) + '" y1="' + (aBot + 16) + '" x2="' + (x - 6) + '" y2="' + (aBot + 28) + '"/>');
+  }
+  if (S.avModo === 'cabalgado' && !uni) {
+    const f = sideOf(S.avLado), other = f === 'R' ? 'L' : 'R';
+    if (av.some(c => c.f === f)) L(X[f], aBot, X[other] + (f === 'R' ? -18 : 18), vTop(other), 'thin');
+  }
+  if (S.avModo === 'comun') {
+    const yb = (aBot + Y.v - 21) / 2;
+    extras.push('<rect class="s-band" x="' + (X.R - 30) + '" y="' + (yb - 7) + '" width="' + (X.L - X.R + 60) + '" height="14" rx="7"/><text class="s-small" x="' + C + '" y="' + yb + '">válvula AV común</text>');
+  }
+
+  // arteries
+  const aW = 58, aH = 26, gTop = Y.g - aH / 2;
+  const arts = [];
+  const vS = m => side(m) || (m === 'VI' ? 'L' : 'R');
+  const aortaRight = ['normal','D','lado_der','anterior'].includes(S.relacion);
+  if (S.vaTipo === 'concordante' || S.vaTipo === 'discordante') {
+    const ao = S.vaTipo === 'concordante' ? vS('VI') : vS('VD'), ap = S.vaTipo === 'concordante' ? vS('VD') : vS('VI');
+    if (uni || ao === ap) { arts.push({lab:'Ao', x:aortaRight ? C - 40 : C + 40, src:[ao]}, {lab:'AP', x:aortaRight ? C + 40 : C - 40, src:[ap]}); }
+    else { arts.push({lab:'Ao', x:X[ao], src:[ao]}, {lab:'AP', x:X[ap], src:[ap]}); }
+  } else if (S.vaTipo === 'doble_salida') {
+    const s = uni ? 'U' : (S.vaDS === 'indet' ? (V.R.w >= V.L.w ? 'R' : 'L') : vS(S.vaDS));
+    arts.push({lab:'Ao', x:aortaRight ? X.R : X.L, src:[s], off:aortaRight ? -12 : 12}, {lab:'AP', x:aortaRight ? X.L : X.R, src:[s], off:aortaRight ? 12 : -12});
+  } else {
+    const lab = {tronco:'TA', aorta_sol:'Ao', pulm_sol:'AP', solitario:'TA'}[S.vaUnica];
+    const src = uni ? ['U'] : S.vaOrigen === 'cabalga' ? ['R','L'] : [vS(S.vaOrigen)];
+    arts.push({lab:lab, x:C, src:src, single:true});
+  }
+  arts.forEach(a => {
+    box(a.x, Y.g, aW, aH, a.lab, cls(a.lab));
+    const imp = (S.vaModo === 'ao_imperf' && a.lab === 'Ao' && !a.single) || (S.vaModo === 'ap_imperf' && a.lab === 'AP' && !a.single);
+    a.src.forEach((s, i) => {
+      const x1 = (s === 'U' ? C : X[s]) + (a.off || 0) + (a.src.length > 1 ? (i === 0 ? 6 : -6) : 0);
+      const x2 = a.x + (a.src.length > 1 ? (i === 0 ? -12 : 12) : 0);
+      L(x1, vBot(s), x2, gTop, imp ? 'dash' : '');
+      if (imp) bar(x1, vBot(s), x2, gTop);
+    });
+  });
+  if (S.vaModo === 'cabalgado' && !uni) {
+    const lab = {aorta:'Ao', pulmonar:'AP', tronco:'TA'}[S.vaVaso];
+    const a = arts.find(z => z.lab === lab);
+    const hs = vS(S.vaHacia);
+    if (a && hs && !a.src.includes(hs)) L(X[hs] + (hs === 'R' ? 14 : -14), vBot(hs), a.x + (X[hs] < a.x ? -10 : 10), gTop, 'thin');
+  }
+  const svg = $('#schema');
+  svg.innerHTML = lines.join('') + o.join('') + extras.join('');
+  svg.setAttribute('aria-label', 'Esquema: ' + $$('.fcell', $('#formula')).map(c => c.querySelector('.fk').textContent + ' ' + c.querySelector('.fv').textContent).join(', '));
+}
+
+function renderReport(){ $('#report').innerHTML = blocksToHTML(buildReport()); }
+
+function update(){
+  applyVisibility();
+  renderFormula();
+  drawSchema();
+  renderChecks();
+  if (editing) $('#stale').hidden = false; else renderReport();
+}
+
+/* ---------------- actions ---------------- */
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 2200); }
+function setEditing(on){
+  editing = on;
+  const r = $('#report');
+  r.contentEditable = on ? 'true' : 'false';
+  r.classList.toggle('editing', on);
+  $('#edit-note').hidden = !on;
+  $('#btn-edit span').textContent = on ? 'Volver al formulario' : 'Editar texto';
+  if (!on) { $('#stale').hidden = true; renderReport(); }
+  else r.focus();
+}
+function applyPreset(id){
+  const p = PRESETS.find(z => z[0] === id); if (!p) return;
+  const keep = {};
+  ['modalidad','nombre','edad','expediente','fecha','indicacion','cirugias','tecnica'].concat(PERSIST).forEach(k => keep[k] = S[k]);
+  S = Object.assign(DEFAULTS(), keep, JSON.parse(JSON.stringify(p[2])));
+  if (!S.les) S.les = {};
+  if (editing) setEditing(false);
+  syncDOM(); update();
+}
+function copyText(text){
+  const fallback = () => {
+    const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+    if (ok) toast('Informe copiado'); else { selectReport(); toast('Seleccioná el texto y copialo con Ctrl/Cmd + C'); }
+  };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => toast('Informe copiado'), fallback);
+    else fallback();
+  } catch (e) { fallback(); }
+}
+function selectReport(){ const r = document.createRange(); r.selectNodeContents($('#report')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+function bind(){
+  const form = $('#form');
+  const onChange = e => {
+    const el = e.target;
+    if (el.dataset.k) {
+      const k = el.dataset.k;
+      if (el.type === 'radio' && !el.checked) return;
+      S[k] = el.type === 'checkbox' ? el.checked : el.value;
+      if (k === 'modalidad' && !tecEdited) { S.tecnica = TEC[S.modalidad]; $('#tecnica').value = S.tecnica; }
+      if (k === 'tecnica') tecEdited = true;
+      if (PERSIST.includes(k)) savePrefs();
+      update();
+    } else if (el.dataset.les) {
+      const id = el.dataset.les, lk = el.dataset.lk;
+      S.les[id] = S.les[id] || {};
+      S.les[id][lk] = el.type === 'checkbox' ? el.checked : el.value;
+      if (lk === 'on' && el.checked) { const d = LES.find(z => z.id === id); if (d.tipos && !S.les[id].tipo) S.les[id].tipo = d.tipos[0][0]; }
+      update();
+    }
+  };
+  form.addEventListener('input', onChange);
+  form.addEventListener('change', onChange);
+  form.addEventListener('submit', e => e.preventDefault());
+
+  $('#preset').addEventListener('change', e => { if (e.target.value) { applyPreset(e.target.value); toast('Plantilla cargada: ' + e.target.selectedOptions[0].textContent); e.target.value = ''; } });
+  $('#btn-new').addEventListener('click', () => {
+    const keep = {}; PERSIST.forEach(k => keep[k] = S[k]);
+    S = Object.assign(DEFAULTS(), keep); tecEdited = false;
+    if (editing) setEditing(false);
+    syncDOM(); update(); toast('Informe nuevo');
+  });
+  $('#btn-copy').addEventListener('click', () => copyText(blocksToText(currentBlocks())));
+  $('#btn-edit').addEventListener('click', () => setEditing(!editing));
+  $('#btn-regen').addEventListener('click', () => { $('#stale').hidden = true; renderReport(); });
+  $('#btn-docx').addEventListener('click', () => {
+    try { download(fileBase() + '.docx', new Blob([blocksToDocx(currentBlocks())], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})); toast('Word generado'); }
+    catch (e) { toast('No se pudo generar el Word'); }
+  });
+  $('#btn-txt').addEventListener('click', () => download(fileBase() + '.txt', new Blob([blocksToText(currentBlocks())], {type:'text/plain;charset=utf-8'})));
+  $('#btn-print').addEventListener('click', () => window.print());
+  $('#btn-goto').addEventListener('click', () => $('#panel-report').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'}));
+
+  const tabs = [['tab-informe','view-informe'], ['tab-guia','view-guia']];
+  tabs.forEach(([t, v]) => $('#' + t).addEventListener('click', () => {
+    tabs.forEach(([t2, v2]) => { $('#' + t2).setAttribute('aria-selected', String(t2 === t)); $('#' + v2).hidden = t2 !== t; });
+    window.scrollTo(0, 0);
+  }));
+  if (location.hash === '#criterios') $('#tab-guia').click();
+  if ('IntersectionObserver' in window) {
+    const cta = $('#btn-goto');
+    new IntersectionObserver(es => { es.forEach(e => { cta.hidden = e.isIntersecting; }); }, {threshold:0.05}).observe($('#panel-report'));
+  }
+}
+
+loadPrefs();
+renderForm();
+syncDOM();
+bind();
+update();
+})();
+</script>
+</body>
+</html>
