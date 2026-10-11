@@ -744,6 +744,11 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
         <span class="hub-name">InfoEasyRad</span>
         <span class="hub-desc">Informá tus estudios fácilmente: dictás y el informe se redacta solo.</span>
       </button>
+      <button type="button" class="hub-card" onclick="window.location.href='/registro.html'">
+        <span class="hub-ico">🗂️</span>
+        <span class="hub-name">Registro de audios</span>
+        <span class="hub-desc">Grabá los dictados con nombre, edad y fecha: se suben solos y después decidís cuáles transcribir e informar.</span>
+      </button>
       <button type="button" class="hub-card" onclick="window.location.href='/tavi.html'">
         <span class="hub-ico">🫀</span>
         <span class="hub-name">Formulario TAVI</span>
@@ -963,6 +968,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 
   <div class="slabel">Transcripción</div>
   <div class="card">
+    <div id="regBanner" style="display:none;font-size:12.5px;padding:9px 12px;margin-bottom:10px;border-radius:9px;background:var(--blue-light);color:var(--blue);line-height:1.5">🗂️ Audio del registro: <b id="regBannerNombre"></b> · <a href="/registro.html" style="color:var(--blue);font-weight:600">Volver al registro</a></div>
     <textarea id="tbox" style="min-height:100px" placeholder="La transcripción aparecerá aquí, o escribí/pegá el dictado directamente..."></textarea>
     <button class="gbtn" id="gbtn" onclick="doGenerate()" disabled>📄 Generar informe</button>
     <div class="alert" id="ga"></div>
@@ -1080,6 +1086,7 @@ async function bioUnlock(){
   try{
     await p.verifyIdentity({reason:'Desbloquear InfoEasyRad',title:'InfoEasyRad',subtitle:'',description:''});
     document.getElementById('bioOverlay').style.display='none';
+    try{sessionStorage.setItem('ier_bio_ok','1');}catch(e){} // el Registro de audios no vuelve a pedirlo en esta sesión
   }catch(e){/* usuario canceló o falló — sigue bloqueado */}
 }
 async function initBio(){
@@ -1299,7 +1306,9 @@ function setRefFile(f){
   document.getElementById('finfoRef').classList.add('show');
 }
 
-document.getElementById('pFecha').value=new Date().toISOString().slice(0,10);
+// Fecha local (toISOString da la fecha UTC: después de las 18 h en Honduras/México salía la de mañana)
+function hoyLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+document.getElementById('pFecha').value=hoyLocal();
 selectModalidad('CCTA');
 
 function switchTab(t){
@@ -1342,7 +1351,60 @@ async function supaAuthFetch(endpoint, body){
 function mostrarHub(){
   const a=document.getElementById('authScreen');const h=document.getElementById('hubScreen');
   if(a)a.style.display='none';
+  const destino=destinoDesdeUrl();
+  if(destino){ // viene del Registro de audios: abre InfoEasyRad directo
+    if(h)h.style.display='none';
+    if(destino.registro)cargarDesdeRegistro(destino.registro);
+    return;
+  }
   if(h){h.style.display='flex';window.scrollTo(0,0);}
+}
+
+// ===== Registro de audios → InfoEasyRad (/?registro=<id> o /?abrir=infoeasy) =====
+let registroActual=null,destinoUsado=false;
+function destinoDesdeUrl(){
+  if(destinoUsado)return null;
+  destinoUsado=true;
+  let p;try{p=new URLSearchParams(location.search);}catch(e){return null;}
+  const registro=p.get('registro'),abrir=p.get('abrir');
+  if(!registro&&abrir!=='infoeasy')return null;
+  try{history.replaceState(null,'',location.pathname);}catch(e){}
+  return {registro:registro&&/^[0-9a-f-]{36}$/i.test(registro)?registro:null};
+}
+async function registroApi(body){
+  const r=await authFetch('/api/registro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  let d={};try{d=await r.json();}catch(e){}
+  if(!r.ok)throw new Error(d.mensaje||d.error||('Error '+r.status));
+  return d;
+}
+async function cargarDesdeRegistro(id){
+  doNew();
+  alert2('ta','Cargando el audio del registro…','warn');
+  document.getElementById('tbox').scrollIntoView({block:'center'}); // que se vea el progreso
+  try{
+    let reg=(await registroApi({action:'obtener',id})).registro;
+    document.getElementById('pNombre').value=reg.paciente_nombre||'';
+    document.getElementById('pEdad').value=reg.paciente_edad||'';
+    if(reg.fecha_estudio)document.getElementById('pFecha').value=reg.fecha_estudio;
+    const mods=[...document.querySelectorAll('.modbtn')].map(b=>b.dataset.mod);
+    if(reg.modalidad&&mods.includes(reg.modalidad))selectModalidad(reg.modalidad);
+    registroActual={id:reg.id};
+    document.getElementById('regBannerNombre').textContent=reg.paciente_nombre||'';
+    document.getElementById('regBanner').style.display='block';
+    if(reg.transcripcion===null||reg.transcripcion===undefined){
+      alert2('ta','Transcribiendo el audio de '+(reg.paciente_nombre||'el paciente')+'…','warn');
+      reg=(await registroApi({action:'transcribir',id})).registro;
+    }
+    const texto=(reg.transcripcion||'').trim();
+    document.getElementById('tbox').value=texto;
+    checkGenBtn();
+    if(texto)alert2('ta','Audio del registro listo ✓ Revisá la transcripción y generá el informe','ok');
+    else alert2('ta','El audio no tiene texto reconocible. Podés escribir el dictado a mano.','warn');
+    document.getElementById('tbox').scrollIntoView({behavior:'smooth',block:'center'});
+  }catch(e){alert2('ta','No se pudo cargar el audio del registro: '+e.message,'err');}
+}
+function marcarRegistroInformado(id){
+  registroApi({action:'estado',id,estado:'informado'}).catch(()=>{});
 }
 function abrirInfoEasy(){
   const h=document.getElementById('hubScreen');
@@ -1730,6 +1792,7 @@ async function doGenerate(){
     document.getElementById('rout').classList.add('show');
     document.getElementById('reportEdit').scrollIntoView({behavior:'smooth',block:'start'});
     saveToHistorial(rep,pac);
+    if(registroActual)marcarRegistroInformado(registroActual.id);
     // Actualizar contador en UI
     if(usuarioActual){
       usuarioActual.informes_mes=(usuarioActual.informes_mes||0)+1;
@@ -1915,7 +1978,8 @@ async function doDownloadDocx(){
 }
 function doNew(){
   ['pNombre','pEdad','pExpediente','pLocalidad','tbox'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('pFecha').value=new Date().toISOString().slice(0,10);
+  document.getElementById('pFecha').value=hoyLocal();
+  registroActual=null;document.getElementById('regBanner').style.display='none';
   document.getElementById('reportEdit').value='';document.getElementById('rout').classList.remove('show');
   document.getElementById('rtime').textContent='0:00';document.getElementById('rstat').textContent='Presioná para dictar el informe';
   afile=null;document.getElementById('tbtn').disabled=true;document.getElementById('gbtn').disabled=true;

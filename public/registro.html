@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<title>Registro de audios — InfoEasyRad</title>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="theme-color" content="#0A7B5C"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png"/>
+<link rel="icon" href="/assets/favicon.ico" sizes="any"/>
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"/>
+<style>
+/* ── TOKENS (mismos que InfoEasyRad) ──────────────────────── */
+:root{
+  --green:#0A7B5C;--green-light:#E8F5F0;--green-mid:#C3E8DC;
+  --blue:#1A4FBA;--blue-light:#EBF0FB;
+  --ink:#0D1117;--ink-2:#3D4550;--ink-3:#6B7280;--ink-4:#9CA3AF;
+  --surface:#F4F6F9;--card:#FFFFFF;--border:#E5E9EF;--border-focus:#0A7B5C;
+  --red:#DC2626;--red-light:#FEF2F2;--amber:#D97706;--amber-light:#FFFBEB;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+  --radius:14px;--radius-sm:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--surface);min-height:100vh;display:flex;justify-content:center;
+  padding:2rem 1rem;padding-top:calc(env(safe-area-inset-top) + 1rem);
+  padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right));
+  padding-bottom:max(2rem,env(safe-area-inset-bottom));color:var(--ink);
+}
+.app{width:100%;max-width:640px}
+button{font-family:inherit}
+
+/* ── BARRA SUPERIOR Y HEADER ──────────────────────────────── */
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:1.1rem}
+.pill{
+  padding:7px 13px;font-size:12px;font-weight:500;border:1.5px solid var(--border);border-radius:20px;
+  background:#fff;cursor:pointer;color:var(--ink-3);display:inline-flex;align-items:center;gap:5px;
+  white-space:nowrap;transition:all 0.15s;box-shadow:var(--shadow);text-decoration:none;
+}
+.pill:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.pill.back{background:#2a5298;border-color:#2a5298;color:#fff}
+.pill.back:hover{opacity:.9;background:#2a5298;color:#fff}
+.header{display:flex;align-items:center;gap:13px;margin-bottom:1.6rem;padding:0 2px}
+.logo{
+  width:42px;height:42px;flex-shrink:0;background:linear-gradient(135deg,#0A7B5C 0%,#1A4FBA 100%);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;
+  font-weight:700;letter-spacing:-0.3px;box-shadow:0 2px 8px rgba(10,123,92,0.30);
+}
+.ttl{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-0.3px}
+.sub{font-size:12px;color:var(--ink-3);margin-top:2px}
+
+/* ── SECCIONES Y TARJETAS ─────────────────────────────────── */
+.slabel{font-size:10.5px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:7px;padding-left:1px}
+.slabel-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.slabel-row .slabel{margin-bottom:0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.15rem 1.3rem;margin-bottom:1.1rem;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+label{font-size:11px;color:var(--ink-3);font-weight:600;display:block;margin-bottom:4px}
+label .req{color:var(--red)}
+input[type=text],input[type=date],input[type=search],select{
+  width:100%;padding:9px 11px;font-size:13.5px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  outline:none;font-family:inherit;color:var(--ink);background:#fff;transition:border-color 0.15s;
+  -webkit-appearance:none;appearance:none;min-height:40px;
+}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);
+  background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:28px}
+input:focus,select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123,92,0.08)}
+input.falta{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,0.12)}
+
+/* ── GRABACIÓN ────────────────────────────────────────────── */
+.reca{display:flex;flex-direction:column;align-items:center;gap:12px;padding:1rem 0 .6rem}
+.rtime{font-size:24px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.rbtn{
+  width:76px;height:76px;border-radius:50%;border:2px solid var(--border);background:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:32px;transition:all 0.15s;box-shadow:var(--shadow);
+}
+.rbtn:hover{border-color:var(--green);box-shadow:0 0 0 4px rgba(10,123,92,0.10)}
+.rbtn.rec{border-color:var(--red);background:var(--red-light);animation:pulse 1.2s infinite}
+.rbtn:disabled{opacity:.5;cursor:wait}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.2)}50%{box-shadow:0 0 0 7px rgba(220,38,38,0)}}
+.rstat{font-size:12.5px;color:var(--ink-3);text-align:center;min-height:18px}
+.rstat.ok{color:var(--green);font-weight:600}
+.mic-inline{
+  padding:10px 14px;font-size:13px;font-weight:500;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:#fff;cursor:pointer;color:var(--ink-2);margin-top:10px;width:100%;display:flex;align-items:center;
+  justify-content:center;gap:7px;transition:all 0.15s;
+}
+.mic-inline:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.tip{font-size:11.5px;color:var(--ink-4);margin-top:9px;line-height:1.5}
+
+/* ── ALERTAS ──────────────────────────────────────────────── */
+.alert{font-size:12.5px;padding:9px 13px;border-radius:var(--radius-sm);margin-top:9px;display:none;line-height:1.5}
+.alert.show{display:block}
+.alert.warn{background:var(--amber-light);color:#92610a;border:1px solid #FDE68A}
+.alert.ok{background:var(--green-light);color:#065F46;border:1px solid var(--green-mid)}
+.alert.err{background:var(--red-light);color:#991B1B;border:1px solid #FECACA}
+
+/* ── COLA LOCAL ───────────────────────────────────────────── */
+.cola-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cola-item:last-child{border-bottom:none;padding-bottom:0}
+.cola-item:first-child{padding-top:0}
+.cola-ico{font-size:18px;flex-shrink:0}
+.cola-txt{flex:1;min-width:0}
+.cola-nom{font-size:13.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cola-est{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.cola-est.err{color:#991B1B}
+.barra{height:4px;background:var(--surface);border-radius:4px;margin-top:6px;overflow:hidden}
+.barra>span{display:block;height:100%;background:var(--green);width:0;transition:width .2s}
+
+/* ── PESTAÑAS Y BÚSQUEDA ──────────────────────────────────── */
+.tabs{display:flex;gap:4px;margin-bottom:12px;background:var(--surface);border-radius:10px;padding:4px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1 0 auto;padding:7px 10px;font-size:12.5px;font-weight:500;border:none;border-radius:7px;cursor:pointer;
+  background:transparent;color:var(--ink-3);transition:all 0.15s;white-space:nowrap;
+}
+.tab.active{background:#fff;color:var(--green);font-weight:600;box-shadow:var(--shadow)}
+.cnt{display:inline-block;min-width:18px;padding:0 5px;margin-left:3px;border-radius:9px;background:var(--border);color:var(--ink-2);font-size:10.5px;font-weight:700;line-height:17px;text-align:center}
+.tab.active .cnt{background:var(--green-light);color:var(--green)}
+.cnt.alto{background:var(--amber-light);color:#92610a}
+.link-btn{background:none;border:none;color:var(--green);font-size:12px;font-weight:600;cursor:pointer;padding:4px 2px}
+.link-btn:hover{text-decoration:underline}
+.link-btn.danger{color:var(--red)}
+.link-btn:disabled{opacity:.45;cursor:wait;text-decoration:none}
+
+/* ── ÍTEMS DEL REGISTRO ───────────────────────────────────── */
+.vacio{text-align:center;padding:1.6rem .5rem;color:var(--ink-4);font-size:13px;line-height:1.6}
+.ritem{padding:14px 0;border-bottom:1px solid var(--border)}
+.ritem:last-child{border-bottom:none}
+.ritem.saliendo{opacity:.35;transition:opacity .25s}
+.ritem-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.ritem-nom{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.35;word-break:break-word}
+.ritem-meta{font-size:12px;color:var(--ink-3);margin-top:3px;line-height:1.5}
+.chip{flex-shrink:0;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+.chip.pendiente{background:var(--amber-light);color:#92610a;border:1px solid #FDE68A}
+.chip.transcrito{background:var(--blue-light);color:var(--blue)}
+.chip.informado{background:var(--green-light);color:var(--green)}
+.chip.descartado{background:var(--surface);color:var(--ink-3)}
+.chip.subiendo{background:var(--surface);color:var(--ink-3)}
+.chip.incompleta{background:var(--red-light);color:#991B1B}
+.trans{
+  margin-top:9px;font-size:12.5px;line-height:1.6;color:var(--ink-2);background:var(--surface);border-radius:var(--radius-sm);
+  padding:9px 11px;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;
+}
+.trans.abierta{display:block;-webkit-line-clamp:unset}
+.trans.vacia{font-style:italic;color:var(--ink-4)}
+.ritem audio{width:100%;margin-top:10px;height:40px}
+.arow{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.abtn{
+  flex:1 1 auto;min-width:92px;padding:9px 8px;font-size:12px;font-weight:600;border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);background:#fff;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;
+  justify-content:center;gap:5px;transition:all 0.15s;white-space:nowrap;
+}
+.abtn:hover{background:var(--surface);border-color:var(--ink-4)}
+.abtn.pri{background:var(--green);color:#fff;border-color:var(--green)}
+.abtn.sec{background:var(--blue);color:#fff;border-color:var(--blue)}
+.abtn.pri:hover,.abtn.sec:hover{opacity:.9}
+.abtn:disabled{opacity:.5;cursor:wait}
+.ritem-mini{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+.editar{margin-top:10px;padding:12px;border:1.5px dashed var(--border);border-radius:var(--radius-sm)}
+.ver-mas{display:block;margin:12px auto 0;padding:9px 18px;font-size:12.5px;font-weight:600;border:1.5px solid var(--border);border-radius:20px;background:#fff;color:var(--ink-2);cursor:pointer}
+
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite;vertical-align:-2px}
+.spin.osc{border-color:rgba(0,0,0,0.12);border-top-color:var(--ink-3)}
+@keyframes sp{to{transform:rotate(360deg)}}
+.footer{text-align:center;font-size:11px;color:var(--ink-4);margin-top:1.4rem;padding-bottom:2rem;line-height:1.6}
+
+#bioOverlay{display:none;position:fixed;inset:0;z-index:9999;background:#0d1b16;color:#fff;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px}
+
+@media (max-width:480px){
+  body{padding-left:max(.75rem,env(safe-area-inset-left));padding-right:max(.75rem,env(safe-area-inset-right))}
+  .card{padding:1rem;margin-bottom:.9rem;border-radius:12px}
+  .grid2{gap:7px}
+  input[type=text],input[type=date],input[type=search],select{padding:11px;font-size:15px}
+  .rbtn{width:80px;height:80px;font-size:34px}
+  .abtn{min-width:calc(50% - 4px);padding:11px 6px;font-size:12.5px}
+  .tab{padding:8px 9px;font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){.rbtn.rec{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <a class="pill back" href="/">← Hub</a>
+    <a class="pill" href="/?abrir=infoeasy" id="btnInfoEasy">🎙️ InfoEasyRad</a>
+  </div>
+  <div class="header">
+    <div class="logo">IR</div>
+    <div><div class="ttl">Registro de audios</div><div class="sub">Grabá ahora, decidí después cuáles informar</div></div>
+  </div>
+
+  <!-- Sin sesión -->
+  <div class="card" id="sinSesion" hidden>
+    <div class="vacio" style="padding:1rem .5rem">
+      🔒 Para usar el registro necesitás tu sesión de InfoEasyRad.<br>
+      <a class="pill" href="/" style="margin-top:12px">Iniciar sesión</a>
+    </div>
+  </div>
+
+  <div id="contenido" hidden>
+    <div class="slabel">Nuevo audio</div>
+    <div class="card">
+      <div class="grid2">
+        <div><label for="rNombre">Nombre del paciente <span class="req">*</span></label><input type="text" id="rNombre" placeholder="Apellidos, Nombre" autocomplete="off" autocapitalize="words"/></div>
+        <div><label for="rEdad">Edad</label><input type="text" id="rEdad" placeholder="Ej. 58" autocomplete="off"/></div>
+      </div>
+      <div class="grid2" style="margin-bottom:0">
+        <div><label for="rFecha">Fecha del estudio</label><input type="date" id="rFecha"/></div>
+        <div><label for="rModalidad">Modalidad</label>
+          <select id="rModalidad">
+            <option value="">Sin definir</option>
+            <option>CCTA</option>
+            <option>Rayos X</option>
+            <option>Ultrasonido</option>
+            <option>Tomografía computada</option>
+            <option>Resonancia magnética</option>
+            <option>Fluoroscopía</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="reca">
+        <div class="rtime" id="rtime">0:00</div>
+        <button class="rbtn" id="rbtn" type="button" onclick="toggleGrabacion()" aria-label="Grabar audio">🎙</button>
+        <div class="rstat" id="rstat">Escribí el nombre y presioná para grabar</div>
+      </div>
+      <button class="mic-inline" type="button" onclick="document.getElementById('rArchivos').click()">📁 Subir audios ya grabados</button>
+      <input type="file" id="rArchivos" accept="audio/*,.m4a,.mp3,.wav,.ogg,.opus,.webm,.flac" multiple hidden onchange="onArchivos(this)"/>
+      <div class="tip">Al detener, el audio se sube solo con estos datos. Si no hay señal, queda guardado en este equipo y se sube al volver la conexión. Para varios archivos de pacientes distintos, dejá el nombre vacío: se usa el nombre de cada archivo y lo corregís después.</div>
+      <div class="alert" id="nAlert"></div>
+    </div>
+
+    <div id="colaWrap" hidden>
+      <div class="slabel-row">
+        <div class="slabel">En cola en este equipo</div>
+        <button class="link-btn" type="button" onclick="procesarCola(true)">↻ Reintentar ahora</button>
+      </div>
+      <div class="card" id="colaLista"></div>
+    </div>
+
+    <div class="slabel-row">
+      <div class="slabel">Audios registrados</div>
+      <button class="link-btn" type="button" onclick="cargarLista()">↻ Actualizar</button>
+    </div>
+    <div class="card">
+      <div class="tabs" role="tablist">
+        <button class="tab active" type="button" data-estado="pendiente" onclick="cambiarFiltro('pendiente')">Pendientes<span class="cnt" id="c-pendiente"></span></button>
+        <button class="tab" type="button" data-estado="transcrito" onclick="cambiarFiltro('transcrito')">Transcritos<span class="cnt" id="c-transcrito"></span></button>
+        <button class="tab" type="button" data-estado="informado" onclick="cambiarFiltro('informado')">Informados<span class="cnt" id="c-informado"></span></button>
+        <button class="tab" type="button" data-estado="descartado" onclick="cambiarFiltro('descartado')">Descartados<span class="cnt" id="c-descartado"></span></button>
+      </div>
+      <input type="search" id="rBuscar" placeholder="🔎 Buscar paciente…" autocomplete="off" oninput="buscarConPausa()"/>
+      <div id="lista"><div class="vacio"><span class="spin osc"></span></div></div>
+      <button class="ver-mas" id="verMas" type="button" hidden onclick="cargarLista(false)">Ver más</button>
+      <div class="alert" id="lAlert"></div>
+    </div>
+    <div class="footer">Los audios quedan en tu cuenta, en almacenamiento privado.<br>Solo se envían a transcribir cuando vos lo decidís. Podés eliminarlos cuando quieras.</div>
+  </div>
+</div>
+
+<div id="bioOverlay">
+  <div style="font-size:44px">🔒</div>
+  <div style="font-size:17px;font-weight:600">InfoEasyRad bloqueado</div>
+  <div style="font-size:13px;color:#9fb8ae">Usá Face ID o Touch ID para acceder</div>
+  <button onclick="bioUnlock()" style="margin-top:8px;padding:12px 28px;border-radius:10px;border:none;background:#0f6e56;color:#fff;font-size:15px;font-weight:600">Desbloquear</button>
+</div>
+
+<script>
+// ═══ Registro de audios ═══════════════════════════════════════════════
+// Flujo: el audio se guarda primero en este equipo (IndexedDB) y una cola lo
+// sube sola: crear registro → subida directa firmada a Storage → confirmar.
+// Si la subida directa falla y el audio es chico, se sube a través de la API.
+const API='/api/registro';
+const MAX_BYTES=25*1024*1024;
+const MAX_GRABACION_SEG=20*60;
+const LIMITE_PAGINA=30;
+const MIME_POR_EXT={webm:'audio/webm',mp4:'audio/mp4',m4a:'audio/mp4',mp3:'audio/mpeg',mpeg:'audio/mpeg',mpga:'audio/mpeg',
+  wav:'audio/wav',ogg:'audio/ogg',oga:'audio/ogg',opus:'audio/ogg',flac:'audio/flac'};
+const ESTADO_TXT={pendiente:'Pendiente',transcrito:'Transcrito',informado:'Informado',descartado:'Descartado',subiendo:'Subiendo…'};
+const ERRORES_PERMANENTES=new Set(['nombre_requerido','formato_no_soportado','archivo_grande']);
+
+let filtro='pendiente',busqueda='',registros=[],hayMas=false,conteos={},cargaN=0,timerBusqueda=null;
+let avisoLista=null; // null = cargando · '' = cargada · texto = aviso (sin conexión, activándose, error)
+let rec=null,recStream=null,recChunks=[],recSecs=0,recInt=null,recMime='',recMetaInicio=null;
+let procesandoCola=false,otraVuelta=false,progreso={},colaMemoria=null,colaActual=[],editando=null;
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function hoyLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtDur(s){if(s==null||s==='')return '';s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function fmtTam(b){if(!b)return '';return b<1024*1024?Math.max(1,Math.round(b/1024))+' KB':(b/1024/1024).toFixed(1)+' MB';}
+const MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function fmtFecha(iso){if(!iso)return '';const p=String(iso).slice(0,10).split('-');return parseInt(p[2],10)+' '+MESES[parseInt(p[1],10)-1]+' '+p[0];}
+function fmtCuando(iso){
+  if(!iso)return '';const d=new Date(iso),h=new Date();
+  const hora=d.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+  const ayer=new Date(h);ayer.setDate(h.getDate()-1);
+  if(d.toDateString()===h.toDateString())return 'hoy '+hora;
+  if(d.toDateString()===ayer.toDateString())return 'ayer '+hora;
+  return d.getDate()+' '+MESES[d.getMonth()]+' '+hora;
+}
+function normEdad(v){v=String(v||'').trim();return /^\d{1,3}$/.test(v)?v+' años':v;}
+function extDe(nombre,tipo){
+  const e=String(nombre||'').split('.').pop().toLowerCase();
+  if(MIME_POR_EXT[e]&&String(nombre).includes('.'))return e;
+  const t=String(tipo||'').toLowerCase();
+  if(t.includes('webm'))return 'webm';if(t.includes('m4a'))return 'm4a';if(t.includes('mp4'))return 'mp4';
+  if(t.includes('mpeg')||t.includes('mp3'))return 'mp3';if(t.includes('wav'))return 'wav';
+  if(t.includes('opus'))return 'opus';if(t.includes('ogg'))return 'ogg';if(t.includes('flac'))return 'flac';
+  return null;
+}
+function nombreDesdeArchivo(n){return String(n||'Audio').replace(/\.[^.]+$/,'').replace(/[_]+/g,' ').replace(/\s+/g,' ').trim().slice(0,200)||'Audio sin nombre';}
+function alertEn(id,msg,tipo){const el=$(id);if(!msg){el.className='alert';el.textContent='';return;}el.className='alert show '+tipo;el.textContent=msg;
+  if(tipo==='ok'){clearTimeout(el._t);el._t=setTimeout(()=>{el.className='alert';},4500);}}
+function usuarioEmail(){
+  try{const u=JSON.parse(localStorage.getItem('ier_user')||'null');if(u&&u.email)return u.email.toLowerCase();}catch(e){}
+  return (localStorage.getItem('ier_email_saved')||'sin-email').toLowerCase();
+}
+
+// ── Sesión (mismo token que InfoEasyRad) ─────────────────────────────
+async function authFetch(path,opts,reintento){
+  opts=opts||{};if(reintento===undefined)reintento=true;
+  const t=localStorage.getItem('supa_access_token');
+  opts.headers=Object.assign({},opts.headers||{},t?{'Authorization':'Bearer '+t}:{});
+  const r=await fetch(path,opts);
+  if(r.status===401&&reintento){
+    const rt=localStorage.getItem('supa_refresh_token');
+    if(rt){
+      try{
+        const rr=await fetch('/api/auth-login',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'refresh',refresh_token:rt})});
+        if(rr.ok){
+          const d=await rr.json();
+          if(d.access_token){
+            localStorage.setItem('supa_access_token',d.access_token);
+            localStorage.setItem('supa_refresh_token',d.refresh_token||rt);
+            return authFetch(path,opts,false);
+          }
+        }
+      }catch(e){}
+    }
+  }
+  return r;
+}
+async function api(body){
+  let r;
+  try{r=await authFetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+  catch(e){const er=new Error('Sin conexión');er.red=true;throw er;}
+  let d={};try{d=await r.json();}catch(e){}
+  if(!r.ok){
+    const er=new Error(d.mensaje||d.error||('Error '+r.status));er.status=r.status;er.code=d.error;
+    if(r.status===401)sesionVencida();
+    throw er;
+  }
+  return d;
+}
+function sesionVencida(){$('contenido').hidden=true;$('sinSesion').hidden=false;}
+
+// ── Cola local (IndexedDB; si no está disponible, memoria) ────────────
+const IDB_NOMBRE='infoeasyrad-registro',IDB_STORE='cola';
+function idb(){
+  return new Promise((res,rej)=>{
+    if(!window.indexedDB)return rej(new Error('sin indexedDB'));
+    const r=indexedDB.open(IDB_NOMBRE,1);
+    r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(IDB_STORE))r.result.createObjectStore(IDB_STORE,{keyPath:'lid'});};
+    r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);
+  });
+}
+async function colaOp(modo,fn){
+  if(colaMemoria)return fn(null);
+  let db;
+  try{db=await idb();}catch(e){colaMemoria=new Map();return fn(null);}
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(IDB_STORE,modo);const st=tx.objectStore(IDB_STORE);let out;
+    const q=fn(st);if(q)q.onsuccess=()=>{out=q.result;};
+    tx.oncomplete=()=>{db.close();res(out);};
+    tx.onerror=tx.onabort=()=>{db.close();rej(tx.error||new Error('IndexedDB'));};
+  });
+}
+function colaTodos(){return colaOp('readonly',st=>st?st.getAll():null).then(v=>colaMemoria?[...colaMemoria.values()]:(v||[]));}
+function colaGuardar(it){return colaOp('readwrite',st=>{if(st)return st.put(it);colaMemoria.set(it.lid,it);return null;});}
+function colaBorrar(lid){return colaOp('readwrite',st=>{if(st)return st.delete(lid);colaMemoria.delete(lid);return null;});}
+
+function uuid(){
+  if(window.crypto&&crypto.randomUUID)return crypto.randomUUID();
+  const b=crypto.getRandomValues(new Uint8Array(16));b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;
+  const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');
+  return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+}
+async function encolar(blob,meta){
+  const buf=await blob.arrayBuffer();
+  // lid = id definitivo del registro: así un reintento nunca crea duplicados
+  const it=Object.assign({
+    lid:uuid(),email:usuarioEmail(),creado:new Date().toISOString(),intentos:0,error:'',permanente:false
+  },meta,{buf,tamano_bytes:buf.byteLength,mime_type:blob.type||meta.mime_type||MIME_POR_EXT[meta.ext]||''});
+  await colaGuardar(it);
+  if(colaMemoria)alertEn('nAlert','Este navegador no permite guardar audios en el equipo: no cierres la página hasta que termine de subir.','warn');
+  await pintarCola();
+  procesarCola();
+  return it;
+}
+
+async function procesarCola(manual){
+  if(procesandoCola){otraVuelta=true;return;}
+  procesandoCola=true;let subidos=0;
+  try{
+    do{
+      otraVuelta=false;
+      const items=(await colaTodos()).filter(i=>i.email===usuarioEmail()).sort((a,b)=>a.creado<b.creado?-1:1);
+      for(const it of items){
+        if(it.permanente&&!manual)continue;
+        if(!navigator.onLine){break;}
+        try{
+          it.error='';progreso[it.lid]=0;pintarItemCola(it,'Subiendo…');
+          await subirItem(it);
+          await colaBorrar(it.lid);delete progreso[it.lid];subidos++;
+        }catch(e){
+          delete progreso[it.lid];
+          it.intentos=(it.intentos||0)+1;it.error=e.message||'Error';
+          it.permanente=ERRORES_PERMANENTES.has(e.code); // el resto se reintenta solo
+          try{await colaGuardar(it);}catch(x){}
+          if(e.red)break; // sin red: no tiene sentido seguir con los demás
+        }
+        await pintarCola();
+      }
+    }while(otraVuelta);
+  }finally{procesandoCola=false;await pintarCola();}
+  if(subidos){
+    alertEn('nAlert',subidos===1?'✓ Audio subido al registro':'✓ '+subidos+' audios subidos al registro','ok');
+    if(filtro==='pendiente')cargarLista();else cargarConteos(); // no cambia la pestaña que estás mirando
+  }
+}
+
+async function subirItem(it){
+  const d=await api({action:'crear',id:it.lid,paciente_nombre:it.paciente_nombre,paciente_edad:it.paciente_edad,
+    fecha_estudio:it.fecha_estudio,modalidad:it.modalidad,origen:it.origen,mime_type:it.mime_type,ext:it.ext,
+    tamano_bytes:it.tamano_bytes,duracion_seg:it.duracion_seg});
+  if(d.ya_subido)return; // ya estaba arriba (p. ej. la app se cerró justo antes de terminar)
+  const blob=new Blob([it.buf],{type:it.mime_type||'application/octet-stream'});
+  try{
+    await putFirmado(d.subida.url,blob,p=>{progreso[it.lid]=p;pintarItemCola(it,'Subiendo… '+p+'%');});
+  }catch(e){
+    if(e.red&&blob.size<=(d.subida.max_via_funcion||0)){await subirViaApi(it.lid,blob,it.ext);return;}
+    throw e;
+  }
+  await api({action:'confirmar',id:it.lid});
+}
+
+function putFirmado(url,blob,onProg){
+  return new Promise((res,rej)=>{
+    const x=new XMLHttpRequest();
+    x.open('PUT',url);
+    x.setRequestHeader('Content-Type',blob.type||'application/octet-stream');
+    x.setRequestHeader('x-upsert','true');
+    x.timeout=10*60*1000;
+    if(x.upload)x.upload.onprogress=e=>{if(e.lengthComputable)onProg(Math.round(e.loaded*100/e.total));};
+    x.onload=()=>{
+      if(x.status>=200&&x.status<300)return res();
+      const er=new Error(x.status===413?'El audio supera el tamaño permitido':'El almacenamiento rechazó el audio ('+x.status+')');
+      er.status=x.status;if(x.status===413)er.code='archivo_grande';rej(er);
+    };
+    x.onerror=x.ontimeout=()=>{const er=new Error('No se pudo conectar con el almacenamiento');er.red=true;rej(er);};
+    x.send(blob);
+  });
+}
+
+async function subirViaApi(id,blob,ext){
+  const fd=new FormData();fd.append('action','subir');fd.append('id',id);fd.append('file',blob,'audio.'+ext);
+  let r;
+  try{r=await authFetch(API,{method:'POST',body:fd});}catch(e){const er=new Error('Sin conexión');er.red=true;throw er;}
+  let d={};try{d=await r.json();}catch(e){}
+  if(!r.ok){const er=new Error(d.mensaje||d.error||('Error '+r.status));er.status=r.status;throw er;}
+}
+
+async function pintarCola(){
+  let items=[];
+  try{items=(await colaTodos()).filter(i=>i.email===usuarioEmail()).sort((a,b)=>a.creado<b.creado?-1:1);}catch(e){}
+  colaActual=items;
+  $('colaWrap').hidden=!items.length;
+  $('colaLista').innerHTML=items.map(it=>{
+    const p=progreso[it.lid];
+    let est,clase='';
+    if(p!==undefined)est='Subiendo… '+p+'%';
+    else if(it.permanente){est='No se pudo subir: '+it.error;clase='err';}
+    else if(!navigator.onLine)est='Sin conexión — se sube solo al volver la señal';
+    else if(it.error){est='Reintentando ('+it.error+')';clase='err';}
+    else est='Esperando para subir…';
+    return `<div class="cola-item" data-lid="${esc(it.lid)}">
+      <div class="cola-ico">${it.origen==='archivo'?'📁':'🎙️'}</div>
+      <div class="cola-txt">
+        <div class="cola-nom">${esc(it.paciente_nombre)}</div>
+        <div class="cola-est ${clase}">${esc(est)} · ${esc(fmtTam(it.tamano_bytes))}${it.duracion_seg?' · '+fmtDur(it.duracion_seg):''}</div>
+        <div class="barra"><span style="width:${p!==undefined?p:0}%"></span></div>
+      </div>
+      ${p===undefined?`<button class="link-btn danger" type="button" onclick="quitarDeCola('${esc(it.lid)}')">Quitar</button>`:''}
+    </div>`;
+  }).join('');
+  pintarLista(); // oculta de la lista los que siguen en cola
+}
+function pintarItemCola(it,texto){
+  const el=document.querySelector('.cola-item[data-lid="'+it.lid+'"]');if(!el)return;
+  const e=el.querySelector('.cola-est');if(e){e.textContent=texto+' · '+fmtTam(it.tamano_bytes);e.className='cola-est';}
+  const b=el.querySelector('.barra>span');if(b&&progreso[it.lid]!==undefined)b.style.width=progreso[it.lid]+'%';
+}
+async function quitarDeCola(lid){
+  const it=colaActual.find(i=>i.lid===lid);if(!it)return;
+  if(!confirm('¿Quitar el audio de "'+it.paciente_nombre+'" de la cola? Se pierde la grabación.'))return;
+  await colaBorrar(lid);
+  try{await api({action:'eliminar',id:it.lid});}catch(e){} // por si alcanzó a registrarse
+  await pintarCola();cargarLista();
+}
+
+// ── Grabación ─────────────────────────────────────────────────────────
+function datosFormulario(){
+  return{paciente_nombre:$('rNombre').value.replace(/\s+/g,' ').trim(),paciente_edad:normEdad($('rEdad').value),
+    fecha_estudio:$('rFecha').value||hoyLocal(),modalidad:$('rModalidad').value||''};
+}
+async function toggleGrabacion(){
+  if(rec&&rec.state==='recording'){rec.stop();return;}
+  const meta=datosFormulario();
+  if(!meta.paciente_nombre){
+    $('rNombre').classList.add('falta');$('rNombre').focus();
+    alertEn('nAlert','Escribí el nombre del paciente antes de grabar','warn');return;
+  }
+  if(!navigator.mediaDevices||!window.MediaRecorder){alertEn('nAlert','Este navegador no permite grabar audio','err');return;}
+  alertEn('nAlert','');
+  try{
+    recStream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recMime=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':
+      MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'';
+    const opts={audioBitsPerSecond:48000};if(recMime)opts.mimeType=recMime;
+    try{rec=new MediaRecorder(recStream,opts);}catch(e){rec=new MediaRecorder(recStream);}
+    recChunks=[];recMetaInicio=meta;
+    rec.ondataavailable=e=>{if(e.data&&e.data.size>0)recChunks.push(e.data);};
+    rec.onstop=finalizarGrabacion;
+    rec.start(1000);recSecs=0;
+    $('rbtn').classList.add('rec');$('rbtn').textContent='⏹';$('rbtn').setAttribute('aria-label','Detener grabación');
+    $('rstat').className='rstat';$('rstat').textContent='Grabando a '+meta.paciente_nombre+'… presioná para detener';
+    $('rtime').textContent='0:00';
+    recInt=setInterval(()=>{recSecs++;$('rtime').textContent=fmtDur(recSecs);if(recSecs>=MAX_GRABACION_SEG&&rec.state==='recording')rec.stop();},1000);
+  }catch(e){
+    if(recStream)recStream.getTracks().forEach(t=>t.stop());
+    alertEn('nAlert','No se pudo usar el micrófono: '+e.message,'err');
+  }
+}
+async function finalizarGrabacion(){
+  clearInterval(recInt);
+  if(recStream)recStream.getTracks().forEach(t=>t.stop());
+  const btn=$('rbtn');btn.classList.remove('rec');btn.textContent='🎙';btn.setAttribute('aria-label','Grabar audio');
+  const tipo=(rec&&rec.mimeType)||recMime||'audio/webm';
+  const blob=new Blob(recChunks,{type:tipo});
+  if(recSecs<1||blob.size<800){$('rstat').className='rstat';$('rstat').textContent='Grabación demasiado corta: no se guardó';return;}
+  const meta=datosFormulario();
+  if(!meta.paciente_nombre)meta.paciente_nombre=recMetaInicio.paciente_nombre;
+  const ext=tipo.includes('mp4')?'mp4':tipo.includes('ogg')?'ogg':'webm';
+  btn.disabled=true;
+  try{
+    await encolar(blob,Object.assign(meta,{origen:'grabacion',ext,duracion_seg:recSecs,mime_type:tipo}));
+    $('rstat').className='rstat ok';$('rstat').textContent='✓ '+meta.paciente_nombre+' guardado ('+fmtDur(recSecs)+') — se sube solo';
+    $('rNombre').value='';$('rEdad').value='';
+    if(recSecs>=MAX_GRABACION_SEG)alertEn('nAlert','La grabación se detuvo sola a los 20 minutos','warn');
+  }catch(e){
+    $('rstat').className='rstat';$('rstat').textContent='No se pudo guardar la grabación: '+e.message;
+  }finally{btn.disabled=false;}
+}
+
+async function duracionDe(file){
+  return new Promise(res=>{
+    try{
+      const a=document.createElement('audio');const url=URL.createObjectURL(file);let listo=false;
+      const fin=v=>{if(listo)return;listo=true;URL.revokeObjectURL(url);res(v);};
+      a.preload='metadata';a.onloadedmetadata=()=>fin(isFinite(a.duration)?Math.round(a.duration):null);
+      a.onerror=()=>fin(null);setTimeout(()=>fin(null),4000);a.src=url;
+    }catch(e){res(null);}
+  });
+}
+async function onArchivos(input){
+  const files=[...input.files];input.value='';
+  if(!files.length)return;
+  const base=datosFormulario();const rechazados=[];let n=0;
+  for(const f of files){
+    const ext=extDe(f.name,f.type);
+    if(!ext){rechazados.push(f.name+' (formato no soportado)');continue;}
+    if(f.size>MAX_BYTES){rechazados.push(f.name+' (más de 25 MB)');continue;}
+    const dur=await duracionDe(f);
+    await encolar(f,Object.assign({},base,{paciente_nombre:base.paciente_nombre||nombreDesdeArchivo(f.name),
+      origen:'archivo',ext,duracion_seg:dur,mime_type:f.type||MIME_POR_EXT[ext]}));
+    n++;
+  }
+  if(n&&base.paciente_nombre){$('rNombre').value='';$('rEdad').value='';}
+  if(rechazados.length)alertEn('nAlert','No se agregaron: '+rechazados.join(', '),'warn');
+  else if(n)alertEn('nAlert',n===1?'Audio agregado — se sube solo':n+' audios agregados — se suben solos','ok');
+}
+
+// ── Lista del registro ────────────────────────────────────────────────
+function cambiarFiltro(f){
+  filtro=f;editando=null;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.estado===f));
+  registros=[];hayMas=false;avisoLista=null;pintarLista();
+  cargarLista();
+}
+function buscarConPausa(){clearTimeout(timerBusqueda);timerBusqueda=setTimeout(()=>{busqueda=$('rBuscar').value.trim();cargarLista();},300);}
+async function cargarLista(reiniciar){
+  if(reiniciar===undefined)reiniciar=true;
+  const n=++cargaN;
+  try{
+    const d=await api({action:'listar',estado:filtro,q:busqueda,desde:reiniciar?0:registros.length,limite:LIMITE_PAGINA});
+    if(n!==cargaN)return; // llegó una respuesta vieja
+    registros=reiniciar?d.registros:registros.concat(d.registros);
+    hayMas=d.hay_mas;conteos=d.conteos||{};avisoLista='';
+    alertEn('lAlert','');pintarConteos();pintarLista();
+  }catch(e){
+    if(n!==cargaN)return;
+    if(e.code==='registro_no_configurado'){
+      registros=[];hayMas=false;
+      avisoLista='⚙️ El registro de audios se está activando.<br>Los audios que grabes quedan guardados en este equipo y se suben solos cuando esté listo.';
+    }else if(e.red){
+      if(!registros.length)avisoLista='📡 Sin conexión. Los audios nuevos quedan en cola en este equipo y se suben solos.';
+      else alertEn('lAlert','Sin conexión: se muestra lo último cargado','warn');
+    }else if(e.status!==401){
+      alertEn('lAlert','No se pudo cargar el registro: '+e.message,'err');
+      if(!registros.length)avisoLista='No se pudo cargar el registro. Tocá «Actualizar» para reintentar.';
+    }
+    pintarLista();
+  }
+}
+function pintarConteos(){
+  ['pendiente','transcrito','informado','descartado'].forEach(k=>{
+    const el=$('c-'+k);if(!el)return;const v=conteos[k]||0;
+    el.textContent=v?String(v):'';el.style.display=v?'':'none';
+    el.classList.toggle('alto',k==='pendiente'&&v>0);
+  });
+}
+function textoVacio(){
+  if(busqueda)return 'Ningún paciente coincide con «'+esc(busqueda)+'».';
+  return {pendiente:'No hay audios pendientes.<br>Grabá uno arriba: se sube solo con los datos del paciente.',
+    transcrito:'Todavía no hay audios transcritos.',informado:'Todavía no hay audios informados.',
+    descartado:'No hay audios descartados.'}[filtro]||'Sin audios.';
+}
+function pintarLista(){
+  const lista=$('lista');if(!lista)return;
+  const enCola=new Set(colaActual.map(i=>i.lid));
+  const visibles=registros.filter(r=>!(r.estado==='subiendo'&&enCola.has(r.id)));
+  $('verMas').hidden=!hayMas;
+  // Conservar lo que el usuario tiene abierto: reproductores sonando y la edición en curso
+  const audios={};
+  lista.querySelectorAll('.ritem[data-id] .audio-slot audio').forEach(a=>{audios[a.closest('.ritem').dataset.id]=a;});
+  const borrador=editando&&$('eNombre')?{eNombre:$('eNombre').value,eEdad:$('eEdad').value,eFecha:$('eFecha').value,eModalidad:$('eModalidad').value}:null;
+  if(!visibles.length){
+    lista.innerHTML=avisoLista===null?'<div class="vacio"><span class="spin osc"></span></div>'
+      :'<div class="vacio">'+(avisoLista||textoVacio())+'</div>';
+    return;
+  }
+  lista.innerHTML=visibles.map(htmlItem).join('');
+  Object.keys(audios).forEach(id=>{
+    const it=lista.querySelector('.ritem[data-id="'+id+'"]');if(!it)return;
+    it.querySelector('.audio-slot').appendChild(audios[id]);
+    const b=it.querySelector('.btn-escuchar');if(b)b.remove();
+  });
+  if(borrador&&$('eNombre'))Object.keys(borrador).forEach(k=>{$(k).value=borrador[k];});
+}
+function htmlItem(r){
+  const id=esc(r.id);
+  const incompleta=r.estado==='subiendo'&&(Date.now()-new Date(r.created_at).getTime())>10*60*1000;
+  const chipClase=incompleta?'incompleta':r.estado;
+  const chipTxt=incompleta?'Subida incompleta':(r.estado==='subiendo'?'Subiendo en otro equipo…':ESTADO_TXT[r.estado]||r.estado);
+  const meta=[r.paciente_edad,r.fecha_estudio?fmtFecha(r.fecha_estudio):'',r.modalidad,
+    r.duracion_seg?(r.origen==='archivo'?'📁 ':'🎙 ')+fmtDur(r.duracion_seg):'',
+    'registrado '+fmtCuando(r.created_at)].filter(Boolean).map(esc).join(' · ');
+  if(editando===r.id)return `<div class="ritem" data-id="${id}">${htmlEditar(r)}</div>`;
+  let trans='';
+  if(r.transcripcion!==null&&r.transcripcion!==undefined){
+    trans=r.transcripcion.trim()
+      ?`<div class="trans" onclick="this.classList.toggle('abierta')" title="Tocá para ver todo">${esc(r.transcripcion.trim())}</div>`
+      :`<div class="trans vacia">Sin texto: el audio parece estar en silencio.</div>`;
+  }
+  let acc='',mini='';
+  const escuchar=`<button class="abtn btn-escuchar" type="button" onclick="escuchar('${id}',this)">▶ Escuchar</button>`;
+  const informar=(txt)=>`<button class="abtn sec" type="button" onclick="informar('${id}')">📄 ${txt}</button>`;
+  const editar=`<button class="link-btn" type="button" onclick="editar('${id}')">✏️ Editar datos</button>`;
+  const borrar=`<button class="link-btn danger" type="button" onclick="eliminar('${id}',this)">🗑 Eliminar</button>`;
+  if(r.estado==='subiendo'){
+    mini=incompleta?borrar:'';
+  }else if(r.estado==='pendiente'){
+    acc=escuchar+`<button class="abtn pri" type="button" onclick="transcribir('${id}',this)">✍️ Transcribir</button>`+
+      informar('Informar')+`<button class="abtn" type="button" onclick="cambiarEstado('${id}','descartado',this)">✕ Descartar</button>`;
+    mini=editar+borrar;
+  }else if(r.estado==='transcrito'){
+    acc=escuchar+informar('Informar')+`<button class="abtn" type="button" onclick="copiar('${id}',this)">📋 Copiar texto</button>`+
+      `<button class="abtn" type="button" onclick="cambiarEstado('${id}','descartado',this)">✕ Descartar</button>`;
+    mini=editar+borrar;
+  }else if(r.estado==='informado'){
+    acc=escuchar+informar('Abrir en InfoEasyRad');
+    mini=`<span class="ritem-meta" style="margin:0;padding:4px 0">Informado ${esc(fmtCuando(r.informado_at))}</span>`+borrar;
+  }else if(r.estado==='descartado'){
+    acc=escuchar+`<button class="abtn" type="button" onclick="cambiarEstado('${id}','pendiente',this)">↩ Restaurar</button>`;
+    mini=borrar;
+  }
+  return `<div class="ritem" data-id="${id}">
+    <div class="ritem-top"><div class="ritem-nom">${esc(r.paciente_nombre)}</div><span class="chip ${chipClase}">${esc(chipTxt)}</span></div>
+    <div class="ritem-meta">${meta}</div>
+    ${trans}
+    <div class="audio-slot"></div>
+    ${acc?'<div class="arow">'+acc+'</div>':''}
+    ${mini?'<div class="ritem-mini">'+mini+'</div>':''}
+  </div>`;
+}
+function htmlEditar(r){
+  const opts=['','CCTA','Rayos X','Ultrasonido','Tomografía computada','Resonancia magnética','Fluoroscopía','Otro']
+    .map(m=>`<option value="${esc(m)}"${(r.modalidad||'')===m?' selected':''}>${m?esc(m):'Sin definir'}</option>`).join('');
+  const extra=r.modalidad&&!['CCTA','Rayos X','Ultrasonido','Tomografía computada','Resonancia magnética','Fluoroscopía','Otro'].includes(r.modalidad)
+    ?`<option value="${esc(r.modalidad)}" selected>${esc(r.modalidad)}</option>`:'';
+  return `<div class="editar">
+    <div class="grid2">
+      <div><label>Nombre del paciente</label><input type="text" id="eNombre" value="${esc(r.paciente_nombre)}" autocomplete="off"/></div>
+      <div><label>Edad</label><input type="text" id="eEdad" value="${esc(r.paciente_edad||'')}" autocomplete="off"/></div>
+    </div>
+    <div class="grid2" style="margin-bottom:0">
+      <div><label>Fecha del estudio</label><input type="date" id="eFecha" value="${esc(r.fecha_estudio||'')}"/></div>
+      <div><label>Modalidad</label><select id="eModalidad">${opts}${extra}</select></div>
+    </div>
+    <div class="arow">
+      <button class="abtn pri" type="button" onclick="guardarEdicion('${esc(r.id)}',this)">Guardar</button>
+      <button class="abtn" type="button" onclick="editar(null)">Cancelar</button>
+    </div>
+  </div>`;
+}
+function reemplazar(reg){
+  const i=registros.findIndex(x=>x.id===reg.id);
+  if(i>=0)registros[i]=reg;
+}
+function conBoton(btn,txt){if(!btn)return()=>{};const prev=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin'+(btn.classList.contains('pri')||btn.classList.contains('sec')?'':' osc')+'"></span> '+txt;return()=>{btn.disabled=false;btn.innerHTML=prev;};}
+
+async function escuchar(id,btn){
+  const listo=conBoton(btn,'Cargando…');
+  try{
+    const d=await api({action:'audio_url',id});
+    const slot=document.querySelector('.ritem[data-id="'+id+'"] .audio-slot');
+    if(slot){slot.innerHTML='<audio controls autoplay preload="auto"></audio>';slot.querySelector('audio').src=d.url;}
+    if(btn)btn.remove();
+  }catch(e){listo();alertEn('lAlert','No se pudo cargar el audio: '+e.message,'err');}
+}
+async function transcribir(id,btn){
+  const listo=conBoton(btn,'Transcribiendo…');
+  try{
+    const d=await api({action:'transcribir',id});
+    if(filtro==='pendiente'&&d.registro.estado==='transcrito'){conteos.pendiente=Math.max(0,(conteos.pendiente||1)-1);conteos.transcrito=(conteos.transcrito||0)+1;pintarConteos();}
+    reemplazar(d.registro);pintarLista();
+    alertEn('lAlert','✓ Transcripción lista: '+d.registro.paciente_nombre,'ok');
+  }catch(e){listo();alertEn('lAlert','No se pudo transcribir: '+e.message,'err');}
+}
+function informar(id){window.location.href='/?registro='+encodeURIComponent(id);}
+async function copiar(id,btn){
+  const r=registros.find(x=>x.id===id);if(!r||!r.transcripcion)return;
+  try{await navigator.clipboard.writeText(r.transcripcion);}
+  catch(e){const ta=document.createElement('textarea');ta.value=r.transcripcion;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+  if(btn){const p=btn.innerHTML;btn.innerHTML='✓ Copiado';setTimeout(()=>{btn.innerHTML=p;},1800);}
+}
+async function cambiarEstado(id,estado,btn){
+  const listo=conBoton(btn,estado==='descartado'?'Descartando…':'Restaurando…');
+  try{
+    const d=await api({action:'estado',id,estado});
+    const el=document.querySelector('.ritem[data-id="'+id+'"]');if(el)el.classList.add('saliendo');
+    setTimeout(()=>{registros=registros.filter(x=>x.id!==id);pintarLista();},250);
+    alertEn('lAlert',estado==='descartado'?'Movido a Descartados (podés restaurarlo desde ahí)':'✓ Restaurado: '+d.registro.paciente_nombre,'ok');
+    cargarConteos();
+  }catch(e){listo();alertEn('lAlert','No se pudo cambiar el estado: '+e.message,'err');}
+}
+async function cargarConteos(){try{const d=await api({action:'listar',estado:filtro,q:busqueda,limite:1});conteos=d.conteos||{};pintarConteos();}catch(e){}}
+async function eliminar(id,btn){
+  const r=registros.find(x=>x.id===id);
+  if(!confirm('¿Eliminar definitivamente el audio'+(r?' de '+r.paciente_nombre:'')+'? No se puede deshacer.'))return;
+  const listo=conBoton(btn,'Eliminando…');
+  try{
+    await api({action:'eliminar',id});
+    registros=registros.filter(x=>x.id!==id);pintarLista();cargarConteos();
+    alertEn('lAlert','Audio eliminado','ok');
+  }catch(e){listo();alertEn('lAlert','No se pudo eliminar: '+e.message,'err');}
+}
+function editar(id){editando=id;pintarLista();if(id){const el=$('eNombre');if(el)el.focus();}}
+async function guardarEdicion(id,btn){
+  const nombre=$('eNombre').value.replace(/\s+/g,' ').trim();
+  if(!nombre){$('eNombre').classList.add('falta');$('eNombre').focus();return;}
+  const listo=conBoton(btn,'Guardando…');
+  try{
+    const d=await api({action:'actualizar',id,paciente_nombre:nombre,paciente_edad:normEdad($('eEdad').value),
+      fecha_estudio:$('eFecha').value,modalidad:$('eModalidad').value});
+    editando=null;reemplazar(d.registro);pintarLista();alertEn('lAlert','✓ Datos actualizados','ok');
+  }catch(e){listo();alertEn('lAlert','No se pudo guardar: '+e.message,'err');}
+}
+
+// ── Bloqueo con Face ID (si está activado en InfoEasyRad) ─────────────
+function bioPlugin(){return (window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.NativeBiometric)||null;}
+async function bioUnlock(){
+  const p=bioPlugin();
+  if(!p){$('bioOverlay').style.display='none';return;}
+  try{
+    await p.verifyIdentity({reason:'Desbloquear InfoEasyRad',title:'InfoEasyRad',subtitle:'',description:''});
+    $('bioOverlay').style.display='none';
+    try{sessionStorage.setItem('ier_bio_ok','1');}catch(e){}
+  }catch(e){/* sigue bloqueado */}
+}
+async function initBio(){
+  const p=bioPlugin();
+  if(!p||localStorage.getItem('bio_lock')!=='1')return;
+  try{if(sessionStorage.getItem('ier_bio_ok')==='1')return;}catch(e){}
+  try{const r=await p.isAvailable();if(!(r&&r.isAvailable))return;}catch(e){return;}
+  $('bioOverlay').style.display='flex';bioUnlock();
+}
+
+// ── Inicio ────────────────────────────────────────────────────────────
+(function(){
+  if(!localStorage.getItem('supa_access_token')){$('sinSesion').hidden=false;return;}
+  $('contenido').hidden=false;
+  initBio();
+  $('rFecha').value=hoyLocal();
+  const mod=localStorage.getItem('reg_modalidad');if(mod)$('rModalidad').value=mod;
+  $('rModalidad').addEventListener('change',()=>{const v=$('rModalidad').value;v?localStorage.setItem('reg_modalidad',v):localStorage.removeItem('reg_modalidad');});
+  $('rNombre').addEventListener('input',()=>$('rNombre').classList.remove('falta'));
+  $('rNombre').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('rEdad').focus();}});
+  window.addEventListener('online',()=>{pintarCola();procesarCola();cargarLista();});
+  window.addEventListener('offline',()=>pintarCola());
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){procesarCola();}});
+  setInterval(()=>{if(colaActual.some(i=>!i.permanente)&&navigator.onLine)procesarCola();},30000);
+  window.addEventListener('beforeunload',e=>{
+    if((rec&&rec.state==='recording')||(colaMemoria&&colaMemoria.size)){e.preventDefault();e.returnValue='';}
+  });
+  pintarCola().then(()=>procesarCola());
+  cargarLista();
+})();
+</script>
+</body>
+</html>

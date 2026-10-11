@@ -35,7 +35,7 @@ ul li{font-size:14px;color:#3d4550;margin-bottom:0.4rem}
       <p>InfoEasyRad — Radiology Reports</p>
     </div>
   </div>
-  <div class="updated">Última actualización: 9 de agosto de 2026</div>
+  <div class="updated">Última actualización: 10 de octubre de 2026</div>
 
   <h2>1. Introducción</h2>
   <p>InfoEasyRad ("nosotros", "nuestro" o "la App") es un servicio de generación de informes radiológicos por voz desarrollado para profesionales de la salud. Esta Política de Privacidad describe cómo recopilamos, usamos y protegemos tu información cuando usás nuestra aplicación.</p>
@@ -45,7 +45,8 @@ ul li{font-size:14px;color:#3d4550;margin-bottom:0.4rem}
   <p><strong>2.2 Datos de uso</strong><br>Registramos el número de informes generados por mes para gestionar tu plan de suscripción.</p>
   <p><strong>2.3 Historial de informes en la nube</strong><br>Si tenés activada la función "Historial en la nube" (activada por defecto, podés desactivarla en Configuración), almacenamos el contenido de tus informes generados —incluyendo el nombre del paciente si lo dictaste— en nuestros servidores (Supabase) asociados exclusivamente a tu cuenta, para que puedas acceder a tu historial desde cualquier dispositivo. Podés eliminar informes individuales o todo el historial desde la app en cualquier momento, y la eliminación se aplica también a nuestros servidores. Si desactivás la función, los informes nuevos se guardan únicamente en tu dispositivo.</p>
   <p><strong>2.4 Archivos en tu Google Drive</strong><br>Si usás la función de guardado en Google Drive, los informes se suben como archivos privados a una carpeta "InfoEasyRad" dentro de tu propia cuenta de Google. Esos archivos te pertenecen, residen en tu cuenta de Google y no conservamos copias de ellos. El acceso se realiza con tu autorización mediante el protocolo OAuth de Google y podés revocarlo en cualquier momento desde la configuración de tu cuenta de Google.</p>
-  <p><strong>2.5 Grabaciones de voz</strong><br>Las grabaciones de voz se envían de forma segura a OpenAI Whisper para transcripción y a OpenAI GPT-4 para generación del informe. No almacenamos las grabaciones de audio. OpenAI procesa estos datos según su propia política de privacidad.</p>
+  <p><strong>2.5 Grabaciones de voz</strong><br>Las grabaciones que dictás directamente en InfoEasyRad se envían de forma segura a OpenAI Whisper para su transcripción, y el texto a OpenAI GPT-4 para la generación del informe. Esas grabaciones no se almacenan. OpenAI procesa estos datos según su propia política de privacidad.</p>
+  <p><strong>2.5.1 Registro de audios</strong><br>Si usás el Registro de audios, las grabaciones y archivos de audio que registrás, junto con el nombre, la edad, la fecha del estudio y la modalidad que ingresás, se guardan en almacenamiento privado de nuestros servidores (Supabase), cifrado en tránsito y en reposo, asociado exclusivamente a tu cuenta. Un audio registrado solo se envía a OpenAI Whisper cuando elegís transcribirlo, y la transcripción se guarda junto al audio. Mientras un audio no termina de subirse, queda guardado temporalmente en tu dispositivo. Podés eliminar cada audio desde el registro en cualquier momento; la eliminación es definitiva e incluye el archivo de audio y sus datos. Recomendamos eliminar los audios que ya no necesites una vez emitido el informe.</p>
   <p><strong>2.6 Datos biométricos</strong><br>Si activás el bloqueo con Face ID o Touch ID, la verificación biométrica la realiza tu dispositivo (Apple iOS) de forma local. La App nunca recibe, transmite ni almacena tus datos biométricos; únicamente recibe del sistema operativo la confirmación de que la verificación fue exitosa.</p>
 
   <h2>3. Cómo usamos tu información</h2>
@@ -61,7 +62,7 @@ ul li{font-size:14px;color:#3d4550;margin-bottom:0.4rem}
   <p>No vendemos ni alquilamos tu información personal. Compartimos datos únicamente con:</p>
   <ul>
     <li><strong>OpenAI</strong> — para transcripción de voz y generación de informes</li>
-    <li><strong>Supabase</strong> — para autenticación, datos de cuenta y, si está activado, el historial de informes en la nube</li>
+    <li><strong>Supabase</strong> — para autenticación, datos de cuenta, el historial de informes en la nube (si está activado) y los audios del Registro de audios (si lo usás)</li>
     <li><strong>Stripe</strong> — para procesamiento de pagos</li>
     <li><strong>Vercel</strong> — para hospedaje del servicio</li>
   </ul>
