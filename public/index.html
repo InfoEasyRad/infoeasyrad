@@ -694,6 +694,20 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
       <button class="auth-btn" id="regSubmitBtn" onclick="doAuthRegister()">Crear cuenta</button>
       <div class="auth-alert" id="regAlert"></div>
     </div>
+    <!-- NUEVA CONTRASEÑA (al abrir el enlace de "Recuperar contraseña" del correo) -->
+    <div id="formNuevaPass" style="display:none">
+      <p style="font-size:13px;color:#6B7280;text-align:center;margin-bottom:14px;line-height:1.5">Escribí tu nueva contraseña para volver a entrar.</p>
+      <div class="auth-field">
+        <label>Nueva contraseña</label>
+        <input type="password" id="npPass" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/>
+      </div>
+      <div class="auth-field">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="npPass2" placeholder="Repetí tu contraseña" autocomplete="new-password"/>
+      </div>
+      <button class="auth-btn" id="npSubmitBtn" onclick="doNuevaPassword()">Guardar contraseña</button>
+      <div class="auth-alert" id="npAlert"></div>
+    </div>
     <!-- Links legales -->
     <div style="text-align:center;margin-top:1.25rem;padding-top:1rem;border-top:1px solid #e5e9ef">
       <p style="font-size:11px;color:#9ca3af;line-height:1.7">
@@ -1353,6 +1367,7 @@ function mostrarHub(){
   if(a)a.style.display='none';
   const destino=destinoDesdeUrl();
   if(destino){ // viene del Registro de audios: abre InfoEasyRad directo
+    if(destino.irA){window.location.href=destino.irA;return;}
     if(h)h.style.display='none';
     if(destino.registro)cargarDesdeRegistro(destino.registro);
     return;
@@ -1367,8 +1382,9 @@ function destinoDesdeUrl(){
   destinoUsado=true;
   let p;try{p=new URLSearchParams(location.search);}catch(e){return null;}
   const registro=p.get('registro'),abrir=p.get('abrir');
-  if(!registro&&abrir!=='infoeasy')return null;
+  if(!registro&&abrir!=='infoeasy'&&abrir!=='registro')return null;
   try{history.replaceState(null,'',location.pathname);}catch(e){}
+  if(abrir==='registro')return {irA:'/registro.html'}; // volver al registro después de iniciar sesión
   return {registro:registro&&/^[0-9a-f-]{36}$/i.test(registro)?registro:null};
 }
 async function registroApi(body){
@@ -1477,6 +1493,54 @@ async function doForgotPassword(){
 function showAuthAlert(id,msg,tipo){
   const el=document.getElementById(id);
   el.textContent=msg;el.className='auth-alert show '+tipo;
+}
+
+// ===== Recuperar contraseña: el enlace del correo vuelve con #access_token=...&type=recovery =====
+let recuperacion=null;
+function leerEnlaceRecuperacion(){
+  const h=location.hash||'';
+  if(h.length<2)return;
+  let p;try{p=new URLSearchParams(h.slice(1));}catch(e){return;}
+  if(p.get('type')==='recovery'&&p.get('access_token')){
+    recuperacion={access_token:p.get('access_token'),refresh_token:p.get('refresh_token')||''};
+  }else if(p.get('error_code')||p.get('error')){
+    recuperacion={error:p.get('error_code')||p.get('error')};
+  }else return;
+  try{history.replaceState(null,'',location.pathname+location.search);}catch(e){} // que los tokens no queden en la barra
+}
+function mostrarNuevaPassword(){
+  const h=document.getElementById('hubScreen');if(h)h.style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+  document.querySelector('.auth-tabs').style.display='none';
+  document.getElementById('formLogin').style.display='none';
+  document.getElementById('formReg').style.display='none';
+  document.getElementById('formNuevaPass').style.display='block';
+  const b=document.getElementById('authBox');if(b)b.scrollIntoView({block:'center'});
+}
+async function doNuevaPassword(){
+  const p1=document.getElementById('npPass').value,p2=document.getElementById('npPass2').value;
+  if(p1.length<8){showAuthAlert('npAlert','La contraseña debe tener al menos 8 caracteres','err');return;}
+  if(p1!==p2){showAuthAlert('npAlert','Las contraseñas no coinciden','err');return;}
+  if(!recuperacion||!recuperacion.access_token){showAuthAlert('npAlert','El enlace no es válido. Pedí uno nuevo con «¿Olvidaste tu contraseña?».','err');return;}
+  const btn=document.getElementById('npSubmitBtn');btn.disabled=true;btn.textContent='Guardando...';
+  try{
+    const r=await fetch(API_BASE+'/api/auth-login',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'update_password',access_token:recuperacion.access_token,password:p1})});
+    let d={};try{d=await r.json();}catch(e){}
+    if(!r.ok)throw new Error(d.error||('Error '+r.status));
+    // La contraseña quedó cambiada y el enlace ya abrió sesión: se guarda y se entra
+    localStorage.setItem('supa_access_token',recuperacion.access_token);
+    if(recuperacion.refresh_token)localStorage.setItem('supa_refresh_token',recuperacion.refresh_token);
+    const email=String(d.email||'').toLowerCase().trim();
+    if(email)localStorage.setItem('ier_email_saved',email);
+    recuperacion=null;
+    document.getElementById('formNuevaPass').style.display='none';
+    document.querySelector('.auth-tabs').style.display='';
+    document.getElementById('formLogin').style.display='block';
+    if(email){try{await cargarUsuarioDesdeServer(email);}catch(e){}}
+    mostrarHub();
+  }catch(e){showAuthAlert('npAlert',e.message,'err');}
+  finally{btn.disabled=false;btn.textContent='Guardar contraseña';}
 }
 
 async function cargarUsuarioDesdeServer(email){
@@ -2460,8 +2524,18 @@ function clearAllHistorial(){
   initBio();
   // Cargar sello guardado
   updateSelloUI();
-  // Verificar sesión activa
-  verificarSesion();
+  // Enlace de "Recuperar contraseña" del correo: primero se pide la contraseña nueva
+  leerEnlaceRecuperacion();
+  if(recuperacion&&recuperacion.access_token){mostrarNuevaPassword();}
+  else{
+    // Verificar sesión activa
+    Promise.resolve(verificarSesion()).then(()=>{
+      if(recuperacion&&recuperacion.error){
+        showAuthAlert('loginAlert','El enlace del correo venció o ya se usó. Si querías recuperar tu contraseña, pedí uno nuevo con «¿Olvidaste tu contraseña?».','warn');
+      }
+      recuperacion=null;
+    });
+  }
 })();
 
 </script>

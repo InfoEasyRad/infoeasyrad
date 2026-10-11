@@ -40,13 +40,33 @@ const FORMATOS = {
   mpga: 'audio/mpeg', wav: 'audio/wav', ogg: 'audio/ogg', oga: 'audio/ogg', opus: 'audio/ogg', flac: 'audio/flac'
 };
 
+// Devuelve el usuario, null si la sesión no es válida, o lanza si Supabase no responde
+// (para no confundir una caída del servidor con una sesión vencida).
 async function verificarToken(req) {
   const h = req.headers['authorization'] || '';
   const token = h.startsWith('Bearer ') ? h.slice(7) : null;
   if (!token) return null;
   const { data, error } = await supabase.auth.getUser(token);
-  if (error || !data || !data.user) return null;
-  return data.user;
+  if (error) {
+    const caido = error.name === 'AuthRetryableFetchError' || error.name === 'AuthUnknownError' ||
+      !error.status || error.status >= 500;
+    if (caido) throw Object.assign(new Error('Supabase no responde: ' + error.message), { servidorCaido: true });
+    return null;
+  }
+  return data && data.user ? data.user : null;
+}
+
+function esServidorCaido(e) {
+  if (e && e.servidorCaido) return true;
+  const t = [e && e.message, e && e.details, e && e.name].join(' ');
+  return /fetch failed|ENOTFOUND|ECONNREFUSED|ECONNRESET|ETIMEDOUT|EAI_AGAIN|StorageUnknownError/i.test(t);
+}
+
+function servidorNoDisponible(res) {
+  return res.status(503).json({
+    error: 'servicio_no_disponible',
+    mensaje: 'No se pudo conectar con el servidor. Probá de nuevo en unos minutos.'
+  });
 }
 
 // ── Utilidades ──────────────────────────────────────────────────────────
@@ -390,7 +410,13 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const authUser = await verificarToken(req);
+  let authUser;
+  try {
+    authUser = await verificarToken(req);
+  } catch (e) {
+    console.error('Error registro (verificar sesión):', e.message);
+    return servidorNoDisponible(res);
+  }
   if (!authUser) return res.status(401).json({ error: 'no_autorizado', mensaje: 'Sesión inválida o expirada' });
 
   try {
@@ -403,6 +429,7 @@ module.exports = async function handler(req, res) {
     return await accion(body, res, authUser);
   } catch (e) {
     console.error('Error registro:', e);
+    if (esServidorCaido(e)) return servidorNoDisponible(res);
     if (esFaltaDeConfiguracion(e)) {
       return res.status(503).json({
         error: 'registro_no_configurado',

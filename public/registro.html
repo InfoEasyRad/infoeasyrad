@@ -197,8 +197,8 @@ input.falta{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,0.12)}
   <!-- Sin sesión -->
   <div class="card" id="sinSesion" hidden>
     <div class="vacio" style="padding:1rem .5rem">
-      🔒 Para usar el registro necesitás tu sesión de InfoEasyRad.<br>
-      <a class="pill" href="/" style="margin-top:12px">Iniciar sesión</a>
+      <span id="sinSesionTexto">🔒 Para usar el registro necesitás iniciar sesión en InfoEasyRad.</span><br>
+      <button class="pill" type="button" style="margin-top:12px" onclick="irAIniciarSesion()">Iniciar sesión</button>
     </div>
   </div>
 
@@ -359,7 +359,16 @@ async function api(body){
   }
   return d;
 }
-function sesionVencida(){$('contenido').hidden=true;$('sinSesion').hidden=false;}
+function sesionVencida(){
+  $('sinSesionTexto').textContent='🔒 Tu sesión de InfoEasyRad venció. Iniciá sesión de nuevo y volvés directo aquí.';
+  $('contenido').hidden=true;$('sinSesion').hidden=false;
+}
+// La sesión guardada ya no sirve: se borra para que la app pida la contraseña,
+// y después de iniciar sesión vuelve al registro (/?abrir=registro).
+function irAIniciarSesion(){
+  ['supa_access_token','supa_refresh_token','ier_user'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
+  location.href='/?abrir=registro';
+}
 
 // ── Cola local (IndexedDB; si no está disponible, memoria) ────────────
 const IDB_NOMBRE='infoeasyrad-registro',IDB_STORE='cola';
@@ -619,6 +628,9 @@ async function cargarLista(reiniciar){
     if(e.code==='registro_no_configurado'){
       registros=[];hayMas=false;
       avisoLista='⚙️ El registro de audios se está activando.<br>Los audios que grabes quedan guardados en este equipo y se suben solos cuando esté listo.';
+    }else if(e.code==='servicio_no_disponible'){
+      if(!registros.length)avisoLista='📡 No se pudo conectar con el servidor de InfoEasyRad. Probá de nuevo en unos minutos.<br>Los audios que grabes quedan guardados en este equipo y se suben solos.';
+      else alertEn('lAlert','No se pudo conectar con el servidor: se muestra lo último cargado','warn');
     }else if(e.red){
       if(!registros.length)avisoLista='📡 Sin conexión. Los audios nuevos quedan en cola en este equipo y se suben solos.';
       else alertEn('lAlert','Sin conexión: se muestra lo último cargado','warn');
