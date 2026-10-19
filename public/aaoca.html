@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reporte estructurado de AAOCA — Nomenclatura ICAAC</title>
+<meta name="description" content="Generador de informe estructurado para anomalía del origen aórtico de una arteria coronaria (AAOCA) según los 13 elementos de la nomenclatura ICAAC. Descriptor central automático, mapa de topografía ostial y cálculo de elipticidad, %CSA y diámetro efectivo.">
+<meta name="theme-color" content="#0F212C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Reporte estructurado de AAOCA — Nomenclatura ICAAC">
+<meta property="og:description" content="Los 13 elementos del reporte AAOCA en una sola pantalla: descriptor central en vivo, mapa de topografía ostial interactivo y cálculos automáticos.">
+<meta property="og:locale" content="es_MX">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%230F212C'/%3E%3Cpath d='M16 16 L16 3 A13 13 0 0 1 27.3 22.5 Z' fill='%23A5102F'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%230F212C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F212C;
+  --ink-2:#31505F;
+  --muted:#6D8797;
+  --paper:#E8EDF0;
+  --surface:#FFFFFF;
+  --line:#C7D4DC;
+  --line-soft:#DFE7EC;
+  --crimson:#A5102F;
+  --crimson-soft:#F6E2E7;
+  --teal:#0D6A76;
+  --teal-soft:#DCEDEF;
+  --amber:#9A5B00;
+  --amber-soft:#FBEEDC;
+  --radius:3px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{font-family:"Archivo","Helvetica Neue",Arial,system-ui,sans-serif;font-variation-settings:"wdth" 112;}
+.mono{font-family:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--line);
+  background:var(--surface);
+  padding:22px 28px 18px;
+}
+.masthead-inner{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--crimson);margin:0 0 6px;
+}
+h1{margin:0;font-size:27px;font-weight:700;letter-spacing:-.015em;line-height:1.12}
+.masthead p.sub{margin:6px 0 0;color:var(--muted);font-size:13.5px;max-width:56ch}
+.cite{font-size:11.5px;color:var(--muted);text-align:right;line-height:1.45;font-family:"IBM Plex Mono",monospace}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1320px;margin:0 auto;padding:26px 28px 80px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:34px;align-items:start}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr;gap:24px;padding:20px 16px 60px}}
+
+/* ---------- form ---------- */
+.group{margin-bottom:30px}
+.group-head{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:18px}
+.group-head h2{font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.group-head .range{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);margin-left:auto}
+
+.field{background:var(--surface);border:1px solid var(--line-soft);padding:14px 16px 15px;margin-bottom:10px}
+.field-head{display:flex;gap:10px;align-items:baseline;margin-bottom:4px}
+.num{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--crimson);min-width:20px}
+label.title{font-weight:600;font-size:14.5px}
+.hint{color:var(--muted);font-size:12.5px;margin:0 0 10px 30px;line-height:1.45}
+.field-body{margin-left:30px}
+@media (max-width:560px){.hint,.field-body{margin-left:0}}
+
+/* segmented radio/checkbox chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips input{position:absolute;opacity:0;width:0;height:0}
+.chips label{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line);background:#fff;
+  padding:6px 11px;font-size:13.5px;cursor:pointer;border-radius:var(--radius);
+  transition:background .12s,border-color .12s,color .12s;
+}
+.chips label .tag{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted)}
+.chips label:hover{border-color:var(--teal)}
+.chips input:checked + label{background:var(--teal);border-color:var(--teal);color:#fff}
+.chips input:checked + label .tag{color:#BFE4E8}
+.chips input:focus-visible + label{outline:2px solid var(--crimson);outline-offset:2px}
+
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.sub{flex:1 1 150px;min-width:130px}
+.sub > span{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+input[type=number],input[type=text],textarea,select{
+  width:100%;font-family:"IBM Plex Sans",sans-serif;font-size:14px;color:var(--ink);
+  border:1px solid var(--line);background:#fff;padding:7px 9px;border-radius:var(--radius);
+}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--teal);outline-offset:-1px;border-color:var(--teal)}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+.calc{
+  margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:13px;
+  background:var(--teal-soft);border-left:3px solid var(--teal);padding:8px 11px;color:#08434B;
+}
+.calc.empty{background:#F1F5F7;border-left-color:var(--line);color:var(--muted)}
+.note{
+  margin-top:10px;font-size:12.5px;background:var(--amber-soft);border-left:3px solid var(--amber);
+  padding:8px 11px;color:#6B3F00;
+}
+.note[hidden]{display:none}
+.switch{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-top:10px}
+.switch input{width:auto}
+
+/* ---------- topography map (signature) ---------- */
+.mapcard{background:var(--surface);border:1px solid var(--line-soft);padding:16px}
+.map-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.map-toolbar .lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.viewtoggle{display:flex;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.viewtoggle button{
+  border:0;background:#fff;font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;
+  padding:5px 12px;cursor:pointer;color:var(--ink-2)
+}
+.viewtoggle button[aria-pressed=true]{background:var(--ink);color:#fff}
+.mapgrid{display:grid;grid-template-columns:1fr 132px;gap:14px;align-items:center}
+@media (max-width:430px){.mapgrid{grid-template-columns:1fr}}
+svg.map{width:100%;height:auto;display:block}
+.seg{fill:#F1F5F7;stroke:#fff;stroke-width:1.5;cursor:pointer;transition:fill .12s}
+.seg:hover{fill:#DCE7EC}
+.seg.on{fill:var(--crimson)}
+.seg-lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-2);pointer-events:none;text-anchor:middle;dominant-baseline:central}
+.seg-lbl.on{fill:#fff;font-weight:600}
+.sinus-lbl{font-family:"Archivo",sans-serif;font-weight:700;font-size:17px;fill:#9FB3BE;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.sinus-num{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;fill:var(--ink);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.com-lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--muted);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.orient{font-family:"IBM Plex Mono",monospace;font-size:9.5px;fill:var(--muted);text-anchor:middle}
+.lvl{cursor:pointer}
+.lvl rect{fill:#F1F5F7;stroke:#fff;stroke-width:1.5;transition:fill .12s}
+.lvl:hover rect{fill:#DCE7EC}
+.lvl.on rect{fill:var(--crimson)}
+.lvl text{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-2);dominant-baseline:central}
+.lvl.on text{fill:#fff;font-weight:600}
+.lvl-cap{font-family:"IBM Plex Mono",monospace;font-size:9px;fill:var(--muted)}
+.map-readout{
+  margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:13px;
+  display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line-soft);padding-top:10px;flex-wrap:wrap
+}
+.map-readout b{color:var(--crimson);font-weight:600}
+
+/* ---------- output panel ---------- */
+.panel{position:sticky;top:18px}
+.descriptor{
+  background:var(--ink);color:#fff;padding:16px 18px;border:1px solid var(--ink);
+}
+.descriptor .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#89A6B4}
+.descriptor .code{
+  font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:600;letter-spacing:-.01em;
+  margin-top:6px;word-break:break-word;line-height:1.25
+}
+.descriptor .code em{font-style:normal;color:#F0879C}
+.descriptor .ostium{font-family:"IBM Plex Mono",monospace;font-size:13px;color:#B7CDD7;margin-top:8px}
+
+.report{background:var(--surface);border:1px solid var(--line-soft);border-top:0;padding:18px 20px 20px;max-height:calc(100vh - 240px);overflow:auto}
+.report h3{margin:0 0 2px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.report .src{font-size:11px;color:var(--muted);font-family:"IBM Plex Mono",monospace;margin-bottom:4px}
+.doc-count{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);margin:0 0 14px}
+.out-topo{margin:2px 0 16px;text-align:center}
+.out-topo[hidden]{display:none}
+.out-topo .cap{display:block;margin-top:4px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted)}
+.oneline{font-size:14px;line-height:1.7;color:var(--ink);margin:0}
+.oneline .na{color:#9AAEB8;font-style:italic;font-weight:400}
+.imgmgr{margin-top:18px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.imgmgr-head .lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.addimg-btn{font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:500;border:1px dashed var(--line);background:#fff;color:var(--teal);padding:5px 11px;border-radius:var(--radius);cursor:pointer}
+.addimg-btn:hover{border-color:var(--teal);background:var(--teal-soft)}
+.addimg-btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.imgmgr-grid{display:flex;flex-wrap:wrap;gap:8px;min-height:0}
+.imgmgr-grid:empty::after{content:"Sin imágenes adjuntas todavía.";color:var(--muted);font-size:12.5px;font-style:italic}
+.thumb{position:relative;width:72px;height:72px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line-soft);flex:0 0 auto}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:2px;right:2px;width:18px;height:18px;border:0;border-radius:50%;background:rgba(15,33,44,.72);color:#fff;font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.thumb button:hover{background:var(--crimson)}
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+button.act{
+  font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;font-weight:500;
+  border:1px solid var(--ink);background:var(--ink);color:#fff;padding:9px 16px;cursor:pointer;border-radius:var(--radius)
+}
+button.act.ghost{background:#fff;color:var(--ink)}
+button.act:hover{background:var(--crimson);border-color:var(--crimson);color:#fff}
+button.act:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.toast{font-size:12.5px;color:var(--teal);align-self:center;font-family:"IBM Plex Mono",monospace}
+
+footer.legal{max-width:1320px;margin:0 auto;padding:0 28px 40px;color:var(--muted);font-size:12px;line-height:1.6}
+footer.legal .editor{
+  margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid var(--line);
+  font-family:"Archivo",sans-serif;font-variation-settings:"wdth" 108;
+  font-weight:700;font-size:14px;color:var(--ink)
+}
+footer.legal .editor span{
+  display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--crimson);font-weight:500;margin-bottom:3px
+}
+footer.legal a{color:var(--ink-2)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- móvil / app de celular ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+button,.chips label,svg{touch-action:manipulation}
+svg{max-width:100%;height:auto}
+img,canvas{max-width:100%}
+@media (max-width:1000px){
+  .panel{position:static}
+  .report{max-height:none;overflow:visible}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .masthead{padding:max(16px,env(safe-area-inset-top)) 16px 14px}
+  h1{font-size:22px}
+  .cite{text-align:left}
+  .wrap{padding:16px max(14px,env(safe-area-inset-right)) 48px max(14px,env(safe-area-inset-left));gap:18px}
+  footer.legal{padding:0 16px max(32px,env(safe-area-inset-bottom))}
+  .chips{gap:8px}
+  .chips label{min-height:44px;padding:8px 14px;font-size:15px}
+  input[type=number],input[type=text],textarea,select{font-size:16px;min-height:44px;padding:9px 11px}
+  .sub{flex:1 1 100%}
+  .switch{font-size:15px;min-height:44px}
+  .switch input{width:22px;height:22px}
+  .viewtoggle button{min-height:40px;padding:8px 16px;font-size:14px}
+  .mapcard{padding:12px}
+  .descriptor .code{font-size:20px}
+  .report{padding:16px 14px}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.act{min-height:46px;padding:10px 8px;font-size:14.5px;width:100%}
+  .toast{grid-column:1/-1}
+  .thumb button{width:28px;height:28px;font-size:16px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  body{background:#fff}
+  .masthead,.formcol,.actions,footer.legal{display:none!important}
+  .wrap{display:block;padding:0}
+  .panel{position:static}
+  .descriptor{background:#fff;color:#000;border:1px solid #000}
+  .descriptor .lbl{color:#555}
+  .descriptor .code em{color:#000}
+  .descriptor .ostium{color:#333}
+  .report{max-height:none;overflow:visible;border:1px solid #000;border-top:0}
+  .imgmgr-head .addimg-btn{display:none!important}
+  .thumb button{display:none!important}
+}
+</style>
+</head>
+<body>
+<nav style="padding:10px 28px;background:#fff;border-bottom:1px solid #C7D4DC;font-family:'IBM Plex Sans',sans-serif;font-size:13px"><a href="/" style="color:#31505F;text-decoration:none">← Hub</a></nav>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <p class="eyebrow">ICAAC · Nomenclatura estandarizada</p>
+      <h1>Reporte estructurado de AAOCA</h1>
+    </div>
+    <div>
+      <p class="cite">Mery CM, Nathan M, Gräni C, et al.<br>Proposed Standardized Nomenclature for AAOCA.<br>JACC Cardiovasc Imaging. 2026;19(8):983–1001.</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ COLUMNA FORMULARIO ============ -->
+  <div class="formcol">
+
+    <!-- ---- DESCRIPTOR CENTRAL ---- -->
+    <section class="group">
+      <div class="group-head"><h2>Descriptor central</h2><span class="range">1–3</span></div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">1</span><label class="title">Vaso anómalo</label></div>
+        <p class="hint">Prefijo que antecede al término AAOCA. Usa <b>ST</b> cuando un tronco único da origen a todas las ramas principales fuera de la pared aórtica.</p>
+        <div class="field-body">
+          <div class="chips" id="f-vessel"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">2</span><label class="title">Seno de origen</label></div>
+        <p class="hint">Toma el borde proximal (caudal) del ostium. Un origen yuxtacomisural se codifica por su seno salvo que nazca directamente sobre la comisura.</p>
+        <div class="field-body">
+          <div class="chips" id="f-sinus"></div>
+          <label class="switch"><input type="checkbox" id="f-bicuspid"> Válvula aórtica bicúspide con 2 senos</label>
+          <div class="note" id="note-ho" hidden>Nivel IV en la localización ostial (≥5 mm o ≥20% sobre la unión sinotubular): el descriptor central se emite como <b>HO</b> (origen alto).</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">3</span><label class="title">Curso proximal</label></div>
+        <p class="hint">Marca todos los que apliquen. <b>IM</b> se reserva exclusivamente al trayecto dentro de la pared aórtica; no es intercambiable con intraseptal ni intramiocárdico.</p>
+        <div class="field-body">
+          <div class="chips" id="f-course"></div>
+          <div class="row" style="margin-top:12px">
+            <label class="sub"><span>Segmento interarterial</span>
+              <select id="f-iaface">
+                <option value="">No aplica / no evaluado</option>
+                <option>Pulmonary-facing (entre aorta y arteria pulmonar)</option>
+                <option>RVOT-facing (entre aorta y tracto de salida del VD)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- OSTIUM ---- -->
+    <section class="group">
+      <div class="group-head"><h2>Características del ostium</h2><span class="range">4–6 · LoReM</span></div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">4</span><label class="title">Localización ostial</label></div>
+        <p class="hint">Selecciona el segmento en el mapa de topografía y la altura en el corte longitudinal. El segmento <b>b</b> abarca el 50% central del seno; <b>a</b> y <b>c</b>, el 25% junto a cada comisura.</p>
+        <div class="field-body">
+          <div class="mapcard">
+            <div class="map-toolbar">
+              <span class="lbl">Mapa de topografía</span>
+              <div class="viewtoggle" role="group" aria-label="Perspectiva del mapa">
+                <button type="button" id="view-surg" aria-pressed="true">Vista quirúrgica</button>
+                <button type="button" id="view-rad" aria-pressed="false">Vista radiológica</button>
+              </div>
+            </div>
+            <div class="mapgrid">
+              <svg class="map" id="topomap" viewBox="0 0 300 300" role="group" aria-label="Mapa circunferencial de los senos aórticos"></svg>
+              <svg class="map" id="levelmap" viewBox="0 0 132 190" role="group" aria-label="Niveles craneocaudales del ostium"></svg>
+            </div>
+            <div class="map-readout">
+              <span>Localización: <b id="ro-loc">—</b></span>
+              <span id="ro-lvl" style="color:var(--muted)">Elige seno, segmento y nivel</span>
+            </div>
+            <label class="switch"><input type="checkbox" id="f-jc"> Yuxtacomisural (JC): ostium a ≤1 mm de una comisura</label>
+            <div class="row" id="ho-dist-row" style="margin-top:10px;display:none">
+              <label class="sub"><span>Distancia sobre la unión sinotubular (mm)</span><input type="number" step="0.1" min="0" id="f-hodist" placeholder="p. ej. 7.5"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">5</span><label class="title">Relación ostial</label></div>
+        <p class="hint">Relación espacial entre ostia del mismo seno. Los tipos 3 y 4 tienen ostium único; solo el tipo 4 corresponde a tronco único (ST).</p>
+        <div class="field-body"><div class="chips" id="f-rel"></div></div>
+        <div class="note" id="note-rel" hidden></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">6</span><label class="title">Morfología ostial</label></div>
+        <p class="hint">Relación entre el eje menor y el eje mayor del ostium. Evita el término «ostium estenótico»: infiere riesgo y no se puede cuantificar de forma estandarizada.</p>
+        <div class="field-body"><div class="chips" id="f-morph"></div></div>
+      </div>
+    </section>
+
+    <!-- ---- CURSO PROXIMAL ---- -->
+    <section class="group">
+      <div class="group-head"><h2>Detalles del curso proximal</h2><span class="range">7–11</span></div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">7</span><label class="title">Intramuralidad</label></div>
+        <p class="hint">La cirugía es el estándar de referencia para la longitud. En angio-TC se apoya en la forma oval del vaso y el signo de la grasa pericoronaria.</p>
+        <div class="field-body">
+          <div class="chips" id="f-im"></div>
+          <div class="row" style="margin-top:12px">
+            <label class="sub"><span>Longitud del segmento IM (mm)</span><input type="number" step="0.1" min="0" id="f-imlen" placeholder="p. ej. 8.5"></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">8</span><label class="title">Elipticidad del curso proximal</label></div>
+        <p class="hint">Mide ambos ejes en el punto de mayor deformación. Un vaso redondo tiene elipticidad de 1; a mayor valor, más oval.</p>
+        <div class="field-body">
+          <div class="row">
+            <label class="sub"><span>Eje mayor (mm)</span><input type="number" step="0.01" min="0" id="f-major" placeholder="3.2"></label>
+            <label class="sub"><span>Eje menor (mm)</span><input type="number" step="0.01" min="0" id="f-minor" placeholder="1.6"></label>
+          </div>
+          <div class="calc empty" id="calc-ellip">Elipticidad = eje mayor ÷ eje menor</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">9</span><label class="title">Estenosis de área (%CSA)</label></div>
+        <p class="hint">Área del segmento más estrecho frente al área de un segmento normal del vaso distal de referencia.</p>
+        <div class="field-body">
+          <div class="row">
+            <label class="sub"><span>CSA mínima (mm²)</span><input type="number" step="0.01" min="0" id="f-csamin" placeholder="2.1"></label>
+            <label class="sub"><span>CSA distal de referencia (mm²)</span><input type="number" step="0.01" min="0" id="f-csaref" placeholder="7.0"></label>
+          </div>
+          <div class="calc empty" id="calc-csa">%CSA = (1 − CSA mínima ÷ CSA de referencia) × 100</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">10</span><label class="title">Estenosis de diámetro efectivo</label></div>
+        <p class="hint">Se calcula sola a partir del punto 9: diámetro efectivo = 2 × √(CSA ÷ π), es decir el diámetro de un círculo con la misma área que la luz medida.</p>
+        <div class="field-body">
+          <div class="calc empty" id="calc-diam">Captura las dos áreas del punto 9 para obtener los diámetros efectivos.</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">11</span><label class="title">Ángulo agudo de salida</label></div>
+        <p class="hint">Origen tangencial a la pared aórtica con ángulo menor de 45°.</p>
+        <div class="field-body">
+          <div class="chips" id="f-angle"></div>
+          <div class="row" style="margin-top:12px">
+            <label class="sub"><span>Ángulo medido (grados, opcional)</span><input type="number" step="1" min="0" max="180" id="f-angledeg" placeholder="p. ej. 28"></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- DOMINANCIA Y HALLAZGOS ---- -->
+    <section class="group">
+      <div class="group-head"><h2>Dominancia y hallazgos</h2><span class="range">12–13</span></div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">12</span><label class="title">Dominancia coronaria</label></div>
+        <p class="hint">Se define por el vaso que da la rama interventricular posterior y las ramas posterolaterales.</p>
+        <div class="field-body"><div class="chips" id="f-dom"></div></div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="num">13</span><label class="title">Hallazgos adicionales y comentarios</label></div>
+        <p class="hint">El pilar es el engrosamiento de la pared aórtica que se extiende desde cada comisura hasta la unión sinotubular.</p>
+        <div class="field-body">
+          <div class="chips" id="f-extras"></div>
+          <div class="row" style="margin-top:12px">
+            <label class="sub" style="flex:1 1 100%"><span>Puente miocárdico: vaso, localización, longitud y profundidad</span><input type="text" id="f-mb" placeholder="p. ej. DA media, 20 mm, 2.5 mm de profundidad"></label>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <label class="sub" style="flex:1 1 100%"><span>Elipticidad dinámica en el ciclo cardiaco</span>
+              <div class="row">
+                <label class="sub"><span style="text-transform:none;letter-spacing:0">Diástole</span><input type="number" step="0.1" min="0" id="f-elldia" placeholder="2.0"></label>
+                <label class="sub"><span style="text-transform:none;letter-spacing:0">Sístole</span><input type="number" step="0.1" min="0" id="f-ellsys" placeholder="2.3"></label>
+              </div>
+            </label>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <label class="sub" style="flex:1 1 100%"><span>Otros comentarios</span><textarea id="f-comments" placeholder="Fístulas coronarias, lesiones ateroscleróticas, curso intracavitario, modalidad de imagen empleada, etc."></textarea></label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ COLUMNA SALIDA ============ -->
+  <div class="panel">
+    <div class="descriptor">
+      <span class="lbl">Descriptor central</span>
+      <div class="code" id="out-code"><em>Selecciona el vaso anómalo</em></div>
+      <div class="ostium" id="out-ostium"></div>
+    </div>
+    <div class="report">
+      <h3>Informe estructurado</h3>
+      <p class="src">Nomenclatura ICAAC · agnóstica al riesgo</p>
+      <p class="doc-count" id="out-count">0/13 elementos documentados</p>
+
+      <div class="out-topo" id="out-topo" hidden>
+        <canvas id="out-topo-canvas" width="248" height="300" style="width:124px;height:150px"></canvas>
+        <span class="cap">Localización seleccionada</span>
+      </div>
+
+      <p class="oneline" id="out-oneline"><span class="na">Completa el formulario para generar el informe.</span></p>
+
+      <div class="imgmgr">
+        <div class="imgmgr-head">
+          <span class="lbl">Imágenes adjuntas</span>
+          <button type="button" class="addimg-btn" id="btn-addimg">+ Añadir imágenes</button>
+          <input type="file" id="f-images" accept="image/*" multiple hidden>
+        </div>
+        <div class="imgmgr-grid" id="out-images"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="act" id="btn-copy" type="button">Copiar texto</button>
+      <button class="act" id="btn-pdf" type="button">Descargar PDF</button>
+      <button class="act" id="btn-word" type="button">Descargar Word</button>
+      <button class="act ghost" id="btn-print" type="button">Imprimir</button>
+      <button class="act ghost" id="btn-reset" type="button">Vaciar formulario</button>
+      <span class="toast" id="toast" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+</div>
+
+<footer class="legal">
+  <p class="editor"><span>Edición y adaptación</span> Dr. Carlos Leonardo Maldonado Estrada — Médico radiólogo, UNAH · Fellow en imagen cardiaca</p>
+  Herramienta de apoyo a la documentación clínica. Todo el procesamiento ocurre en tu navegador: no se transmite, guarda ni registra ningún dato del paciente. No sustituye el juicio médico ni asigna riesgo: la nomenclatura ICAAC describe anatomía y morfología, y la estratificación de riesgo queda fuera de su alcance. Nomenclatura y esquemas basados en Mery CM et al., <i>JACC: Cardiovascular Imaging</i> 2026;19(8):983–1001 (CC BY-NC-ND 4.0).
+</footer>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Catálogos
+   ============================================================ */
+const VESSELS = [
+  ["R","Coronaria derecha"],
+  ["L","Tronco coronario izquierdo"],
+  ["LAD","Descendente anterior"],
+  ["LCX","Circunfleja"],
+  ["ST","Tronco único (todas las ramas)"]
+];
+const SINUS_TRI = [
+  ["RS","Seno derecho"],["LS","Seno izquierdo"],["NS","Seno no coronario"],
+  ["LR","Comisura izq.-der."],["LN","Comisura izq.-no coronaria"],["RN","Comisura der.-no coronaria"]
+];
+const SINUS_BI = [
+  ["RS","Seno derecho"],["LS","Seno izquierdo"],["AS","Seno anterior"],["PS","Seno posterior"]
+];
+const COURSES = [
+  ["IM","Intramural"],["IA","Interarterial"],["IS","Intraseptal"],["PP","Prepulmonar"],["RA","Retroaórtico"]
+];
+const RELS = [
+  ["1","Ostia separados"],["2","Ostia adyacentes"],
+  ["3","Ostium único con bifurcación dentro de la pared"],["4","Ostium único y tronco único"]
+];
+const MORPHS = [
+  ["Redondo","eje menor ≈ eje mayor"],
+  ["Oval","eje menor 50–90% del mayor"],
+  ["Slit-like","eje menor <50% del mayor"],
+  ["Hipoplásico","pinhole: dimensiones iguales pero menores que el vaso distal"]
+];
+const YESNO = [["Sí",""],["No",""],["No evaluado",""]];
+const DOMS = [["Derecha","RD"],["Izquierda","LD"],["Codominancia","CD"]];
+const EXTRAS = [
+  ["pilar","Curso por detrás del pilar intercoronario"],
+  ["dyn","Cambio dinámico en el ciclo cardiaco"],
+  ["mb","Puente miocárdico"],
+  ["fist","Fístula coronaria"],
+  ["ath","Lesiones ateroscleróticas"],
+  ["intracav","Curso intracavitario / intracameral"]
+];
+const LEVELS = [
+  ["I","Dentro del seno, hasta el nivel de las comisuras"],
+  ["II","Entre las comisuras y la unión sinotubular (zona del pilar)"],
+  ["III","Desde la unión sinotubular hasta <5 mm (o <20% de la profundidad del seno) por encima"],
+  ["IV","≥5 mm o ≥20% de la profundidad del seno sobre la unión sinotubular → origen alto (HO)"]
+];
+
+/* ============================================================
+   Estado
+   ============================================================ */
+const S = {
+  vessel:"", sinus:"", bicuspid:false, courses:[], iaface:"",
+  osSinus:"", osSeg:"", osLevel:"", jc:false, hodist:"",
+  rel:"", morph:"",
+  im:"", imlen:"", major:"", minor:"", csamin:"", csaref:"",
+  angle:"", angledeg:"",
+  dom:"", extras:[], mb:"", elldia:"", ellsys:"", comments:"",
+  view:"surg", images:[]
+};
+
+/* ============================================================
+   Constructores de chips
+   ============================================================ */
+const CHIP_SYNCS = [];
+function chipSet(host, name, options, type, getVal, onChange){
+  const el = document.getElementById(host);
+  el.innerHTML = "";
+  CHIP_SYNCS.push(()=>{
+    el.querySelectorAll("input").forEach(i=>{ i.checked = getVal(i.value); });
+  });
+  options.forEach(([val,desc],i)=>{
+    const id = host+"-"+i;
+    const inp = document.createElement("input");
+    inp.type = type; inp.name = name; inp.id = id; inp.value = val;
+    const lab = document.createElement("label");
+    lab.htmlFor = id;
+    lab.innerHTML = '<span>'+val+'</span>' + (desc? ' <span class="tag">'+desc+'</span>':'');
+    inp.checked = getVal(val);
+    inp.addEventListener("change", ()=>{ onChange(val, inp.checked); render(); });
+    el.appendChild(inp); el.appendChild(lab);
+  });
+}
+
+function buildChips(){
+  CHIP_SYNCS.length = 0;
+  chipSet("f-vessel","vessel",VESSELS,"radio",v=>S.vessel===v,v=>{S.vessel=v;});
+  chipSet("f-sinus","sinus",(S.bicuspid?SINUS_BI:SINUS_TRI),"radio",v=>S.sinus===v,v=>{
+    S.sinus=v;
+    const map = {RS:"1",LS:"2",NS:"3",AS:"1",PS:"2"};
+    if(map[v]) S.osSinus = map[v];
+  });
+  chipSet("f-course","course",COURSES,"checkbox",v=>S.courses.includes(v),(v,on)=>{
+    S.courses = on ? [...S.courses, v] : S.courses.filter(x=>x!==v);
+  });
+  chipSet("f-rel","rel",RELS.map(([a,b])=>["Tipo "+a,b]),"radio",v=>S.rel===v,v=>{S.rel=v;});
+  chipSet("f-morph","morph",MORPHS,"radio",v=>S.morph===v,v=>{S.morph=v;});
+  chipSet("f-im","im",YESNO,"radio",v=>S.im===v,v=>{S.im=v;});
+  chipSet("f-angle","angle",YESNO,"radio",v=>S.angle===v,v=>{S.angle=v;});
+  chipSet("f-dom","dom",DOMS,"radio",v=>S.dom===v,v=>{S.dom=v;});
+  chipSet("f-extras","extras",EXTRAS.map(([k,t])=>[t,""]),"checkbox",
+    v=>S.extras.includes(v),(v,on)=>{S.extras = on?[...S.extras,v]:S.extras.filter(x=>x!==v);});
+}
+
+/* ============================================================
+   Mapa de topografía (elemento distintivo)
+   ============================================================ */
+const R_OUT = 118, R_IN = 82;
+
+function sinusConfig(){
+  if(S.bicuspid){
+    return [
+      {n:"1", label:"A", start:-90, end:90,  order:["a","b","c"]},
+      {n:"2", label:"P", start:90,  end:270, order:["a","b","c"]}
+    ];
+  }
+  return [
+    {n:"1", label:"R", start:-60, end:60,  order:["c","b","a"]},
+    {n:"3", label:"N", start:60,  end:180, order:["c","b","a"]},
+    {n:"2", label:"L", start:180, end:300, order:["c","b","a"]}
+  ];
+}
+const COMS = [{t:"LR",a:-60},{t:"RN",a:60},{t:"LN",a:180}];
+const COMS_BI = [{t:"C",a:-90},{t:"C",a:90}];
+
+function segBounds(s){
+  const span = s.end - s.start, q = span/4;
+  return [[s.start, s.start+q],[s.start+q, s.end-q],[s.end-q, s.end]];
+}
+
+function pt(cx,cy,r,deg,dir){
+  const rad = (deg*dir - 90) * Math.PI/180;
+  return [cx + r*Math.cos(rad), cy + r*Math.sin(rad)];
+}
+function annular(cx,cy,r1,r2,a1,a2,dir){
+  const large = Math.abs(a2-a1) > 180 ? 1 : 0;
+  const sweep = dir > 0 ? 1 : 0;
+  const p1 = pt(cx,cy,r2,a1,dir), p2 = pt(cx,cy,r2,a2,dir);
+  const p3 = pt(cx,cy,r1,a2,dir), p4 = pt(cx,cy,r1,a1,dir);
+  return `M${p1[0].toFixed(2)},${p1[1].toFixed(2)} A${r2},${r2} 0 ${large} ${sweep} ${p2[0].toFixed(2)},${p2[1].toFixed(2)} L${p3[0].toFixed(2)},${p3[1].toFixed(2)} A${r1},${r1} 0 ${large} ${1-sweep} ${p4[0].toFixed(2)},${p4[1].toFixed(2)} Z`;
+}
+
+function drawMap(){
+  const svg = document.getElementById("topomap");
+  const cx=150, cy=152, dir = (S.view==="surg") ? 1 : -1;
+  let h = "";
+  // brújula de orientación, fuera del círculo para no chocar con las comisuras
+  const izq = dir>0 ? "IZQ" : "DER", der = dir>0 ? "DER" : "IZQ";
+  h += `<g>
+    <text class="orient" x="42" y="15">ANTERIOR</text>
+    <text class="orient" x="15" y="33">${izq}</text>
+    <text class="orient" x="69" y="33">${der}</text>
+    <text class="orient" x="42" y="49">POSTERIOR</text>
+    <line x1="42" y1="22" x2="42" y2="42" stroke="#B3C4CD" stroke-width="1"/>
+    <line x1="32" y1="30" x2="52" y2="30" stroke="#B3C4CD" stroke-width="1"/>
+  </g>`;
+
+  sinusConfig().forEach(s=>{
+    const bounds = segBounds(s);
+    bounds.forEach((b,i)=>{
+      const key = s.n + s.order[i];
+      const on = (S.osSinus===s.n && S.osSeg===s.order[i]);
+      h += `<path class="seg${on?" on":""}" data-sinus="${s.n}" data-seg="${s.order[i]}" tabindex="0" role="button" aria-label="Seno ${s.n}, segmento ${s.order[i]}" d="${annular(cx,cy,R_IN,R_OUT,b[0],b[1],dir)}"/>`;
+      const mid = (b[0]+b[1])/2;
+      const p = pt(cx,cy,(R_IN+R_OUT)/2,mid,dir);
+      h += `<text class="seg-lbl${on?" on":""}" x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}">${s.order[i]}</text>`;
+    });
+    const cmid = (s.start+s.end)/2;
+    const pl = pt(cx,cy,R_IN-30,cmid,dir);
+    const pn = pt(cx,cy,R_IN-52,cmid,dir);
+    h += `<text class="sinus-lbl" x="${pl[0].toFixed(1)}" y="${pl[1].toFixed(1)}">${s.label}</text>`;
+    h += `<text class="sinus-num" x="${pn[0].toFixed(1)}" y="${pn[1].toFixed(1)}">${s.n}</text>`;
+  });
+
+  (S.bicuspid?COMS_BI:COMS).forEach(c=>{
+    const p = pt(cx,cy,R_OUT+14,c.a,dir);
+    h += `<text class="com-lbl" x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}">${c.t}</text>`;
+  });
+
+  svg.innerHTML = h;
+  svg.querySelectorAll(".seg").forEach(el=>{
+    const pick = ()=>{ S.osSinus = el.dataset.sinus; S.osSeg = el.dataset.seg; render(); };
+    el.addEventListener("click", pick);
+    el.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }});
+  });
+}
+
+function drawLevels(){
+  const svg = document.getElementById("levelmap");
+  let h = `<text class="lvl-cap" x="2" y="10">Altura del ostium</text>`;
+  const top=22, hgt=34, w=94, x=6;
+  LEVELS.forEach(([lv],i)=>{
+    const y = top + i*hgt;
+    const on = S.osLevel===lv;
+    h += `<g class="lvl${on?" on":""}" data-lvl="${lv}" tabindex="0" role="button" aria-label="Nivel ${lv}">
+      <rect x="${x}" y="${y}" width="${w}" height="${hgt-3}" rx="2"/>
+      <text x="${x+11}" y="${y+(hgt-3)/2}">${lv}</text></g>`;
+  });
+  // referencias anatómicas
+  h += `<line x1="${x}" y1="${top+2*hgt-1.5}" x2="${x+w+22}" y2="${top+2*hgt-1.5}" stroke="#0F212C" stroke-width="1" stroke-dasharray="3 2"/>`;
+  h += `<text class="lvl-cap" x="${x+w+2}" y="${top+2*hgt-6}">UST</text>`;
+  h += `<text class="lvl-cap" x="${x+w+2}" y="${top+hgt-6}">Com.</text>`;
+  h += `<line x1="${x}" y1="${top+hgt-1.5}" x2="${x+w+18}" y2="${top+hgt-1.5}" stroke="#8FA6B2" stroke-width="1" stroke-dasharray="2 2"/>`;
+  h += `<text class="lvl-cap" x="2" y="${top+4*hgt+14}">IV = origen alto (HO)</text>`;
+  svg.innerHTML = h;
+  svg.querySelectorAll(".lvl").forEach(el=>{
+    const pick = ()=>{ S.osLevel = (S.osLevel===el.dataset.lvl) ? "" : el.dataset.lvl; render(); };
+    el.addEventListener("click", pick);
+    el.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }});
+  });
+}
+
+/* ============================================================
+   Mini-diagrama de la selección (va dentro del informe)
+   ============================================================ */
+const LEVEL_IDX = {I:0,II:1,III:2,IV:3};
+function drawMiniTopo(){
+  const wrap = document.getElementById("out-topo");
+  const cnv = document.getElementById("out-topo-canvas");
+  const ctx = cnv.getContext("2d");
+  const W = 124, H = 150;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(2,2);
+  ctx.clearRect(0,0,W,H);
+
+  if(!S.osSinus || !S.osSeg){ wrap.hidden = true; return; }
+  wrap.hidden = false;
+
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(0,0,W,H);
+
+  const cx=62, cy=62, rOut=44, rIn=29, dir=(S.view==="surg")?1:-1;
+  function toXY(r,deg){
+    const rad = (deg*dir - 90) * Math.PI/180;
+    return [cx + r*Math.cos(rad), cy + r*Math.sin(rad)];
+  }
+  function wedge(r1,r2,a1,a2,fill){
+    const steps = 20;
+    ctx.beginPath();
+    for(let i=0;i<=steps;i++){
+      const a = a1 + (a2-a1)*i/steps;
+      const [x,y] = toXY(r2,a);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    for(let i=steps;i>=0;i--){
+      const a = a1 + (a2-a1)*i/steps;
+      const [x,y] = toXY(r1,a);
+      ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  const cfg = sinusConfig();
+  cfg.forEach(s=>{
+    wedge(rIn, rOut, s.start, s.end, s.n===S.osSinus ? "#F6E2E7" : "#F1F5F7");
+  });
+
+  const sc = cfg.find(s=>s.n===S.osSinus);
+  if(sc){
+    const bounds = segBounds(sc);
+    const idx = sc.order.indexOf(S.osSeg);
+    if(idx>=0){
+      const [a1,a2] = bounds[idx];
+      const mid = (a1+a2)/2;
+      const li = LEVEL_IDX[S.osLevel];
+      const rLevel = li===undefined ? (rIn+rOut)/2 : rIn + (rOut-rIn)*((li+0.5)/4);
+      const [mx,my] = toXY(rLevel, mid);
+      ctx.beginPath();
+      ctx.arc(mx,my,5.5,0,Math.PI*2);
+      ctx.fillStyle = "#A5102F";
+      ctx.fill();
+      ctx.strokeStyle = "#FFFFFF";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  ctx.fillStyle = "#0F212C";
+  ctx.font = "bold 12px 'IBM Plex Mono', Consolas, monospace";
+  ctx.textAlign = "center";
+  ctx.fillText(ostialCode() || (S.osSinus+S.osSeg), cx, H-16);
+}
+
+/* ============================================================
+   Cálculos
+   ============================================================ */
+const num = v => (v===""||v===null||isNaN(parseFloat(v))) ? null : parseFloat(v);
+const effDiam = csa => 2*Math.sqrt(csa/Math.PI);
+
+function calcEllip(){
+  const M = num(S.major), m = num(S.minor);
+  if(M===null||m===null||m===0) return null;
+  return M/m;
+}
+function calcCSA(){
+  const a = num(S.csamin), b = num(S.csaref);
+  if(a===null||b===null||b===0) return null;
+  return (1 - a/b)*100;
+}
+function calcDiam(){
+  const a = num(S.csamin), b = num(S.csaref);
+  if(a===null||b===null||b<=0) return null;
+  const dmin = effDiam(a), dref = effDiam(b);
+  return {dmin, dref, pct:(1 - dmin/dref)*100};
+}
+
+/* ============================================================
+   Descriptor central e informe
+   ============================================================ */
+const COURSE_ORDER = ["IM","IA","IS","PP","RA"];
+function orderedCourses(){ return COURSE_ORDER.filter(c=>S.courses.includes(c)); }
+
+const TRUE_SINUS = ["RS","LS","NS","AS","PS"];
+function sinusToken(){
+  if(!S.sinus) return "";
+  const isTrueSinus = TRUE_SINUS.includes(S.sinus);
+  return (isTrueSinus && S.osLevel==="IV") ? `HO (${S.sinus})` : S.sinus;
+}
+function coreDescriptor(){
+  if(!S.vessel) return null;
+  let s = S.vessel + "-AAOCA";
+  const sin = sinusToken();
+  if(sin) s += "/" + sin;
+  const c = orderedCourses();
+  if(c.length) s += "-" + c.join(",");
+  return s;
+}
+function ostialCode(){
+  if(!S.osSinus || !S.osSeg || !S.osLevel) return "";
+  return S.osSinus + S.osSeg + "-" + S.osLevel + (S.jc ? "-JC" : "");
+}
+
+function levelText(){
+  const f = LEVELS.find(l=>l[0]===S.osLevel);
+  return f ? "Nivel "+f[0]+" — "+f[1] : null;
+}
+
+function buildOneLinerParts(){
+  const parts = [];
+
+  const code = coreDescriptor();
+  if(code) parts.push(code);
+
+  const oc = ostialCode();
+  const locBits = [];
+  if(oc){
+    let ocStr = "ostium "+oc;
+    if(S.osLevel==="IV" && num(S.hodist)!==null) ocStr += " ("+num(S.hodist)+"mm sobre la unión sinotubular)";
+    locBits.push(ocStr);
+  } else if(S.osSinus || S.osSeg || S.osLevel){
+    locBits.push("ostium: localización incompleta");
+  }
+  if(S.rel) locBits.push(S.rel.toLowerCase());
+  if(S.morph) locBits.push(S.morph.toLowerCase());
+  if(S.jc) locBits.push("yuxtacomisural");
+  if(locBits.length) parts.push(locBits.join(", "));
+
+  if(S.im==="Sí") parts.push("intramural"+(num(S.imlen)!==null ? " "+num(S.imlen)+"mm" : ""));
+  else if(S.im==="No") parts.push("sin segmento intramural");
+
+  const e = calcEllip();
+  if(e!==null) parts.push("elipticidad "+e.toFixed(2)+" ("+num(S.major)+"×"+num(S.minor)+"mm)");
+
+  const c = calcCSA();
+  if(c!==null) parts.push("%CSA "+(c<=0?"0":c.toFixed(0))+"% (mín "+num(S.csamin)+"mm², ref "+num(S.csaref)+"mm²)");
+
+  const d = calcDiam();
+  if(d) parts.push("%diámetro efectivo "+(d.pct<=0?"0":d.pct.toFixed(0))+"% (mín "+d.dmin.toFixed(2)+"mm, ref "+d.dref.toFixed(2)+"mm)");
+
+  if(S.angle) parts.push("ángulo agudo de salida: "+S.angle.toLowerCase()+(num(S.angledeg)!==null ? " ("+num(S.angledeg)+"°)" : ""));
+
+  if(S.dom){
+    const dm = DOMS.find(x=>x[0]===S.dom);
+    parts.push("dominancia "+S.dom.toLowerCase()+" ("+dm[1]+")");
+  }
+
+  if(S.courses.includes("IA") && S.iaface) parts.push(S.iaface.split(" (")[0].toLowerCase());
+
+  EXTRAS.forEach(([k,t])=>{
+    if(!S.extras.includes(t)) return;
+    if(t==="Puente miocárdico"){
+      parts.push("puente miocárdico"+(S.mb.trim() ? " ("+S.mb.trim()+")" : ""));
+    } else if(t==="Cambio dinámico en el ciclo cardiaco"){
+      const dd=num(S.elldia), ss=num(S.ellsys);
+      parts.push("estrechamiento dinámico"+((dd!==null||ss!==null) ? " (elipticidad diástole "+(dd??"–")+", sístole "+(ss??"–")+")" : ""));
+    } else {
+      parts.push(t.toLowerCase());
+    }
+  });
+
+  if(S.comments.trim()) parts.push(S.comments.trim());
+
+  return parts;
+}
+function oneLinerText(){
+  return buildOneLinerParts().join(" · ");
+}
+function filledCount(){
+  const checks = [
+    !!S.vessel,
+    !!S.sinus,
+    S.courses.length>0,
+    !!ostialCode(),
+    !!S.rel,
+    !!S.morph,
+    !!S.im,
+    (num(S.major)!==null && num(S.minor)!==null),
+    (num(S.csamin)!==null && num(S.csaref)!==null),
+    (num(S.csamin)!==null && num(S.csaref)!==null),
+    !!S.angle,
+    !!S.dom,
+    (S.extras.length>0 || S.comments.trim()!=="" || S.mb.trim()!=="")
+  ];
+  return checks.filter(Boolean).length;
+}
+
+function renderOutput(){
+  const code = coreDescriptor();
+  document.getElementById("out-code").innerHTML =
+    code ? code : '<em>Selecciona el vaso anómalo</em>';
+  const oc = ostialCode();
+  document.getElementById("out-ostium").textContent = oc ? "Ostium: "+oc : "";
+
+  drawMiniTopo();
+
+  document.getElementById("out-count").textContent = filledCount()+"/13 elementos documentados";
+
+  const text = oneLinerText();
+  document.getElementById("out-oneline").innerHTML = text
+    ? escapeHtml(text)
+    : '<span class="na">Completa el formulario para generar el informe.</span>';
+
+  renderImages();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+function plainText(){
+  const code = coreDescriptor();
+  const text = oneLinerText();
+  let out = "INFORME ESTRUCTURADO DE AAOCA\n";
+  out += "Nomenclatura ICAAC (Mery CM et al. JACC Cardiovasc Imaging. 2026;19:983-1001)\n\n";
+  out += (code || "(descriptor incompleto)") + "\n\n";
+  out += (text || "Sin datos suficientes para generar el informe.") + "\n";
+  if(S.images.length) out += "\n[Incluye "+S.images.length+" imagen(es) adjunta(s) — descarga en PDF o Word para verlas.]\n";
+  return out;
+}
+
+/* ============================================================
+   Imágenes adjuntas
+   ============================================================ */
+function renderImages(){
+  const host = document.getElementById("out-images");
+  host.innerHTML = "";
+  S.images.forEach((im,i)=>{
+    const div = document.createElement("div");
+    div.className = "thumb";
+    div.innerHTML = `<img src="${im.dataUrl}" alt="${escapeHtml(im.name)}"><button type="button" aria-label="Quitar imagen">×</button>`;
+    div.querySelector("button").addEventListener("click", ()=>{
+      S.images.splice(i,1);
+      renderImages();
+    });
+    host.appendChild(div);
+  });
+}
+function addImageFiles(fileList){
+  Array.from(fileList).forEach(file=>{
+    if(!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const maxDim = 1600;
+        let w = img.naturalWidth, h = img.naturalHeight;
+        if(w>maxDim || h>maxDim){ const sc = maxDim/Math.max(w,h); w=Math.round(w*sc); h=Math.round(h*sc); }
+        const cnv = document.createElement("canvas");
+        cnv.width = w; cnv.height = h;
+        cnv.getContext("2d").drawImage(img,0,0,w,h);
+        const jpg = cnv.toDataURL("image/jpeg", 0.85);
+        S.images = [...S.images, {name:file.name, dataUrl:jpg, width:w, height:h}];
+        renderImages();
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ============================================================
+   Render
+   ============================================================ */
+function render(){
+  CHIP_SYNCS.forEach(fn=>fn());
+  drawMap();
+  drawLevels();
+
+  // lecturas del mapa
+  const oc = ostialCode();
+  document.getElementById("ro-loc").textContent = oc || "—";
+  const lt = levelText();
+  document.getElementById("ro-lvl").textContent = lt || "Elige seno, segmento y nivel";
+
+  document.getElementById("note-ho").hidden = (S.osLevel !== "IV");
+  (function(){
+    const n = document.getElementById("note-rel");
+    let msg = "";
+    if(S.rel==="4" && S.vessel && S.vessel!=="ST") msg = "Según el artículo, el Tipo 4 (tronco único en el mediastino) se describe como <b>ST-AAOCA</b>. Revisa el vaso anómalo.";
+    else if(S.vessel==="ST" && S.rel && S.rel!=="4") msg = "ST-AAOCA corresponde a ostium único con tronco único (Tipo 4). Los patrones Tipo 3 se describen con el vaso correspondiente (p. ej. L-AAOCA).";
+    n.innerHTML = msg; n.hidden = !msg;
+  })();
+  document.getElementById("ho-dist-row").style.display = (S.osLevel==="IV") ? "flex" : "none";
+
+  // cálculos
+  const e = calcEllip(), c = calcCSA(), d = calcDiam();
+  const ce = document.getElementById("calc-ellip");
+  if(e===null){ ce.className="calc empty"; ce.textContent="Elipticidad = eje mayor ÷ eje menor"; }
+  else { ce.className="calc"; ce.textContent="Elipticidad = "+e.toFixed(2); }
+
+  const cc = document.getElementById("calc-csa");
+  if(c===null){ cc.className="calc empty"; cc.textContent="%CSA = (1 − CSA mínima ÷ CSA de referencia) × 100"; }
+  else { cc.className="calc"; cc.textContent = c<=0 ? "Sin estenosis de área" : "Estenosis de área = "+c.toFixed(0)+"%"; }
+
+  const cd = document.getElementById("calc-diam");
+  if(!d){ cd.className="calc empty"; cd.textContent="Captura las dos áreas del punto 9 para obtener los diámetros efectivos."; }
+  else {
+    cd.className="calc";
+    cd.textContent = "Ø efectivo mínimo "+d.dmin.toFixed(2)+" mm · Ø de referencia "+d.dref.toFixed(2)+" mm · estenosis "+(d.pct<=0?"0":d.pct.toFixed(0))+"%";
+  }
+
+  renderOutput();
+}
+
+/* ============================================================
+   Enlaces de inputs
+   ============================================================ */
+function bind(id, key, ev){
+  const el = document.getElementById(id);
+  el.value = S[key];
+  el.addEventListener(ev||"input", ()=>{ S[key] = el.value; render(); });
+}
+["f-iaface|iaface|change","f-hodist|hodist","f-imlen|imlen","f-major|major","f-minor|minor",
+ "f-csamin|csamin","f-csaref|csaref","f-angledeg|angledeg","f-mb|mb","f-elldia|elldia",
+ "f-ellsys|ellsys","f-comments|comments"].forEach(spec=>{
+  const [id,key,ev] = spec.split("|"); bind(id,key,ev);
+});
+
+document.getElementById("f-jc").addEventListener("change", e=>{ S.jc = e.target.checked; render(); });
+document.getElementById("f-bicuspid").addEventListener("change", e=>{
+  S.bicuspid = e.target.checked;
+  const ok = (S.bicuspid?SINUS_BI:SINUS_TRI).some(x=>x[0]===S.sinus);
+  if(!ok){ S.sinus=""; S.osSinus=""; S.osSeg=""; }
+  if(S.bicuspid && S.osSinus==="3"){ S.osSinus=""; S.osSeg=""; }
+  buildChips();
+  render();
+});
+document.getElementById("view-surg").addEventListener("click", ()=>setView("surg"));
+document.getElementById("view-rad").addEventListener("click", ()=>setView("rad"));
+function setView(v){
+  S.view = v;
+  document.getElementById("view-surg").setAttribute("aria-pressed", v==="surg");
+  document.getElementById("view-rad").setAttribute("aria-pressed", v==="rad");
+  drawMap();
+}
+
+/* acciones */
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  setTimeout(()=>{ if(t.textContent===msg) t.textContent=""; }, 2600);
+}
+document.getElementById("btn-copy").addEventListener("click", async ()=>{
+  const text = plainText();
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Informe copiado");
+  }catch(err){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Informe copiado"); }
+    catch(e2){ toast("No se pudo copiar; selecciona el texto manualmente"); }
+    document.body.removeChild(ta);
+  }
+});
+document.getElementById("btn-addimg").addEventListener("click", ()=>document.getElementById("f-images").click());
+document.getElementById("f-images").addEventListener("change", e=>{
+  addImageFiles(e.target.files);
+  e.target.value = "";
+});
+
+/* ============================================================
+   Exportación a PDF (jsPDF, cargado bajo demanda)
+   ============================================================ */
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    if(document.querySelector('script[data-src="'+src+'"]')){ resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src; s.dataset.src = src;
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error("No se pudo cargar "+src));
+    document.head.appendChild(s);
+  });
+}
+async function ensureJsPDF(){
+  if(window.jspdf && window.jspdf.jsPDF) return;
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+}
+function exportFilename(ext){
+  const code = coreDescriptor();
+  const clean = code
+    ? code.replace(/[\/,()]/g,"-").replace(/\s+/g,"").replace(/-+/g,"-").replace(/^-|-$/g,"")
+    : "informe";
+  return "AAOCA_"+clean+"."+ext;
+}
+async function downloadPDF(){
+  try{
+    toast("Generando PDF…");
+    await ensureJsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:"pt", format:"letter" });
+    const marginX = 54;
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    let y = 56;
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(16); doc.setTextColor(15,33,44);
+    doc.text("Informe estructurado de AAOCA", marginX, y); y += 20;
+
+    doc.setFont("helvetica","normal"); doc.setFontSize(9.5); doc.setTextColor(109,135,151);
+    doc.text("Nomenclatura ICAAC \u00b7 Mery CM et al. JACC Cardiovasc Imaging. 2026;19(8):983-1001", marginX, y); y += 26;
+
+    const code = coreDescriptor();
+    doc.setFont("courier","bold"); doc.setFontSize(15); doc.setTextColor(15,33,44);
+    doc.text(code || "(descriptor incompleto)", marginX, y); y += 22;
+
+    const hasTopo = S.osSinus && S.osSeg;
+    const textW = hasTopo ? pageW - marginX*2 - 150 : pageW - marginX*2;
+    const textX = hasTopo ? marginX + 150 : marginX;
+    doc.setFont("helvetica","normal"); doc.setFontSize(10.5); doc.setTextColor(49,80,95);
+    const lines = doc.splitTextToSize(oneLinerText() || "Sin datos suficientes.", textW);
+
+    if(hasTopo){
+      const cnv = document.getElementById("out-topo-canvas");
+      const imgData = cnv.toDataURL("image/png");
+      const dw = 130, dh = 130*(cnv.height/cnv.width);
+      doc.addImage(imgData, "PNG", marginX, y, dw, dh);
+      doc.text(lines, textX, y+12);
+      y += Math.max(dh, lines.length*13) + 22;
+    } else {
+      doc.text(lines, marginX, y);
+      y += lines.length*13 + 18;
+    }
+
+    if(S.images.length){
+      if(y > pageH-150){ doc.addPage(); y = 56; }
+      doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,33,44);
+      doc.text("Im\u00e1genes adjuntas", marginX, y); y += 16;
+
+      const cols = 3, gap = 12;
+      const cellW = (pageW - marginX*2 - gap*(cols-1)) / cols, cellH = cellW*0.75;
+      let col = 0;
+      S.images.forEach(im=>{
+        if(y + cellH > pageH - 50){ doc.addPage(); y = 56; col = 0; }
+        const x = marginX + col*(cellW+gap);
+        let w = cellW, h = cellW*(im.height/im.width);
+        if(h > cellH){ h = cellH; w = cellH*(im.width/im.height); }
+        doc.addImage(im.dataUrl, "JPEG", x, y, w, h);
+        col++;
+        if(col>=cols){ col = 0; y += cellH + gap; }
+      });
+      if(col!==0) y += cellH + gap;
+    }
+
+    doc.setFont("helvetica","italic"); doc.setFontSize(8.5); doc.setTextColor(154,174,184);
+    doc.text("Documento generado con nomenclatura anat\u00f3mica ICAAC. No asigna riesgo cl\u00ednico.", marginX, pageH-30);
+
+    doc.save(exportFilename("pdf"));
+    toast("PDF descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el PDF");
+  }
+}
+
+/* ============================================================
+   Exportación a Word (.doc compatible, sin dependencias)
+   ============================================================ */
+function buildWordHtml(){
+  const code = escapeHtml(coreDescriptor() || "(descriptor incompleto)");
+  const oneliner = escapeHtml(oneLinerText() || "Sin datos suficientes.");
+  let imgBlock = "";
+  if(S.osSinus && S.osSeg){
+    const cnv = document.getElementById("out-topo-canvas");
+    imgBlock = `<img src="${cnv.toDataURL("image/png")}" style="width:150px;display:block;margin:6px 0 12px;">`;
+  }
+  let attachHtml = "";
+  if(S.images.length){
+    attachHtml = "<h3>Im\u00e1genes adjuntas</h3><table style='width:100%;border-collapse:collapse;' cellpadding='4'><tr>" +
+      S.images.map(im=>`<td style="text-align:center;vertical-align:top;"><img src="${im.dataUrl}" style="width:160px;height:auto;border:1px solid #C7D4DC;"><div style="font-size:9pt;color:#6D8797;margin-top:2px;">${escapeHtml(im.name)}</div></td>`).join("") +
+      "</tr></table>";
+  }
+  return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset="utf-8"><title>Informe AAOCA</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->
+<style>
+body{font-family:Calibri, Arial, sans-serif; font-size:11pt; color:#0F212C;}
+h1{font-size:16pt;margin-bottom:2pt;}
+h3{font-size:11pt;margin-top:18pt;}
+.meta{font-size:9pt;color:#6D8797;margin-bottom:14pt;}
+.code{font-family:'Courier New',monospace;font-size:14pt;font-weight:bold;margin-bottom:4pt;}
+.oneline{font-size:11pt;line-height:1.5;}
+.footer{font-size:8pt;color:#9AAEB8;margin-top:24pt;font-style:italic;}
+</style></head>
+<body>
+<h1>Informe estructurado de AAOCA</h1>
+<p class="meta">Nomenclatura ICAAC &middot; Mery CM et al. JACC Cardiovasc Imaging. 2026;19(8):983&ndash;1001</p>
+<p class="code">${code}</p>
+${imgBlock}
+<p class="oneline">${oneliner}</p>
+${attachHtml}
+<p class="footer">Documento generado con nomenclatura anat&oacute;mica ICAAC. No asigna riesgo cl&iacute;nico.</p>
+</body></html>`;
+}
+function downloadWord(){
+  try{
+    const html = buildWordHtml();
+    const blob = new Blob(["\ufeff", html], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = exportFilename("doc");
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 3000);
+    toast("Word descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el Word");
+  }
+}
+document.getElementById("btn-pdf").addEventListener("click", downloadPDF);
+document.getElementById("btn-word").addEventListener("click", downloadWord);
+
+document.getElementById("btn-print").addEventListener("click", ()=>window.print());
+document.getElementById("btn-reset").addEventListener("click", ()=>{
+  if(!confirm("Se borrarán todos los datos capturados. ¿Continuar?")) return;
+  Object.assign(S,{
+    vessel:"",sinus:"",bicuspid:false,courses:[],iaface:"",osSinus:"",osSeg:"",osLevel:"",
+    jc:false,hodist:"",rel:"",morph:"",im:"",imlen:"",major:"",minor:"",csamin:"",csaref:"",
+    angle:"",angledeg:"",dom:"",extras:[],mb:"",elldia:"",ellsys:"",comments:"",images:[]
+  });
+  document.getElementById("f-bicuspid").checked=false;
+  document.getElementById("f-jc").checked=false;
+  document.getElementById("f-images").value="";
+  ["f-iaface","f-hodist","f-imlen","f-major","f-minor","f-csamin","f-csaref","f-angledeg",
+   "f-mb","f-elldia","f-ellsys","f-comments"].forEach(id=>document.getElementById(id).value="");
+  buildChips();
+  render();
+  toast("Formulario vacío");
+});
+
+buildChips();
+render();
+</script>
+</body>
+</html>
