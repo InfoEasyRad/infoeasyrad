@@ -814,7 +814,10 @@ function studyText(){
   const why = cz.length ? " (" + joinY(cz) + ")" : "";
   if(S.quality==="opt") s += " Calidad de imagen diagnóstica óptima, con opacificación homogénea hasta las arterias subsegmentarias.";
   else if(S.quality==="lim") s += " Calidad de imagen limitada" + why + ": valoración confiable hasta las arterias lobares, con valoración subóptima de las arterias segmentarias y subsegmentarias.";
-  else if(S.quality==="nd") s += " Estudio no diagnóstico" + why + ": no permite excluir TEP en las arterias pulmonares principales ni lobares.";
+  else if(S.quality==="nd") s += S.ves.length
+    // con defectos de llenado identificados no se usa N: se describe la limitación sin llamar "no diagnóstico" al estudio
+    ? " Calidad de imagen subóptima" + why + ", con valoración limitada incluso de las arterias pulmonares principales y lobares."
+    : " Estudio no diagnóstico" + why + ": no permite excluir TEP en las arterias pulmonares principales ni lobares.";
   return s;
 }
 function arteriesText(){
