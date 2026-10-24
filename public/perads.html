@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PE-RADS v2026: tromboembolismo pulmonar agudo</title>
+<meta name="description" content="Clasificación PE-RADS v2026 del tromboembolismo pulmonar agudo en angiotomografía y angiorresonancia: ubicación del émbolo más proximal, excepciones, relación VD/VI, trombo en cavidades derechas, texto de informe y consideraciones de manejo.">
+<meta name="theme-color" content="#16232B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PE-RADS v2026: tromboembolismo pulmonar agudo">
+<meta property="og:description" content="Marca el émbolo en el árbol arterial pulmonar y obtén la categoría PE-RADS, el texto del informe y el manejo sugerido.">
+<meta property="og:locale" content="es_MX">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F171C'/%3E%3Cpath d='M16 28V14M16 14C13 11.5 10 11.5 6.5 12.5M16 14C19 11.5 22 11.5 25.5 12.5' stroke='%23E9F0F2' stroke-width='4.2' stroke-linecap='round' fill='none'/%3E%3Cpath d='M17.5 13C20 11.6 22.5 11.6 25 12.4' stroke='%23E9A74C' stroke-width='1.6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600;700&family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EBEFF0;
+  --surface:#FFFFFF;
+  --ink:#16232B;
+  --ink-2:#33464F;
+  --muted:#5F7079;
+  --line:#C9D3D8;
+  --line-soft:#DCE3E6;
+  --visor:#0F171C;
+  --visor-line:#26343C;
+  --visor-text:#9FB1B9;
+  --lung:#18252C;
+  --lumen:#D8E3E8;
+  --clot:#56636B;
+  --iodine:#B8741A;
+  --iodine-lt:#E9A74C;
+  --iodine-ink:#7E4A08;
+  --iodine-soft:#F5E8D3;
+  --info:#2D6F99;
+  --info-soft:#E3EEF4;
+  --focus:#2D7BB0;
+  --sans:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Atkinson Hyperlegible Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;
+}
+a{color:var(--ink-2)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button,.chips label,svg{touch-action:manipulation}
+img,canvas{max-width:100%}
+
+/* ---------- navegación y cabecera ---------- */
+.topnav{padding:10px 28px;background:var(--surface);border-bottom:1px solid var(--line);font-size:14px}
+.topnav a{color:var(--ink-2);text-decoration:none}
+.topnav a:hover{text-decoration:underline}
+.masthead{background:var(--surface);border-bottom:1px solid var(--line);padding:26px 28px 24px}
+.masthead-inner{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px 48px;align-items:flex-end;justify-content:space-between}
+h1{margin:0;font-size:40px;line-height:1.02;font-weight:800;letter-spacing:-.025em}
+.masthead .sub{margin:10px 0 0;max-width:62ch;color:var(--ink-2);font-size:15.5px}
+.cite{margin:0;font-size:13px;color:var(--muted);line-height:1.5;max-width:46ch}
+
+/* ---------- distribución ---------- */
+.wrap{max-width:1320px;margin:0 auto;padding:28px 28px 56px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:36px;align-items:start}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr;gap:26px;padding:20px 16px 48px}}
+
+/* ---------- formulario ---------- */
+.group{margin-bottom:34px}
+.group:last-child{margin-bottom:0}
+.group-head{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.group-head h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.token{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--iodine-ink);background:var(--iodine-soft);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.group-lede{margin:-2px 0 14px;color:var(--muted);font-size:14px;max-width:70ch}
+.field{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:16px 18px 18px;margin-bottom:12px}
+.field-title{display:block;font-weight:700;font-size:16px;margin:0 0 4px}
+.field-title .opt{font-weight:400;color:var(--muted);font-size:14px}
+.hint{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.5;max-width:72ch}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.chips label{
+  display:inline-flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  border:1px solid var(--line);background:#fff;padding:7px 12px;border-radius:6px;
+  cursor:pointer;font-size:14.5px;line-height:1.3;transition:background .12s,border-color .12s,color .12s;
+}
+.chips label .tag{font-size:12.5px;color:var(--muted)}
+.chips label:hover{border-color:var(--ink-2)}
+.chips input:checked + label{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips input:checked + label .tag{color:#B9C9D0}
+.chips input:focus-visible + label{outline:2px solid var(--focus);outline-offset:2px}
+.chips.small label{font-size:13.5px;padding:6px 10px}
+
+.sublabel{display:block;font-size:13.5px;color:var(--muted);margin:14px 0 6px}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.row.spaced{margin-top:12px}
+.sub{flex:1 1 150px;min-width:130px}
+.sub.full{flex:1 1 100%}
+.sub > span{display:block;font-size:13.5px;color:var(--muted);margin-bottom:4px}
+input[type=text],textarea{
+  width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);
+  border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:6px;
+}
+input[type=text]:focus,textarea:focus{outline:2px solid var(--focus);outline-offset:-1px;border-color:var(--focus)}
+input.num{font-family:var(--mono)}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.readout{margin-top:12px;font-family:var(--mono);font-size:14px;background:#F1F4F5;border-radius:6px;padding:9px 12px;color:var(--ink-2)}
+.readout.hit{background:var(--iodine-soft);color:var(--iodine-ink);font-weight:600}
+.readout[hidden],.note[hidden],[hidden]{display:none!important}
+.note{margin-top:12px;font-size:14px;background:var(--info-soft);border-left:3px solid var(--info);padding:9px 12px;border-radius:0 6px 6px 0;color:#1F4B66}
+.switch{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;color:var(--ink-2);margin-top:14px;cursor:pointer;line-height:1.4}
+.switch input{width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+details.more{margin-top:14px;font-size:14px;border-top:1px solid var(--line-soft);padding-top:12px}
+details.more summary{cursor:pointer;color:var(--ink-2);font-weight:600}
+details.more[open] summary{margin-bottom:10px}
+details.more p,details.more li{color:var(--ink-2);margin:0 0 8px;line-height:1.5}
+details.more ul{margin:0;padding-left:18px}
+.listlvl{margin:10px 0 4px;font-size:13.5px;color:var(--muted)}
+.listlvl:first-child{margin-top:0}
+
+/* ---------- visor del árbol arterial (elemento distintivo) ---------- */
+.visor{background:var(--visor);border-radius:12px;padding:12px 12px 14px;color:var(--visor-text)}
+.visor-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 12px;font-size:13px;margin:2px 6px 4px}
+.visor-top b{color:#E6EDF0;font-weight:600}
+svg.tree{display:block;width:100%;height:auto;-webkit-user-select:none;user-select:none}
+.lung{fill:var(--lung)}
+.ves{cursor:pointer}
+.ves:focus{outline:none}
+.ves .hit{fill:none;stroke:transparent;stroke-linecap:butt;stroke-linejoin:round;pointer-events:stroke}
+.ves.lvl1 .hit{stroke-linecap:round}
+.ves .wall{fill:none;stroke:var(--visor);stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.ves .lum{fill:none;stroke:var(--lumen);stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:stroke .12s}
+.ves .clot{fill:none;stroke:var(--clot);stroke-linecap:round;stroke-linejoin:round;pointer-events:none;opacity:0;transition:opacity .12s}
+.ves:hover .lum{stroke:#FFFFFF}
+.ves.on .wall{stroke:var(--iodine-lt)}
+.ves.on .lum{stroke:#FFFFFF}
+.ves.on .clot{opacity:1}
+.ves:focus-visible .hit{stroke:rgba(77,160,214,.5)}
+.vlab{font-family:var(--sans);font-size:12px;font-weight:600;fill:#8DA0A9;pointer-events:none}
+.vlab.on{fill:var(--iodine-lt)}
+.orient{font-family:var(--sans);font-size:11.5px;fill:#6F838C;pointer-events:none}
+.visor-read{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;border-top:1px solid var(--visor-line);margin:6px 6px 0;padding-top:10px;font-size:14.5px;color:#E6EDF0}
+.visor-read dt{color:var(--visor-text)}
+.visor-read dd{margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 6px 0;font-size:12.5px;color:var(--visor-text)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.lg-lum{stroke:var(--lumen);stroke-linecap:round}
+.lg-wall{stroke:var(--iodine-lt);stroke-linecap:round}
+.lg-on{stroke:#FFFFFF;stroke-linecap:round}
+.lg-clot{stroke:var(--clot);stroke-linecap:round}
+.key{margin:10px 6px 0;font-size:12.5px;line-height:1.5;color:#7F939C}
+
+/* ---------- panel de salida ---------- */
+.panel{position:sticky;top:18px}
+.codebox{background:var(--visor);color:#fff;border-radius:12px 12px 0 0;padding:18px 20px 16px}
+.cb-label{margin:0;font-size:13.5px;color:var(--visor-text)}
+.cb-code{margin:4px 0 2px;font-family:var(--mono);font-size:36px;font-weight:700;line-height:1.2;letter-spacing:-.01em;min-height:44px;overflow-wrap:anywhere}
+.cb-code .pre{color:#C8D4D9;font-weight:600;margin-right:.28em}
+.cb-code .seg{font:inherit;color:#fff;background:none;border:0;padding:0 .03em;margin:0;cursor:pointer;border-bottom:2px solid transparent;line-height:inherit;letter-spacing:inherit}
+.cb-code .seg.mod{color:var(--iodine-lt)}
+.cb-code .seg:hover{border-bottom-color:currentColor}
+.cb-code .sl{color:#5C717B;font-weight:400}
+.cb-wait{display:block;font-family:var(--sans);font-size:18px;font-weight:600;color:#C8D4D9;line-height:1.35;padding:8px 0 4px}
+.cb-meaning{margin:2px 0 0;font-size:15px;color:#DCE4E8;min-height:1.5em}
+.cb-parts{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--visor-line)}
+.cb-parts div{min-width:0}
+.cb-parts dt{font-size:12.5px;color:var(--visor-text)}
+.cb-parts dd{margin:1px 0 0;font-size:14.5px;color:#fff}
+.cb-parts dd.dim{color:#7F939C}
+
+.report{background:var(--surface);border:1px solid var(--line-soft);border-top:0;border-radius:0 0 12px 12px;padding:18px 20px 20px;max-height:calc(100vh - 330px);overflow:auto;display:flex;flex-direction:column}
+/* en pantalla se lee primero la impresión y el manejo; al imprimir vuelve el orden del informe */
+.imp-wrap{order:1}
+.mgmt{order:2}
+.inc-switch{order:3}
+.find-wrap{order:4;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr{order:5}
+.rep-sec{margin:0 0 14px}
+.rep-sec h3,.mgmt h3{margin:0 0 6px;font-size:15px;font-weight:700;color:var(--ink)}
+.rep-sec p{margin:0 0 7px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.rep-sec p b{color:var(--ink);font-weight:700}
+.rep-empty{color:var(--muted)!important;font-style:italic}
+.imp{background:#F2F5F6;border-radius:8px;padding:12px 14px}
+.imp p{color:var(--ink)}
+.mgmt{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.mg-sub{margin:-2px 0 10px;font-size:13px;color:var(--muted)}
+.mg-row{margin:0 0 12px;padding-left:12px;border-left:3px solid var(--iodine)}
+.mg-t{margin:0;font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--iodine-ink)}
+.mg-f{margin:2px 0 4px;font-size:14.5px;color:var(--ink)}
+.mg-row ol{margin:4px 0 6px;padding-left:20px;font-size:14px;color:var(--ink-2)}
+.mg-row li{margin:2px 0}
+.mg-x,.mg-n{margin:4px 0 0;font-size:13.5px;color:var(--ink-2)}
+.mg-n{color:var(--muted)}
+.foot{list-style:none;margin:10px 0 0;padding:0;font-size:12.5px;color:var(--muted);line-height:1.5}
+.foot li{margin:2px 0}
+
+.imgmgr{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.imgmgr-head .lbl{font-size:14px;font-weight:700}
+.addimg-btn{font-family:var(--sans);font-size:13.5px;font-weight:600;border:1px dashed var(--line);background:#fff;color:var(--ink-2);padding:6px 12px;border-radius:6px;cursor:pointer}
+.addimg-btn:hover{border-color:var(--ink-2)}
+.imgmgr-grid{display:flex;flex-wrap:wrap;gap:8px}
+.imgmgr-grid:empty::after{content:"Sin imágenes adjuntas.";color:var(--muted);font-size:13.5px}
+.thumb{position:relative;width:72px;height:72px;border-radius:6px;overflow:hidden;border:1px solid var(--line-soft);flex:0 0 auto}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:3px;right:3px;width:20px;height:20px;border:0;border-radius:50%;background:rgba(15,23,28,.75);color:#fff;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+button.act{font-family:var(--sans);font-size:14.5px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:9px 16px;cursor:pointer;border-radius:6px}
+button.act.ghost{background:#fff;color:var(--ink)}
+button.act:hover{background:var(--ink-2);border-color:var(--ink-2);color:#fff}
+.toast{font-size:13.5px;color:var(--info);font-weight:600}
+
+/* ---------- referencia ---------- */
+.refs{max-width:1320px;margin:0 auto;padding:8px 28px 40px}
+.refs > h2{font-size:20px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink);font-weight:700}
+.refs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1150px){.refs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.refs-grid{grid-template-columns:1fr}}
+.ref{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:16px 16px 14px}
+.ref h3{margin:0 0 8px;font-size:16px}
+.ref table{width:100%;border-collapse:collapse;font-size:14px}
+.ref td{padding:6px 0;vertical-align:top;border-top:1px solid var(--line-soft);color:var(--ink-2);line-height:1.45}
+.ref td.k{font-family:var(--mono);font-weight:700;width:3.4em;color:var(--ink);padding-right:8px}
+.ref p{margin:8px 0 0;font-size:14px;color:var(--ink-2)}
+.ref dl{margin:0;font-size:14px}
+.ref dt{font-weight:700;color:var(--ink);margin-top:8px}
+.ref dt:first-child{margin-top:0}
+.ref dd{margin:2px 0 0;color:var(--ink-2);line-height:1.45}
+.ref ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.ref li{margin:0 0 6px;line-height:1.45}
+
+footer.legal{max-width:1320px;margin:0 auto;padding:0 28px 40px;color:var(--muted);font-size:13px;line-height:1.6}
+footer.legal .editor{margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid var(--line);font-weight:700;font-size:15px;color:var(--ink)}
+footer.legal .editor span{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-bottom:2px}
+
+/* barra fija con la categoría (solo móvil) */
+.codebar{display:none}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- móvil ---------- */
+@media (max-width:1000px){
+  .panel{position:static}
+  .report{max-height:none;overflow:visible}
+  .codebar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--visor);color:#fff;border-top:1px solid var(--visor-line);
+    padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    transition:transform .2s ease;
+  }
+  .codebar.away{transform:translateY(120%)}
+  .codebar .c{font-family:var(--mono);font-weight:700;font-size:18px;overflow-wrap:anywhere}
+  .codebar button{font-family:var(--sans);font-size:15px;font-weight:600;background:#fff;color:var(--ink);border:0;border-radius:6px;padding:10px 14px;min-height:44px;flex:0 0 auto;cursor:pointer}
+  body{padding-bottom:76px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .topnav{padding:10px 16px}
+  .masthead{padding:max(18px,env(safe-area-inset-top)) 16px 18px}
+  h1{font-size:32px}
+  .wrap{padding:16px max(14px,env(safe-area-inset-right)) 40px max(14px,env(safe-area-inset-left));gap:22px}
+  .refs{padding:4px 14px 32px}
+  footer.legal{padding:0 16px max(32px,env(safe-area-inset-bottom))}
+  .field{padding:14px 14px 16px}
+  .chips{gap:8px}
+  .chips label{min-height:44px;padding:9px 14px;font-size:15px;align-items:center}
+  .chips.small label{min-height:40px;font-size:14px}
+  input[type=text],textarea{font-size:16px;min-height:44px;padding:9px 11px}
+  .sub{flex:1 1 100%}
+  .switch{font-size:15px;min-height:40px}
+  .switch input{width:22px;height:22px}
+  .visor{padding:8px 6px 12px;margin:0 -4px}
+  .vlab{font-size:17px}
+  .orient{font-size:15px}
+  .cb-code{font-size:28px}
+  .codebox{padding:16px 16px 14px}
+  .report{padding:16px 14px}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.act{min-height:46px;padding:10px 8px;width:100%}
+  .toast{grid-column:1/-1}
+  .thumb button{width:28px;height:28px;font-size:16px}
+}
+
+/* ---------- impresión ---------- */
+@media print{
+  body{background:#fff;padding:0}
+  .topnav,.masthead,.formcol,.actions,.refs,footer.legal,.codebar,.imgmgr-head .addimg-btn,.thumb button,.inc-switch{display:none!important}
+  .wrap{display:block;padding:0}
+  .panel{position:static}
+  .codebox{background:#fff;color:#000;border:1px solid #000;border-radius:0}
+  .cb-label,.cb-meaning,.cb-parts dt,.cb-parts dd,.cb-parts dd.dim,.cb-code .pre,.cb-code .seg,.cb-code .seg.mod,.cb-code .sl{color:#000}
+  .cb-parts{border-top-color:#999}
+  .report{max-height:none;overflow:visible;border:1px solid #000;border-top:0;border-radius:0}
+  .report > *{order:0!important}
+  .find-wrap{margin-top:0;padding-top:0;border-top:0}
+  .mgmt.excl{display:none}
+  .imgmgr:has(.imgmgr-grid:empty){display:none}
+  .imp{background:#fff;border:1px solid #999}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="/">← Hub</a></nav>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <h1>PE-RADS v2026</h1>
+      <p class="sub">Pulmonary Embolism Reporting and Data System: clasificación del tromboembolismo pulmonar (TEP) agudo en angiotomografía (angio-TC) y angiorresonancia (angio-RM), con texto de informe y consideraciones de manejo.</p>
+    </div>
+    <p class="cite">Koweek LM, Agarwal P, Brosnahan SB, et al. Pulmonary Embolism Reporting and Data System (PE-RADS™) v2026 for the Diagnosis of Acute Pulmonary Embolism on CT and MR Angiography. <i>Radiology</i> 2026;320(1):e252721. Publicación simultánea en <i>CHEST</i>.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ FORMULARIO ============ -->
+  <div class="formcol">
+
+    <section class="group" id="sec-calidad">
+      <div class="group-head"><h2>Estudio y calidad de imagen</h2><span class="token" title="Componente del código PE-RADS">N, L</span></div>
+
+      <div class="field">
+        <span class="field-title">Modalidad</span>
+        <div class="chips" id="f-mod"></div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Calidad de imagen</span>
+        <p class="hint">Si no hay TEP agudo, define si el estudio se informa como 0, 0L o N. Si hay TEP agudo definido, la categoría depende solo de su ubicación.</p>
+        <div class="chips" id="f-quality"></div>
+        <div id="causes-wrap" hidden>
+          <span class="sublabel">Causa de la limitación</span>
+          <div class="chips small" id="f-causes"></div>
+        </div>
+        <div class="note" id="note-quality" hidden></div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-ubicacion">
+      <div class="group-head"><h2>Ubicación del TEP agudo</h2><span class="token" title="Componente del código PE-RADS">0–4</span></div>
+
+      <div class="field">
+        <span class="field-title">Arterias con defecto de llenado agudo</span>
+        <p class="hint">Marca cada arteria con trombo agudo: defecto redondo o tubular de bordes bien definidos, central en la luz, que puede expandir el vaso si es oclusivo. La categoría la define el émbolo más proximal.</p>
+        <div class="visor">
+          <div class="visor-top"><span>Vista frontal, convención radiológica</span><b id="v-count">Sin selección</b></div>
+          <svg class="tree" id="tree" role="group" aria-label="Árbol arterial pulmonar: toca una arteria para marcar o desmarcar un trombo"></svg>
+          <dl class="visor-read" id="v-read"></dl>
+          <div class="legend" aria-hidden="true">
+            <span><svg width="30" height="14" viewBox="0 0 30 14"><line x1="6" y1="7" x2="24" y2="7" stroke-width="11" class="lg-lum"/></svg>Central (4)</span>
+            <span><svg width="30" height="14" viewBox="0 0 30 14"><line x1="6" y1="7" x2="24" y2="7" stroke-width="6.5" class="lg-lum"/></svg>Lobar e interlobar (3)</span>
+            <span><svg width="30" height="14" viewBox="0 0 30 14"><line x1="6" y1="7" x2="24" y2="7" stroke-width="3.4" class="lg-lum"/></svg>Segmentaria (2)</span>
+            <span><svg width="30" height="14" viewBox="0 0 30 14"><line x1="6" y1="7" x2="24" y2="7" stroke-width="1.8" class="lg-lum"/></svg>Subsegmentaria (1)</span>
+            <span><svg width="30" height="14" viewBox="0 0 30 14"><line x1="6" y1="7" x2="24" y2="7" stroke-width="12" class="lg-wall"/><line x1="6" y1="7" x2="24" y2="7" stroke-width="9.5" class="lg-on"/><line x1="6" y1="7" x2="24" y2="7" stroke-width="4.8" class="lg-clot"/></svg>Defecto de llenado marcado</span>
+          </div>
+          <p class="key">TAP: tronco de la arteria pulmonar. APD y API: arterias pulmonares derecha e izquierda. LSD, LM y LID: arterias de los lóbulos superior, medio e inferior derechos. LSI y LII: arterias de los lóbulos superior e inferior izquierdos. ILD e ILI: arterias interlobares derecha e izquierda.</p>
+        </div>
+        <label class="switch"><input type="checkbox" id="f-saddle"> Trombo en silla de montar sobre la bifurcación del tronco pulmonar (marca TAP, APD y API)</label>
+        <details class="more" id="list-more">
+          <summary>Marcar desde una lista</summary>
+          <div id="f-list"></div>
+        </details>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Descripción del trombo <span class="opt">(opcional)</span></span>
+        <p class="hint">Solo descriptivo: PE-RADS no incorpora el grado de oclusión ni la carga embólica.</p>
+        <div class="chips" id="f-occl"></div>
+        <div class="row spaced" id="hu-row">
+          <label class="sub"><span>Densidad media del trombo, en unidades Hounsfield (UH)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-hu" placeholder="55"></label>
+        </div>
+        <div class="readout" id="calc-hu" hidden></div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-excepciones">
+      <div class="group-head"><h2>Excepciones</h2><span class="token" title="Componente del código PE-RADS">E</span></div>
+
+      <div class="field">
+        <span class="field-title">Defectos de llenado que no son TEP agudo</span>
+        <p class="hint">Se agregan a la categoría (por ejemplo 0/E o 3/E). Describe su localización y tipo presuntivo: pasan a Hallazgos e Impresión.</p>
+        <div class="chips" id="f-exc"></div>
+        <div class="row spaced" id="exc-other-row" hidden>
+          <label class="sub full"><span>Otro tipo</span><input type="text" id="f-exc-other" autocomplete="off" placeholder="p. ej., émbolo de cuerpo extraño"></label>
+        </div>
+        <div class="row spaced">
+          <label class="sub full"><span>Localización y descripción</span><input type="text" id="f-exc-desc" autocomplete="off" placeholder="p. ej., bandas y membranas en ramas segmentarias del lóbulo inferior derecho"></label>
+        </div>
+        <div class="note" id="note-exc" hidden></div>
+        <details class="more">
+          <summary>Cómo distinguirlos del TEP agudo</summary>
+          <ul>
+            <li><b>Tromboembolismo crónico:</b> defectos lineales y excéntricos, con ángulos obtusos y adheridos a la pared; bandas, membranas, amputación abrupta o vasos estrechos y arrosariados; no expande el vaso y puede calcificar. Suele acompañarse de atenuación en mosaico, bronquiectasias y arterias bronquiales aumentadas.</li>
+            <li><b>Trombo in situ:</b> se forma en la propia arteria, sobre todo con presiones pulmonares elevadas. Se parece al crónico, pero sin mosaico, bronquiectasias ni arterias bronquiales aumentadas.</li>
+            <li><b>Émbolo tumoral:</b> realza con el contraste y puede captar fluorodesoxiglucosa (FDG) en la tomografía por emisión de positrones (PET); el tratamiento se dirige a la neoplasia.</li>
+            <li><b>Sarcoma intimal de la arteria pulmonar:</b> gran defecto que puede simular un TEP central; realza, capta FDG y se acompaña de adenopatías y arterias bronquiales aumentadas, con menos síntomas que el TEP central.</li>
+            <li><b>Cuerpos extraños embolizados</b> (por ejemplo, cemento): su aspecto depende del tamaño y la atenuación del material.</li>
+          </ul>
+        </details>
+        <label class="switch"><input type="checkbox" id="f-septic"> Sospecha de émbolos sépticos (hallazgos parenquimatosos y contexto infeccioso)</label>
+        <div class="note" id="note-septic" hidden>Los émbolos sépticos no se clasifican con PE-RADS: el diagnóstico se basa sobre todo en el parénquima pulmonar y el tratamiento difiere del TEP no infeccioso.</div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-corazon">
+      <div class="group-head"><h2>Corazón derecho</h2><span class="token" title="Componentes del código PE-RADS">RV+, T+</span></div>
+
+      <div class="field">
+        <span class="field-title">Relación ventrículo derecho / ventrículo izquierdo (VD/VI)</span>
+        <p class="hint">Distancia máxima del endocardio del VD al septum, perpendicular al septum, frente a la misma medida del VI. Los tres métodos son válidos y el axial es el más simple. PE-RADS usa un umbral de 1.0 para priorizar la especificidad.</p>
+        <div class="chips" id="f-rvm"></div>
+        <div class="row spaced">
+          <label class="sub"><span id="lbl-rv">Diámetro del VD (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-rv" placeholder="50.1"></label>
+          <label class="sub"><span id="lbl-lv">Diámetro del VI (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-lv" placeholder="47.0"></label>
+        </div>
+        <div class="readout" id="calc-rv"></div>
+        <label class="switch"><input type="checkbox" id="f-rvh"> Hipertrofia del VD, sin estudios previos para comparar</label>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Trombo en cavidades derechas</span>
+        <p class="hint">Solo trombo definido, distinguible de trabeculaciones, artefactos de mezcla y causas no agudas como un cuerpo extraño. No marcar T+ no equivale a descartarlo.</p>
+        <div class="chips" id="f-t"></div>
+        <div id="t-more" hidden>
+          <span class="sublabel">Cavidad</span>
+          <div class="chips" id="f-tloc"></div>
+          <label class="switch"><input type="checkbox" id="f-pfo"> Atraviesa un foramen oval permeable</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-otros">
+      <div class="group-head"><h2>Otros hallazgos</h2></div>
+      <p class="group-lede">No modifican la categoría PE-RADS porque carecen de valores reproducibles, pero pueden informarse según la práctica local.</p>
+      <div class="field">
+        <div class="chips" id="f-acc"></div>
+        <div class="row spaced">
+          <label class="sub"><span>Diámetro del tronco pulmonar (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-pad" placeholder="29"></label>
+        </div>
+        <div class="row spaced">
+          <label class="sub full"><span>Otros hallazgos</span><textarea id="f-other" placeholder="Derrame pleural, adenopatías, hallazgos incidentales…"></textarea></label>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ SALIDA ============ -->
+  <aside class="panel" id="panel" aria-label="Resultado">
+    <div class="codebox">
+      <p class="cb-label">Categoría PE-RADS</p>
+      <div class="cb-code" id="out-code"></div>
+      <p class="cb-meaning" id="out-meaning"></p>
+      <dl class="cb-parts" id="out-parts"></dl>
+    </div>
+    <div class="report">
+      <div class="find-wrap" id="out-find"></div>
+      <div class="imp-wrap" id="out-imp"></div>
+      <div class="mgmt" id="out-mgmt" hidden></div>
+      <label class="switch inc-switch" id="inc-wrap" hidden><input type="checkbox" id="f-incmgmt" checked> Incluir las consideraciones de manejo al copiar, imprimir y exportar</label>
+      <div class="imgmgr">
+        <div class="imgmgr-head">
+          <span class="lbl">Imágenes adjuntas</span>
+          <button type="button" class="addimg-btn" id="btn-addimg">Añadir imágenes</button>
+          <input type="file" id="f-images" accept="image/*" multiple hidden>
+        </div>
+        <div class="imgmgr-grid" id="out-images"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="act" id="btn-copy" type="button">Copiar texto</button>
+      <button class="act" id="btn-pdf" type="button">Descargar PDF</button>
+      <button class="act" id="btn-word" type="button">Descargar Word</button>
+      <button class="act ghost" id="btn-print" type="button">Imprimir</button>
+      <button class="act ghost" id="btn-reset" type="button">Vaciar formulario</button>
+      <span class="toast" id="toast" role="status" aria-live="polite"></span>
+    </div>
+    <p class="sr-only" id="sr-status" aria-live="polite"></p>
+  </aside>
+</main>
+
+<section class="refs" aria-labelledby="refs-h">
+  <h2 id="refs-h">Referencia rápida de PE-RADS v2026</h2>
+  <div class="refs-grid">
+    <div class="ref">
+      <h3>Categorías</h3>
+      <table>
+        <tr><td class="k">0</td><td>Sin TEP agudo</td></tr>
+        <tr><td class="k">1</td><td>Subsegmentaria</td></tr>
+        <tr><td class="k">2</td><td>Segmentaria</td></tr>
+        <tr><td class="k">3</td><td>Lobar o interlobar, distal al origen de la arteria del lóbulo superior</td></tr>
+        <tr><td class="k">4</td><td>Central: tronco, arteria pulmonar derecha o izquierda</td></tr>
+        <tr><td class="k">N</td><td>No diagnóstico: no excluye TEP en arterias principales o lobares</td></tr>
+      </table>
+      <p>Se asigna por paciente, según el émbolo más proximal.</p>
+    </div>
+    <div class="ref">
+      <h3>Modificadores</h3>
+      <table>
+        <tr><td class="k">L</td><td>Estudio limitado en arterias segmentarias o subsegmentarias; solo junto a 0 (0L)</td></tr>
+        <tr><td class="k">E</td><td>Defecto de llenado que no es TEP agudo; junto a 0–4 o N</td></tr>
+        <tr><td class="k">RV+</td><td>Relación VD/VI de 1.0 o más, en axial, cuatro cámaras o volumetría</td></tr>
+        <tr><td class="k">T+</td><td>Trombo definido en la aurícula o el ventrículo derechos</td></tr>
+      </table>
+      <p>Orden: ubicación/E/RV+/T+, por ejemplo 3/E/RV+/T+. N y L no se usan si hay TEP agudo definido.</p>
+    </div>
+    <div class="ref">
+      <h3>Edad del trombo</h3>
+      <dl>
+        <dt>Agudo, hasta 14 días</dt>
+        <dd>Redondo o tubular, bordes bien definidos, central en la luz y con ángulos agudos si es excéntrico; puede expandir el vaso. En TC suele medir 40–70 UH.</dd>
+        <dt>Subagudo, 2 a 12 semanas</dt>
+        <dd>Tubular o elíptico, márgenes menos nítidos, sin expansión del vaso; puede verse lentiforme.</dd>
+        <dt>Crónico, más de 12 semanas</dt>
+        <dd>Lineal y excéntrico, ángulos obtusos, bandas y membranas, sin expansión del vaso.</dd>
+      </dl>
+    </div>
+    <div class="ref">
+      <h3>Fuera del alcance de PE-RADS</h3>
+      <ul>
+        <li>Émbolos sépticos.</li>
+        <li>Carga embólica cuantitativa (índices de Qanadli y Mastora) y grado de oclusión.</li>
+        <li>Signos secundarios de disfunción del VD, como la rectificación septal o el reflujo a la vena cava inferior, y el tamaño auricular: pueden informarse según la práctica local.</li>
+        <li>Se usa “aumento del VD” y no “sobrecarga del VD” porque, sin estudios previos, no se distingue lo agudo de lo crónico.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="legal">
+  <p class="editor"><span>Edición y adaptación</span>Dr. Carlos Leonardo Maldonado Estrada, médico radiólogo (UNAH), fellow en imagen cardiaca</p>
+  Herramienta de apoyo a la documentación clínica. Todo el procesamiento ocurre en tu navegador: no se transmite, guarda ni registra ningún dato del paciente. Las consideraciones de manejo son de nivel poblacional y no sustituyen el juicio clínico ni la valoración individual del riesgo. Basado en Koweek LM et al., <i>Radiology</i> 2026;320(1):e252721, publicación conjunta con <i>CHEST</i>. PE-RADS™ es un sistema del American College of Radiology (ACR).
+</footer>
+
+<div class="codebar" id="codebar">
+  <span class="c" id="cbar-code">PE-RADS pendiente</span>
+  <button type="button" id="cbar-go">Ver informe</button>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Utilidades
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+const NS = "http://www.w3.org/2000/svg";
+
+function num(v){
+  if(v===null || v===undefined) return null;
+  const s = String(v).trim().replace(",", ".");
+  if(s==="" || s==="-" || s===".") return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+function pos(v){ const n = num(v); return (n!==null && n>0) ? n : null; }
+function fmt(n){ return String(Math.round(n*10)/10); }
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function stripArt(s){ return s.replace(/^(el|la|los|las)\s+/i, ""); }
+function joinY(arr){
+  const a = arr.filter(Boolean);
+  if(a.length < 2) return a.join("");
+  const last = a[a.length-1];
+  const conj = /^h?i(?![aeouáéóú])/i.test(last) ? " e " : " y ";
+  return a.slice(0,-1).join(", ") + conj + last;
+}
+function toggleIn(arr, v, on){
+  const i = arr.indexOf(v);
+  if(on && i<0) arr.push(v);
+  if(!on && i>=0) arr.splice(i,1);
+}
+
+/* ============================================================
+   Catálogos
+   ============================================================ */
+const MODS = [["tc","Angio-TC","angiotomografía"],["rm","Angio-RM","angiorresonancia"]];
+const QUALITY = [
+  ["opt","Óptima","valora hasta arterias subsegmentarias"],
+  ["lim","Limitada","confiable solo hasta arterias lobares"],
+  ["nd","No diagnóstica","no excluye TEP en arterias principales o lobares"]
+];
+const CAUSES = [
+  ["contraste","Opacificación heterogénea o insuficiente","both"],
+  ["resp","Movimiento respiratorio","both"],
+  ["card","Movimiento cardiaco","both"],
+  ["pulm","Enfermedad pulmonar o pleural","both"],
+  ["ruido","Ruido cuántico","tc"],
+  ["haz","Estrías o endurecimiento del haz","tc"],
+  ["quim","Desplazamiento químico","rm"],
+  ["alias","Aliasing","rm"],
+  ["susc","Susceptibilidad magnética","rm"],
+  ["trunc","Truncamiento","rm"]
+];
+const CAUSE_TEXT = {
+  contraste:"opacificación heterogénea o insuficiente del contraste", resp:"movimiento respiratorio",
+  card:"movimiento cardiaco", pulm:"artefactos por enfermedad pulmonar o pleural", ruido:"ruido cuántico",
+  haz:"artefactos en estrías o por endurecimiento del haz", quim:"artefacto por desplazamiento químico",
+  alias:"aliasing", susc:"artefacto por susceptibilidad magnética", trunc:"artefacto por truncamiento"
+};
+const OCCL = [["no","No oclusivo"],["si","Oclusivo"],["mixto","Oclusivo y no oclusivo"]];
+const OCCL_TEXT = {no:"no oclusivos", si:"oclusivos", mixto:"oclusivos y no oclusivos"};
+const EXC = [
+  ["cronico","Tromboembolismo crónico"],["insitu","Trombo in situ"],["sarcoma","Sarcoma de la arteria pulmonar"],
+  ["tumoral","Émbolo tumoral"],["cemento","Cemento u otro material exógeno"],["aire","Embolia aérea"],["otro","Otro"]
+];
+const EXC_TEXT = {
+  cronico:"tromboembolismo crónico", insitu:"trombo in situ", sarcoma:"sarcoma de la arteria pulmonar",
+  tumoral:"émbolo tumoral", cemento:"émbolo de cemento u otro material exógeno", aire:"embolia aérea"
+};
+const RVM = [["axial","Axial"],["4c","Cuatro cámaras"],["vol","Volumétrico"]];
+const RVM_TEXT = {axial:"en el plano axial", "4c":"en el plano de cuatro cámaras", vol:"por volumetría"};
+const TSTATE = [["no","No identificado"],["si","Presente"]];
+const TLOC = [["ad","Aurícula derecha"],["vd","Ventrículo derecho"]];
+const TLOC_TEXT = {ad:"la aurícula derecha", vd:"el ventrículo derecho"};
+const ACC = [
+  ["septum","Septum rectificado o desviado hacia el VI"],
+  ["reflujo","Reflujo de contraste a cava inferior y suprahepáticas"],
+  ["tapdil","Tronco pulmonar dilatado"],
+  ["infarto","Infarto pulmonar"],
+  ["oligo","Oligohemia regional"],
+  ["mosaico","Atenuación en mosaico"],
+  ["bronq","Arterias bronquiales aumentadas"]
+];
+const ACC_TEXT = {
+  septum:"septum interventricular rectificado o desviado hacia el ventrículo izquierdo",
+  reflujo:"reflujo de contraste a la vena cava inferior y a las venas suprahepáticas",
+  infarto:"infarto pulmonar", oligo:"oligohemia regional", mosaico:"atenuación en mosaico",
+  bronq:"arterias bronquiales aumentadas de calibre"
+};
+
+/* ============================================================
+   Geometría del árbol arterial (esquema original, vista frontal)
+   ============================================================ */
+const VB = {x:30, y:34, w:500, h:380};
+const LUM  = {4:24, 3:13, 2:6.5, 1:3.2};      // ancho de la luz por nivel
+const CLOT = {4:.5, 3:.52, 2:.6, 1:.7};        // fracción ocupada por el defecto de llenado
+const LVL_ADJ  = {4:"central", 3:"lobar", 2:"segmentario", 1:"subsegmentario"};
+const LVL_CAP  = {4:"Central", 3:"Lobar", 2:"Segmentaria", 1:"Subsegmentaria"};
+const LVL_LIST = {4:"Central (4)", 3:"Lobar e interlobar (3)", 2:"Segmentaria (2)", 1:"Subsegmentaria (1)"};
+
+const LUNGS = [
+  "M152 50C116 52 84 86 66 140C50 190 44 254 46 316C47 356 58 388 92 396C136 404 194 396 230 384C246 378 252 364 250 346L246 250C244 228 238 214 236 196C232 166 226 128 214 98C200 66 180 50 152 50Z",
+  "M408 50C444 52 476 86 494 140C510 190 516 254 514 316C513 356 502 388 468 396C430 404 384 398 352 388C334 382 326 370 328 356C330 336 340 322 338 304C336 288 322 278 318 262L316 220C318 190 324 152 336 112C350 70 378 50 408 50Z"
+];
+
+const BIG = {
+  tap:{lvl:4, side:"c", label:"TAP", chip:"Tronco pulmonar", text:"el tronco de la arteria pulmonar", lab:[297,300,"start"], pts:[[280,342],[280,306],[281,254],[280,210]]},
+  apd:{lvl:4, side:"d", label:"APD", chip:"Pulmonar derecha", text:"la arteria pulmonar derecha", lab:[240,179,"middle"], pts:[[280,207],[258,198],[230,197],[204,203]]},
+  api:{lvl:4, side:"i", label:"API", chip:"Pulmonar izquierda", text:"la arteria pulmonar izquierda", lab:[316,165,"middle"], pts:[[280,207],[302,190],[330,181],[356,187]]},
+  lsd:{lvl:3, side:"d", label:"LSD", chip:"Superior derecha", text:"la arteria lobar superior derecha", lab:[194,154,"start"], pts:[[212,201],[200,182],[186,160],[172,140]]},
+  ild:{lvl:3, side:"d", label:"ILD", chip:"Interlobar derecha", text:"la arteria interlobar derecha", lab:[205,243,"start"], pts:[[204,204],[198,218],[192,234],[188,250]]},
+  lm: {lvl:3, side:"d", label:"LM",  chip:"Lóbulo medio", text:"la arteria del lóbulo medio", lab:[158,292,"middle"], pts:[[191,241],[176,249],[160,259],[144,268]]},
+  lid:{lvl:3, side:"d", label:"LID", chip:"Inferior derecha", text:"la arteria lobar inferior derecha", lab:[193,306,"start"], pts:[[188,248],[184,270],[180,292],[176,316]]},
+  lsi:{lvl:3, side:"i", label:"LSI", chip:"Superior izquierda", text:"la arteria lobar superior izquierda", lab:[388,172,"start"], pts:[[346,186],[358,170],[370,153],[382,137]]},
+  ili:{lvl:3, side:"i", label:"ILI", chip:"Interlobar izquierda", text:"la arteria interlobar izquierda", lab:[353,228,"end"], pts:[[356,189],[366,205],[372,223],[374,242]]},
+  lii:{lvl:3, side:"i", label:"LII", chip:"Inferior izquierda", text:"la arteria lobar inferior izquierda", lab:[391,293,"start"], pts:[[374,238],[376,262],[378,288],[380,314]]}
+};
+
+/* ramas segmentarias por lóbulo; las subsegmentarias se generan en sus extremos */
+const LOBES = [
+  {lobe:"lsd", side:"d", chip:"Lóbulo superior derecho", text:"del lóbulo superior derecho", br:[
+    [[172,140],[168,122],[164,106],[160,90]],
+    [[172,140],[160,128],[148,116],[134,106]],
+    [[172,140],[156,142],[138,146],[118,154]] ]},
+  {lobe:"lm", side:"d", chip:"Lóbulo medio", text:"del lóbulo medio", br:[
+    [[144,268],[130,270],[116,272],[100,276]],
+    [[144,268],[138,280],[132,290],[126,300]] ]},
+  {lobe:"lid", side:"d", chip:"Lóbulo inferior derecho", text:"del lóbulo inferior derecho", br:[
+    [[196,226],[182,218],[168,212],[152,208]],
+    [[176,316],[180,334],[184,352],[190,370]],
+    [[176,316],[173,336],[170,354],[168,372]],
+    [[176,316],[166,334],[156,350],[146,364]],
+    [[176,316],[160,326],[142,334],[122,342]] ]},
+  {lobe:"lsi", side:"i", chip:"Lóbulo superior izquierdo y língula", text:"del lóbulo superior izquierdo y la língula", br:[
+    [[382,137],[388,120],[392,104],[396,88]],
+    [[382,137],[400,132],[418,132],[438,136]],
+    [[366,206],[384,204],[404,200],[426,198]],
+    [[366,206],[382,214],[398,222],[416,230]] ]},
+  {lobe:"lii", side:"i", chip:"Lóbulo inferior izquierdo", text:"del lóbulo inferior izquierdo", br:[
+    [[374,240],[390,246],[404,254],[420,262]],
+    [[380,314],[378,334],[376,352],[372,370]],
+    [[380,314],[390,334],[398,352],[404,372]],
+    [[380,314],[396,326],[412,334],[430,342]] ]}
+];
+
+function cubicD(p){
+  return "M"+p[0][0]+" "+p[0][1]+"C"+p[1][0]+" "+p[1][1]+" "+p[2][0]+" "+p[2][1]+" "+p[3][0]+" "+p[3][1];
+}
+function twigsD(p){
+  const x3 = p[3][0], y3 = p[3][1];
+  let tx = x3 - p[2][0], ty = y3 - p[2][1];
+  const L = Math.hypot(tx,ty) || 1; tx /= L; ty /= L;
+  const len = 16, a = 0.5;
+  return [-a, a].map(ang=>{
+    const c = Math.cos(ang), s = Math.sin(ang);
+    const dx = tx*c - ty*s, dy = tx*s + ty*c;
+    return "M"+x3+" "+y3+"L"+(x3+dx*len).toFixed(1)+" "+(y3+dy*len).toFixed(1);
+  }).join("");
+}
+
+/* orden de pintado: de distal a proximal, para que cada vaso cubra el origen de sus ramas */
+const GROUPS = [];
+LOBES.forEach(L=>GROUPS.push({id:"u_"+L.lobe, lvl:1, side:L.side, chip:L.chip, text:"las ramas subsegmentarias "+L.text, d:L.br.map(twigsD).join("")}));
+LOBES.forEach(L=>GROUPS.push({id:"s_"+L.lobe, lvl:2, side:L.side, chip:L.chip, text:"las ramas segmentarias "+L.text, d:L.br.map(cubicD).join("")}));
+["lm","lid","ild","lsd","lii","ili","lsi","apd","api","tap"].forEach(id=>{
+  GROUPS.push(Object.assign({id:id, d:cubicD(BIG[id].pts)}, BIG[id]));
+});
+const GBY = {};
+GROUPS.forEach(g=>{ GBY[g.id] = g; });
+/* orden anatómico para el texto y la lista */
+const CANON = ["tap","apd","api","lsd","ild","lm","lid","lsi","ili","lii"]
+  .concat(LOBES.map(L=>"s_"+L.lobe), LOBES.map(L=>"u_"+L.lobe));
+
+/* ============================================================
+   Estado
+   ============================================================ */
+function defaults(){
+  return {
+    mod:"tc", quality:"", causes:[],
+    ves:[], saddle:false, occl:"", hu:"",
+    exc:[], excOther:"", excDesc:"", septic:false,
+    rvm:"axial", rv:"", lv:"", rvh:false,
+    t:"", tloc:[], pfo:false,
+    acc:[], pad:"", other:"",
+    incMgmt:true, images:[]
+  };
+}
+const S = defaults();
+
+/* ============================================================
+   Lógica PE-RADS
+   ============================================================ */
+function selGroups(){ return CANON.filter(id=>S.ves.includes(id)).map(id=>GBY[id]); }
+
+/* categoría ordinal: N y L solo cuando no hay TEP agudo definido */
+function ordinal(){
+  if(S.septic) return {kind:"na", tok:null};
+  const sel = selGroups();
+  if(sel.length){
+    const lvl = Math.max.apply(null, sel.map(g=>g.lvl));
+    return {kind:"pe", tok:String(lvl), lvl:lvl};
+  }
+  if(S.quality==="nd")  return {kind:"nd",  tok:"N"};
+  if(S.quality==="lim") return {kind:"lim", tok:"0L"};
+  if(S.quality==="opt") return {kind:"neg", tok:"0"};
+  return {kind:"pending", tok:null};
+}
+function hasExc(){ return S.exc.length > 0; }
+function excTypes(){
+  const t = S.exc.filter(k=>k!=="otro").map(k=>EXC_TEXT[k]);
+  if(S.exc.includes("otro")) t.push(S.excOther.trim() || "otro tipo");
+  return t;
+}
+function rvRatio(){
+  const a = pos(S.rv), b = pos(S.lv);
+  if(a===null || b===null) return null;
+  return Math.round(a/b*100 + 1e-9)/100;   // se decide con el valor mostrado (2 decimales, redondeo hacia arriba en .5)
+}
+function rvPlus(){ const r = rvRatio(); return r!==null && r>=1; }
+function tPlus(){ return S.t==="si"; }
+function causeOk(c){ const x = CAUSES.find(k=>k[0]===c); return !!x && (x[2]==="both" || x[2]===S.mod); }
+
+function tokens(){
+  const o = ordinal();
+  if(!o.tok) return [];
+  const t = [{t:o.tok, sec:(o.kind==="pe" || o.kind==="neg") ? "sec-ubicacion" : "sec-calidad", mod:false}];
+  if(hasExc()) t.push({t:"E", sec:"sec-excepciones", mod:true});
+  if(rvPlus()) t.push({t:"RV+", sec:"sec-corazon", mod:true});
+  if(tPlus())  t.push({t:"T+", sec:"sec-corazon", mod:true});
+  return t;
+}
+function codeString(){
+  if(ordinal().kind==="na") return "Sin categoría PE-RADS";
+  const t = tokens();
+  return t.length ? "PE-RADS " + t.map(x=>x.t).join("/") : "";
+}
+function distribution(){
+  const sides = new Set(selGroups().map(g=>g.side));
+  if(S.saddle || (sides.has("d") && sides.has("i"))) return "bilateral";
+  if(S.ves.includes("tap")) return "";
+  if(sides.has("d")) return "unilateral derecha";
+  if(sides.has("i")) return "unilateral izquierda";
+  return "";
+}
+function meaningText(){
+  const o = ordinal();
+  if(o.kind==="na") return "Sospecha de émbolos sépticos: no se clasifican con PE-RADS.";
+  if(o.kind==="pending") return "";
+  const p = [];
+  if(o.kind==="pe")  p.push("TEP agudo a nivel " + LVL_ADJ[o.lvl]);
+  if(o.kind==="neg") p.push("sin TEP agudo");
+  if(o.kind==="lim") p.push("sin TEP agudo, con estudio limitado");
+  if(o.kind==="nd")  p.push("estudio no diagnóstico");
+  if(hasExc()) p.push("defecto de llenado no agudo");
+  if(rvPlus()) p.push("ventrículo derecho aumentado");
+  if(tPlus())  p.push("trombo en cavidades derechas");
+  return cap(joinY(p)) + ".";
+}
+
+/* ============================================================
+   Texto del informe
+   ============================================================ */
+function studyText(){
+  let s = S.mod==="rm"
+    ? "Angiorresonancia de arterias pulmonares (angio-RM)."
+    : "Angiotomografía de arterias pulmonares (angio-TC).";
+  const cz = S.causes.filter(causeOk).map(c=>CAUSE_TEXT[c]);
+  const why = cz.length ? " (" + joinY(cz) + ")" : "";
+  if(S.quality==="opt") s += " Calidad de imagen diagnóstica óptima, con opacificación homogénea hasta las arterias subsegmentarias.";
+  else if(S.quality==="lim") s += " Calidad de imagen limitada" + why + ": valoración confiable hasta las arterias lobares, con valoración subóptima de las arterias segmentarias y subsegmentarias.";
+  else if(S.quality==="nd") s += " Estudio no diagnóstico" + why + ": no permite excluir TEP en las arterias pulmonares principales ni lobares.";
+  return s;
+}
+function arteriesText(){
+  const sel = selGroups(), out = [];
+  if(sel.length){
+    let s = "Defectos de llenado intraluminales" + (OCCL_TEXT[S.occl] ? " " + OCCL_TEXT[S.occl] : "")
+      + (S.septic ? "" : " con características de TEP agudo") + " en " + joinY(sel.map(g=>g.text));
+    if(S.saddle) s += ", con trombo en silla de montar sobre la bifurcación del tronco pulmonar";
+    const d = distribution();
+    if(d) s += ", de distribución " + d;
+    out.push(s + ".");
+    if(!S.septic){
+      const lvl = Math.max.apply(null, sel.map(g=>g.lvl));
+      const prox = sel.filter(g=>g.lvl===lvl);
+      out.push((prox.length>1 ? "Los émbolos más proximales se localizan en " : "El émbolo más proximal se localiza en ")
+        + joinY(prox.map(g=>g.text)) + " (nivel " + LVL_ADJ[lvl] + ").");
+    }
+    const hu = num(S.hu);
+    if(S.mod==="tc" && hu!==null) out.push("Densidad media del trombo de " + fmt(hu) + " unidades Hounsfield (UH).");
+  } else if(!S.septic){
+    if(S.quality==="opt") out.push("Sin defectos de llenado intraluminales que sugieran TEP agudo hasta las arterias subsegmentarias.");
+    else if(S.quality==="lim") out.push("Sin defectos de llenado intraluminales en las arterias pulmonares centrales ni lobares.");
+    else if(S.quality==="nd") out.push("Sin defectos de llenado definidos, aunque el estudio no permite excluir TEP.");
+  }
+  if(hasExc()){
+    let s = (sel.length && !S.septic ? "Además, defectos" : "Defectos")
+      + " de llenado intravasculares no atribuibles a TEP agudo, de tipo presuntivo " + joinY(excTypes());
+    const d = S.excDesc.trim().replace(/[.\s]+$/, "");
+    if(d) s += ": " + d;
+    out.push(s + ".");
+  }
+  if(S.septic) out.push("Hallazgos en el contexto de sospecha de émbolos sépticos, que no se clasifican con PE-RADS.");
+  return out.join(" ");
+}
+function heartText(){
+  const out = [];
+  const r = rvRatio();
+  if(r!==null){
+    const a = fmt(pos(S.rv)), b = fmt(pos(S.lv));
+    const meas = S.rvm==="vol"
+      ? "volumen del ventrículo derecho " + a + " mL y del izquierdo " + b + " mL"
+      : "ventrículo derecho " + a + " mm e izquierdo " + b + " mm";
+    out.push("Relación ventrículo derecho/ventrículo izquierdo (VD/VI) de " + r.toFixed(2) + " " + RVM_TEXT[S.rvm]
+      + " (" + meas + "): " + (r>=1 ? "aumento del ventrículo derecho." : "sin aumento del ventrículo derecho."));
+  }
+  if(S.rvh){
+    out.push(rvPlus()
+      ? "Hipertrofia del ventrículo derecho: sin estudios previos para comparar, el aumento del ventrículo derecho podría ser de larga evolución por sobrecarga crónica de presión."
+      : "Hipertrofia del ventrículo derecho.");
+  }
+  if(S.t==="si"){
+    const l = S.tloc.map(k=>TLOC_TEXT[k]);
+    out.push("Trombo definido en " + (l.length ? joinY(l) : "las cavidades derechas")
+      + (S.pfo ? ", que atraviesa un foramen oval permeable" : "") + ".");
+  } else if(S.t==="no"){
+    out.push("Sin trombo definido en la aurícula ni en el ventrículo derechos.");
+  }
+  return out.join(" ");
+}
+function otherText(){
+  const it = S.acc.filter(k=>k!=="tapdil").map(k=>ACC_TEXT[k]);
+  const pad = pos(S.pad);
+  if(S.acc.includes("tapdil")) it.unshift("tronco de la arteria pulmonar dilatado" + (pad!==null ? ", de " + fmt(pad) + " mm" : ""));
+  else if(pad!==null) it.unshift("tronco de la arteria pulmonar de " + fmt(pad) + " mm de diámetro");
+  let s = it.length ? cap(joinY(it)) + "." : "";
+  const o = S.other.trim();
+  if(o) s += (s ? " " : "") + cap(o) + (/[.!?…]$/.test(o) ? "" : ".");
+  return s;
+}
+function impressionText(){
+  const o = ordinal();
+  if(o.kind==="pending") return "";
+  if(o.kind==="na") return "Sin categoría PE-RADS: defectos de llenado en el contexto de sospecha de émbolos sépticos.";
+  const p = [];
+  if(o.kind==="pe"){
+    const prox = selGroups().filter(g=>g.lvl===o.lvl);
+    let s = "TEP agudo a nivel " + LVL_ADJ[o.lvl] + " (" + joinY(prox.map(g=>stripArt(g.text))) + ")";
+    const d = distribution();
+    if(d) s += ", de distribución " + d;
+    if(S.saddle) s += ", con trombo en silla de montar";
+    p.push(s);
+  }
+  else if(o.kind==="neg") p.push("sin evidencia de TEP agudo");
+  else if(o.kind==="lim") p.push("sin evidencia de TEP agudo en las arterias centrales ni lobares, con valoración limitada de las arterias segmentarias y subsegmentarias");
+  else if(o.kind==="nd")  p.push("estudio no diagnóstico, que no permite excluir TEP en las arterias pulmonares centrales");
+  if(hasExc()){
+    let s = "defecto de llenado no agudo de tipo presuntivo " + joinY(excTypes());
+    const d = S.excDesc.trim().replace(/[.\s]+$/, "");
+    if(d) s += " (" + d + ")";
+    p.push(s);
+  }
+  if(rvPlus()) p.push("aumento del ventrículo derecho (relación VD/VI de " + rvRatio().toFixed(2) + ")");
+  if(tPlus()){
+    const l = S.tloc.map(k=>TLOC_TEXT[k]);
+    p.push("trombo definido en " + (l.length ? joinY(l) : "las cavidades derechas") + (S.pfo ? ", que atraviesa un foramen oval permeable" : ""));
+  }
+  return codeString() + ". " + cap(p[0]) + (p.length>1 ? "; " + p.slice(1).join("; ") : "") + ".";
+}
+
+/* ============================================================
+   Consideraciones de manejo (tabla 5 de PE-RADS)
+   ============================================================ */
+const MG_A = "Anticoagulación y valoración del riesgo de sangrado†";
+const MG_B = "Valoración de los síntomas clínicos y de los factores de riesgo de enfermedad tromboembólica venosa";
+const MG_C = "Valoración de los síntomas clínicos, incluidos signos de falla del ventrículo derecho e inestabilidad hemodinámica";
+const MG_R = "Estratificación del riesgo del TEP‡";
+const MG_P = "Valoración para terapia de reperfusión†";
+const MG_Q = "Interconsulta con especialista en TEP§";
+const ECO_C = "Considerar valoración cardiovascular dirigida (p. ej., ecocardiograma y electrocardiograma).";
+const ECO_R = "Se recomienda valoración cardiovascular dirigida (p. ej., ecocardiograma y electrocardiograma).";
+
+const ROWS = {
+  "0":  {t:"PE-RADS 0", f:"El TEP agudo no es la causa de los síntomas del paciente.", i:["Considerar un diagnóstico alternativo"], x:""},
+  "0L": {t:"PE-RADS 0L", f:"No se identifica TEP, pero el estudio es limitado en las arterias segmentarias o subsegmentarias.", i:["Por definición se clasifica como 0L; definir los siguientes pasos según la valoración clínica"], x:""},
+  "N":  {t:"PE-RADS N", f:"No se puede excluir TEP en ningún nivel.", i:[], x:"Considerar otra modalidad de imagen o repetir la angiotomografía o la angiorresonancia."},
+  "1":  {t:"PE-RADS 1", f:"TEP agudo presente.", i:[MG_A, MG_B], x:"Considerar ecografía venosa de miembros inferiores en el TEP subsegmentario aislado, para decidir entre anticoagulación y vigilancia.",
+         n:"Algunos pacientes con TEP subsegmentario aislado pueden manejarse solo con observación; otros requieren anticoagulación según factores clínicos."},
+  "1RV":{t:"PE-RADS 1 con RV+", f:"TEP agudo presente. Es poco probable que sea la única causa del aumento del ventrículo derecho.", i:[MG_A, MG_B, MG_C],
+         x:"Considerar un estudio dirigido de la causa del aumento del ventrículo derecho (p. ej., ecocardiograma y electrocardiograma)."},
+  "2":  {t:"PE-RADS 2", f:"TEP agudo presente.", i:[MG_A, MG_B], x:"",
+         n:"En el nivel segmentario, la decisión puede depender del volumen acumulado de trombo y del número de arterias segmentarias afectadas."},
+  "2RV":{t:"PE-RADS 2 con RV+", f:"TEP agudo presente. Puede ser la causa del aumento del ventrículo derecho si hay trombo obstructivo extenso.", i:[MG_A, MG_B, MG_C], x:ECO_C},
+  "3":  {t:"PE-RADS 3", f:"TEP agudo presente.", i:[MG_A, MG_R], x:""},
+  "3RV":{t:"PE-RADS 3 con RV+", f:"TEP agudo presente. Puede ser la principal causa contribuyente del aumento del ventrículo derecho.", i:[MG_A, MG_C, MG_R, MG_P, MG_Q], x:ECO_R},
+  "4":  {t:"PE-RADS 4", f:"TEP agudo presente.", i:[MG_A, MG_R], x:""},
+  "4RV":{t:"PE-RADS 4 con RV+", f:"TEP agudo presente. Probablemente es una de las principales causas contribuyentes del aumento del ventrículo derecho.", i:[MG_A, MG_C, MG_R, MG_P, MG_Q], x:ECO_R}
+};
+const ROW_RV0 = {t:"RV+ sin TEP agudo", f:"PE-RADS no define una conducta específica para esta combinación.", i:[], x:"",
+  n:"El aumento del ventrículo derecho es un predictor independiente de evolución intrahospitalaria adversa, también en pacientes estables sin TEP.", uiOnly:true};
+const ROW_NA = {t:"Émbolos sépticos", f:"No se clasifican con PE-RADS.", i:[], x:"",
+  n:"El diagnóstico se basa sobre todo en los hallazgos del parénquima pulmonar y el tratamiento difiere del TEP no infeccioso.", uiOnly:true};
+function rowT(){
+  return {t:"T+, cualquier categoría", f:"Trombo identificado en la aurícula o el ventrículo derechos.", i:[
+    MG_Q,
+    S.pfo
+      ? "Interconsulta con cardiología intervencionista, cirugía o radiología intervencionista vascular, porque el trombo atraviesa un foramen oval permeable"
+      : "Interconsulta con cardiología intervencionista, cirugía o radiología intervencionista vascular si el trombo atraviesa un foramen oval permeable"
+  ], x:ECO_R};
+}
+const FOOT = {
+  "*":"Orientación de nivel poblacional para el siguiente paso; el manejo de cada paciente debe incluir sus factores individuales.",
+  "†":"La anticoagulación y la terapia de reperfusión deben considerarse según la valoración individual del riesgo de sangrado.",
+  "‡":"Estratificación del riesgo con una escala clínica de predicción para guiar el tratamiento.",
+  "§":"Especialista en TEP: cuidados críticos, neumología, hematología, cardiología, radiología intervencionista o equipo de respuesta al TEP (PERT, Pulmonary Embolism Response Team)."
+};
+function cloneRow(r){ return {t:r.t, f:r.f, i:r.i.slice(), x:r.x || "", n:r.n || "", uiOnly:!!r.uiOnly}; }
+function mgmtRows(){
+  const o = ordinal(), rows = [];
+  if(o.kind==="pending") return rows;
+  if(o.kind==="na") return [cloneRow(ROW_NA)];
+  const rv = rvPlus();
+  if(o.kind==="pe") rows.push(ROWS[o.lvl + (rv ? "RV" : "")]);
+  else rows.push(ROWS[{neg:"0", lim:"0L", nd:"N"}[o.kind]]);
+  if(rv && o.kind!=="pe") rows.push(ROW_RV0);
+  if(tPlus()) rows.push(rowT());
+  return rows.map(cloneRow);
+}
+function footnotes(rows){
+  const txt = rows.map(r=>[r.f, r.x].concat(r.i).join(" ")).join(" ");
+  const out = [["*", FOOT["*"]]];
+  ["†","‡","§"].forEach(s=>{ if(txt.includes(s)) out.push([s, FOOT[s]]); });
+  return out;
+}
+
+/* la primera mención de TEP se expande una sola vez en todo el texto */
+function makeExpander(){
+  let done = false;
+  return s=>{
+    if(!s || done) return s;
+    if(s.includes("tromboembolismo pulmonar")){ done = true; return s; }
+    const m = s.match(/\bTEP( agudo)?\b/);
+    if(!m) return s;
+    done = true;
+    return s.replace(m[0], m[1] ? "tromboembolismo pulmonar agudo (TEP)" : "tromboembolismo pulmonar (TEP)");
+  };
+}
+function buildReport(){
+  const f = [{h:"Estudio", t:studyText()}];
+  const a = arteriesText(); if(a) f.push({h:"Arterias pulmonares", t:a});
+  const c = heartText();    if(c) f.push({h:"Corazón derecho", t:c});
+  const x = otherText();    if(x) f.push({h:"Otros hallazgos", t:x});
+  const ex = makeExpander();
+  f.forEach(s=>{ s.t = ex(s.t); });
+  const imp = ex(impressionText());
+  const rows = mgmtRows();
+  rows.forEach(r=>{ r.f = ex(r.f); r.i = r.i.map(ex); r.x = ex(r.x); });
+  return {findings:f, impression:imp, rows:rows};
+}
+function plainText(){
+  const R = buildReport();
+  let out = "TROMBOEMBOLISMO PULMONAR: CLASIFICACIÓN PE-RADS v2026\n";
+  out += "(Pulmonary Embolism Reporting and Data System. Koweek LM et al. Radiology 2026;320(1):e252721)\n\n";
+  out += "HALLAZGOS\n";
+  R.findings.forEach(s=>{ out += s.h + ": " + s.t + "\n"; });
+  out += "\nIMPRESIÓN\n" + (R.impression || "Pendiente: falta la calidad de imagen o la ubicación del émbolo.") + "\n";
+  const rows = R.rows.filter(r=>!r.uiOnly);
+  if(S.incMgmt && rows.length){
+    out += "\nCONSIDERACIONES DE MANEJO (PE-RADS v2026)*\n";
+    rows.forEach(r=>{
+      out += r.t + ". " + r.f + "\n";
+      r.i.forEach((it,k)=>{ out += (k+1) + ") " + it + "\n"; });
+      if(r.x) out += "Estudios adicionales: " + r.x + "\n";
+    });
+    footnotes(rows).forEach(([s,t])=>{ out += s + " " + t + "\n"; });
+  }
+  if(S.images.length) out += "\n[Incluye " + S.images.length + " imagen(es) adjunta(s): descarga en PDF o Word para verlas.]\n";
+  return out;
+}
+
+/* ============================================================
+   Construcción del árbol (SVG)
+   ============================================================ */
+function svgEl(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  Object.keys(attrs).forEach(k=>e.setAttribute(k, attrs[k]));
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function buildTree(){
+  const svg = $("tree");
+  svg.setAttribute("viewBox", VB.x+" "+VB.y+" "+VB.w+" "+VB.h);
+  LUNGS.forEach(d=>svgEl("path", {d:d, class:"lung"}, svg));
+  svgEl("text", {x:44, y:58, class:"orient"}, svg).textContent = "Derecho";
+  svgEl("text", {x:516, y:58, class:"orient", "text-anchor":"end"}, svg).textContent = "Izquierdo";
+  GROUPS.forEach(g=>{
+    const name = cap(stripArt(g.text));
+    const G = svgEl("g", {class:"ves lvl"+g.lvl, "data-id":g.id, role:"button", tabindex:"0", "aria-pressed":"false",
+      "aria-label": name + ", nivel " + LVL_ADJ[g.lvl] + " (" + g.lvl + ")"}, svg);
+    svgEl("title", {}, G).textContent = name;
+    const w = LUM[g.lvl];
+    [["hit", Math.max(w+14, 22)], ["wall", w+2.6], ["lum", w], ["clot", w*CLOT[g.lvl]]].forEach(([cls, sw])=>{
+      svgEl("path", {d:g.d, class:cls, "stroke-width":sw}, G);
+    });
+    G.addEventListener("click", ()=>toggleVessel(g.id));
+    G.addEventListener("keydown", e=>{
+      if(e.key==="Enter" || e.key===" "){ e.preventDefault(); toggleVessel(g.id); }
+    });
+  });
+  Object.keys(BIG).forEach(id=>{
+    const b = BIG[id];
+    const anchor = b.lab[2]==="start" ? "start" : b.lab[2]==="end" ? "end" : "middle";
+    svgEl("text", {x:b.lab[0], y:b.lab[1], class:"vlab", "data-for":id, "text-anchor":anchor}, svg).textContent = b.label;
+  });
+}
+function toggleVessel(id){
+  toggleIn(S.ves, id, !S.ves.includes(id));
+  if(S.saddle && !["tap","apd","api"].every(x=>S.ves.includes(x))) S.saddle = false;
+  render();
+}
+function renderTree(){
+  document.querySelectorAll("#tree .ves").forEach(G=>{
+    const on = S.ves.includes(G.getAttribute("data-id"));
+    G.classList.toggle("on", on);
+    G.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  document.querySelectorAll("#tree .vlab").forEach(t=>t.classList.toggle("on", S.ves.includes(t.getAttribute("data-for"))));
+  const sel = selGroups();
+  $("v-count").textContent = sel.length ? sel.length + (sel.length===1 ? " selección" : " selecciones") : "Sin selección";
+  let h = "";
+  if(sel.length){
+    const lvl = Math.max.apply(null, sel.map(g=>g.lvl));
+    const prox = sel.filter(g=>g.lvl===lvl).map(g=>stripArt(g.text));
+    h += "<dt>Más proximal</dt><dd>" + esc(cap(joinY(prox))) + " (" + LVL_ADJ[lvl] + ", " + lvl + ")</dd>";
+    h += "<dt>Distribución</dt><dd>" + esc(cap(distribution() || "con afectación del tronco")) + "</dd>";
+  } else {
+    h += "<dt>Más proximal</dt><dd>Toca una arteria del esquema para marcar el trombo</dd>";
+  }
+  $("v-read").innerHTML = h;
+}
+
+/* ============================================================
+   Chips
+   ============================================================ */
+const SYNCS = new Map();
+function chipSet(hostId, name, options, type, getVal, onChange, allowEmpty){
+  const el = $(hostId);
+  el.innerHTML = "";
+  options.forEach((opt, i)=>{
+    const val = opt[0], label = opt[1], tag = opt[2];
+    const id = hostId + "-" + i;
+    const inp = document.createElement("input");
+    inp.type = type; inp.name = name; inp.id = id; inp.value = val;
+    const lab = document.createElement("label");
+    lab.htmlFor = id;
+    lab.innerHTML = "<span>" + esc(label) + "</span>" + (tag ? ' <span class="tag">' + esc(tag) + "</span>" : "");
+    if(type==="radio" && allowEmpty){
+      inp.addEventListener("click", ()=>{ if(getVal(val)){ onChange(val, false); render(); } });
+    }
+    inp.addEventListener("change", ()=>{ onChange(val, inp.checked); render(); });
+    el.appendChild(inp); el.appendChild(lab);
+  });
+  SYNCS.set(hostId, ()=>{ el.querySelectorAll("input").forEach(i=>{ i.checked = !!getVal(i.value); }); });
+}
+function buildCauses(){
+  chipSet("f-causes", "causes", CAUSES.filter(c=>c[2]==="both" || c[2]===S.mod).map(c=>[c[0], c[1]]), "checkbox",
+    v=>S.causes.includes(v), (v,on)=>toggleIn(S.causes, v, on));
+}
+function buildList(){
+  const host = $("f-list");
+  host.innerHTML = "";
+  [4,3,2,1].forEach(lvl=>{
+    const p = document.createElement("p");
+    p.className = "listlvl"; p.textContent = LVL_LIST[lvl];
+    const box = document.createElement("div");
+    box.className = "chips small"; box.id = "f-list-" + lvl;
+    host.appendChild(p); host.appendChild(box);
+    const opts = CANON.filter(id=>GBY[id].lvl===lvl).map(id=>[id, GBY[id].chip, GBY[id].label || ""]);
+    chipSet(box.id, "list"+lvl, opts, "checkbox", v=>S.ves.includes(v), (v,on)=>{
+      toggleIn(S.ves, v, on);
+      if(S.saddle && !["tap","apd","api"].every(x=>S.ves.includes(x))) S.saddle = false;
+    });
+  });
+}
+function buildChips(){
+  chipSet("f-mod", "mod", MODS, "radio", v=>S.mod===v, (v,on)=>{
+    if(!on) return;
+    S.mod = v;
+    S.causes = S.causes.filter(causeOk);
+    buildCauses();
+  }, false);
+  chipSet("f-quality", "quality", QUALITY, "radio", v=>S.quality===v, (v,on)=>{ S.quality = on ? v : ""; }, true);
+  buildCauses();
+  chipSet("f-occl", "occl", OCCL, "radio", v=>S.occl===v, (v,on)=>{ S.occl = on ? v : ""; }, true);
+  chipSet("f-exc", "exc", EXC, "checkbox", v=>S.exc.includes(v), (v,on)=>toggleIn(S.exc, v, on));
+  chipSet("f-rvm", "rvm", RVM, "radio", v=>S.rvm===v, (v,on)=>{ if(on) S.rvm = v; }, false);
+  chipSet("f-t", "tstate", TSTATE, "radio", v=>S.t===v, (v,on)=>{ S.t = on ? v : ""; if(S.t!=="si"){ S.tloc = []; S.pfo = false; } }, true);
+  chipSet("f-tloc", "tloc", TLOC, "checkbox", v=>S.tloc.includes(v), (v,on)=>toggleIn(S.tloc, v, on));
+  chipSet("f-acc", "acc", ACC, "checkbox", v=>S.acc.includes(v), (v,on)=>toggleIn(S.acc, v, on));
+  buildList();
+}
+
+/* ============================================================
+   Render
+   ============================================================ */
+let lastCode = null;
+function renderCodebox(){
+  const o = ordinal(), t = tokens(), host = $("out-code");
+  if(o.kind==="na") host.innerHTML = '<span class="cb-wait">Sin categoría PE-RADS</span>';
+  else if(!t.length) host.innerHTML = '<span class="cb-wait">Elige la calidad de imagen o marca un émbolo</span>';
+  else host.innerHTML = '<span class="pre">PE-RADS</span>' + t.map(x=>
+    '<button type="button" class="seg' + (x.mod ? " mod" : "") + '" data-sec="' + x.sec + '" title="Ir a la sección">' + esc(x.t) + "</button>"
+  ).join('<span class="sl">/</span>');
+  $("out-meaning").textContent = meaningText();
+
+  const r = rvRatio();
+  const locVal = o.kind==="pe" ? LVL_CAP[o.lvl] + " (" + o.lvl + ")"
+    : {neg:"Sin TEP agudo (0)", lim:"Sin TEP, limitado (0L)", nd:"No diagnóstico (N)", na:"No aplica", pending:"Pendiente"}[o.kind];
+  const parts = [
+    ["Ubicación", locVal, o.kind==="pending"],
+    ["Excepción", hasExc() ? "Presente (E)" : "No", !hasExc()],
+    ["Relación VD/VI", r!==null ? r.toFixed(2) + (r>=1 ? " (RV+)" : "") : "Sin medir", r===null],
+    ["Cavidades derechas", S.t==="si" ? "Trombo (T+)" : S.t==="no" ? "Sin trombo definido" : "Sin evaluar", S.t===""]
+  ];
+  $("out-parts").innerHTML = parts.map(p=>'<div><dt>' + p[0] + '</dt><dd' + (p[2] ? ' class="dim"' : "") + ">" + esc(p[1]) + "</dd></div>").join("");
+
+  const cs = codeString();
+  $("cbar-code").textContent = cs || "PE-RADS pendiente";
+  if(cs !== lastCode){
+    $("sr-status").textContent = cs ? "Categoría actual: " + cs : "";
+    lastCode = cs;
+  }
+}
+function renderReport(){
+  const R = buildReport();
+  $("out-find").innerHTML = '<section class="rep-sec"><h3>Hallazgos</h3>'
+    + R.findings.map(f=>"<p><b>" + esc(f.h) + ".</b> " + esc(f.t) + "</p>").join("") + "</section>";
+  $("out-imp").innerHTML = '<section class="rep-sec imp"><h3>Impresión</h3>' + (R.impression
+    ? "<p>" + esc(R.impression) + "</p>"
+    : '<p class="rep-empty">Elige la calidad de imagen o marca la ubicación del émbolo para generar la impresión.</p>') + "</section>";
+  $("inc-wrap").hidden = !R.rows.some(r=>!r.uiOnly);
+
+  const host = $("out-mgmt");
+  if(!R.rows.length){ host.hidden = true; host.innerHTML = ""; }
+  else {
+    host.hidden = false;
+    let m = '<h3>Consideraciones de manejo</h3><p class="mg-sub">Tabla 5 de PE-RADS, orientación de nivel poblacional*</p>';
+    R.rows.forEach(r=>{
+      m += '<div class="mg-row"><p class="mg-t">' + esc(r.t) + '</p><p class="mg-f">' + esc(r.f) + "</p>";
+      if(r.i.length) m += "<ol>" + r.i.map(x=>"<li>" + esc(x) + "</li>").join("") + "</ol>";
+      if(r.x) m += '<p class="mg-x"><b>Estudios adicionales.</b> ' + esc(r.x) + "</p>";
+      if(r.n) m += '<p class="mg-n">' + esc(r.n) + "</p>";
+      m += "</div>";
+    });
+    m += '<ul class="foot">' + footnotes(R.rows).map(([s,t])=>"<li>" + s + " " + esc(t) + "</li>").join("") + "</ul>";
+    host.innerHTML = m;
+  }
+  host.classList.toggle("excl", !S.incMgmt);
+}
+function render(){
+  SYNCS.forEach(fn=>fn());
+  $("causes-wrap").hidden = !(S.quality==="lim" || S.quality==="nd");
+  $("hu-row").hidden = S.mod!=="tc";
+  $("exc-other-row").hidden = !S.exc.includes("otro");
+  $("t-more").hidden = S.t!=="si";
+  $("f-saddle").checked = S.saddle;
+  $("f-septic").checked = S.septic;
+  $("f-rvh").checked = S.rvh;
+  $("f-pfo").checked = S.pfo;
+  $("f-incmgmt").checked = S.incMgmt;
+  $("lbl-rv").textContent = S.rvm==="vol" ? "Volumen del VD (mL)" : "Diámetro del VD (mm)";
+  $("lbl-lv").textContent = S.rvm==="vol" ? "Volumen del VI (mL)" : "Diámetro del VI (mm)";
+
+  const nq = $("note-quality");
+  const showNq = S.ves.length>0 && !S.septic && (S.quality==="lim" || S.quality==="nd");
+  nq.hidden = !showNq;
+  if(showNq) nq.textContent = "Hay TEP agudo marcado: no se usan N ni L. La categoría se asigna por el émbolo más proximal y la limitación queda descrita en el texto.";
+
+  const ne = $("note-exc");
+  const showNe = hasExc() && !S.excDesc.trim();
+  ne.hidden = !showNe;
+  if(showNe) ne.textContent = "Agrega la localización y la descripción: PE-RADS pide describir cada excepción en Hallazgos e Impresión.";
+  $("note-septic").hidden = !S.septic;
+
+  const r = rvRatio(), crv = $("calc-rv");
+  if(r===null){
+    crv.className = "readout";
+    crv.textContent = (pos(S.rv)!==null || pos(S.lv)!==null)
+      ? "Ingresa ambas medidas para calcular la relación."
+      : "VD/VI = VD ÷ VI. RV+ desde 1.0.";
+  } else {
+    crv.className = "readout" + (r>=1 ? " hit" : "");
+    crv.textContent = "VD/VI = " + r.toFixed(2) + (r>=1 ? ": RV+, ventrículo derecho aumentado" : ": menor de 1.0, sin RV+");
+  }
+  const hu = num(S.hu), chu = $("calc-hu");
+  chu.hidden = !(S.mod==="tc" && hu!==null);
+  if(!chu.hidden){
+    const inRange = hu>=40 && hu<=70;
+    chu.textContent = fmt(hu) + " UH: " + (inRange ? "dentro" : "fuera") + " del rango típico del trombo agudo en TC (40 a 70 UH)";
+  }
+  renderTree();
+  renderCodebox();
+  renderReport();
+  renderImages();
+}
+
+/* ============================================================
+   Imágenes adjuntas
+   ============================================================ */
+function renderImages(){
+  const host = $("out-images");
+  host.innerHTML = "";
+  S.images.forEach((im, i)=>{
+    const div = document.createElement("div");
+    div.className = "thumb";
+    div.innerHTML = '<img src="' + im.dataUrl + '" alt="' + esc(im.name) + '"><button type="button" aria-label="Quitar imagen">×</button>';
+    div.querySelector("button").addEventListener("click", ()=>{ S.images.splice(i,1); renderImages(); });
+    host.appendChild(div);
+  });
+}
+function addImageFiles(fileList){
+  Array.from(fileList).forEach(file=>{
+    if(!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const maxDim = 1600;
+        let w = img.naturalWidth, h = img.naturalHeight;
+        if(w>maxDim || h>maxDim){ const sc = maxDim/Math.max(w,h); w = Math.round(w*sc); h = Math.round(h*sc); }
+        const cnv = document.createElement("canvas");
+        cnv.width = w; cnv.height = h;
+        cnv.getContext("2d").drawImage(img, 0, 0, w, h);
+        S.images = S.images.concat([{name:file.name, dataUrl:cnv.toDataURL("image/jpeg", 0.85), width:w, height:h}]);
+        renderImages();
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ============================================================
+   Enlaces de entradas
+   ============================================================ */
+function bind(id, key){
+  const el = $(id);
+  el.value = S[key];
+  el.addEventListener("input", ()=>{ S[key] = el.value; render(); });
+}
+[["f-hu","hu"],["f-exc-other","excOther"],["f-exc-desc","excDesc"],["f-rv","rv"],["f-lv","lv"],["f-pad","pad"],["f-other","other"]]
+  .forEach(([id,key])=>bind(id, key));
+
+$("f-saddle").addEventListener("change", e=>{
+  S.saddle = e.target.checked;
+  if(S.saddle) ["tap","apd","api"].forEach(x=>toggleIn(S.ves, x, true));
+  render();
+});
+$("f-septic").addEventListener("change", e=>{ S.septic = e.target.checked; render(); });
+$("f-rvh").addEventListener("change", e=>{ S.rvh = e.target.checked; render(); });
+$("f-pfo").addEventListener("change", e=>{ S.pfo = e.target.checked; render(); });
+$("f-incmgmt").addEventListener("change", e=>{ S.incMgmt = e.target.checked; render(); });
+
+$("out-code").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-sec]");
+  if(!b) return;
+  $(b.getAttribute("data-sec")).scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"});
+});
+
+/* barra fija en móvil: se oculta cuando el panel de resultado está a la vista */
+(function(){
+  const bar = $("codebar"), panel = $("panel");
+  $("cbar-go").addEventListener("click", ()=>panel.scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"}));
+  if(!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(entries=>{
+    entries.forEach(en=>bar.classList.toggle("away", en.isIntersecting));
+  }, {threshold:0.02}).observe(panel);
+})();
+
+/* ============================================================
+   Acciones
+   ============================================================ */
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  setTimeout(()=>{ if(t.textContent===msg) t.textContent = ""; }, 2600);
+}
+$("btn-copy").addEventListener("click", async ()=>{
+  const text = plainText();
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Texto copiado");
+  }catch(err){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Texto copiado"); }
+    catch(e2){ toast("No se pudo copiar; selecciona el texto manualmente"); }
+    document.body.removeChild(ta);
+  }
+});
+$("btn-addimg").addEventListener("click", ()=>$("f-images").click());
+$("f-images").addEventListener("change", e=>{ addImageFiles(e.target.files); e.target.value = ""; });
+$("btn-print").addEventListener("click", ()=>window.print());
+$("btn-reset").addEventListener("click", ()=>{
+  if(!confirm("Se borrarán todos los datos capturados. ¿Continuar?")) return;
+  Object.assign(S, defaults());
+  ["f-hu","f-exc-other","f-exc-desc","f-rv","f-lv","f-pad","f-other"].forEach(id=>{ $(id).value = ""; });
+  $("f-images").value = "";
+  buildCauses();
+  render();
+  toast("Formulario vacío");
+});
+
+/* ---------- esquema en canvas para PDF y Word ---------- */
+function drawTreeCanvas(){
+  const sc = 2;
+  const cnv = document.createElement("canvas");
+  cnv.width = VB.w*sc; cnv.height = VB.h*sc;
+  const ctx = cnv.getContext("2d");
+  ctx.scale(sc, sc);
+  ctx.translate(-VB.x, -VB.y);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(VB.x, VB.y, VB.w, VB.h);
+  ctx.fillStyle = "#EDF1F3";
+  LUNGS.forEach(d=>ctx.fill(new Path2D(d)));
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  GROUPS.forEach(g=>{
+    const on = S.ves.includes(g.id), w = LUM[g.lvl], p = new Path2D(g.d);
+    ctx.strokeStyle = on ? "#B8741A" : "#8C9BA2"; ctx.lineWidth = w + 2.6; ctx.stroke(p);
+    ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = w; ctx.stroke(p);
+    if(on){ ctx.strokeStyle = "#56636B"; ctx.lineWidth = w*CLOT[g.lvl]; ctx.stroke(p); }
+  });
+  ctx.textBaseline = "alphabetic";
+  Object.keys(BIG).forEach(id=>{
+    const b = BIG[id];
+    ctx.font = "700 12px Arial, Helvetica, sans-serif";
+    ctx.fillStyle = S.ves.includes(id) ? "#7E4A08" : "#4A5B64";
+    ctx.textAlign = b.lab[2]==="start" ? "left" : b.lab[2]==="end" ? "right" : "center";
+    ctx.fillText(b.label, b.lab[0], b.lab[1]);
+  });
+  ctx.font = "11px Arial, Helvetica, sans-serif";
+  ctx.fillStyle = "#6F838C";
+  ctx.textAlign = "left";  ctx.fillText("Derecho", 44, 58);
+  ctx.textAlign = "right"; ctx.fillText("Izquierdo", 516, 58);
+  return cnv;
+}
+
+/* ---------- PDF (jsPDF bajo demanda) ---------- */
+function loadScript(src){
+  return new Promise((resolve, reject)=>{
+    if(document.querySelector('script[data-src="' + src + '"]')){ resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src; s.dataset.src = src;
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error("No se pudo cargar " + src));
+    document.head.appendChild(s);
+  });
+}
+async function ensureJsPDF(){
+  if(window.jspdf && window.jspdf.jsPDF) return;
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+}
+function exportFilename(ext){
+  const cs = codeString();
+  const clean = cs ? cs.replace(/^PE-RADS\s*/, "").replace(/\//g, "_").replace(/\s+/g, "-") : "pendiente";
+  return "PE-RADS_" + (clean || "pendiente") + "." + ext;
+}
+function pdfSafe(s){
+  return String(s).replace(/≥/g, ">=").replace(/≤/g, "<=").replace(/→/g, "->").replace(/−/g, "-").replace(/÷/g, "/");
+}
+async function downloadPDF(){
+  try{
+    toast("Generando PDF…");
+    await ensureJsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:"pt", format:"letter"});
+    const M = 54, W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+    const TW = W - M*2;
+    let y = 56;
+    const need = h=>{ if(y + h > H - 50){ doc.addPage(); y = 56; } };
+    const lines = (txt, size, style, color)=>{
+      doc.setFont("helvetica", style); doc.setFontSize(size); doc.setTextColor(color[0], color[1], color[2]);
+      doc.splitTextToSize(pdfSafe(txt), TW).forEach(l=>{ need(size*1.35); doc.text(l, M, y); y += size*1.35; });
+    };
+    const R = buildReport();
+
+    lines("Tromboembolismo pulmonar: clasificación PE-RADS v2026", 15, "bold", [22,35,43]);
+    y += 2;
+    lines("Pulmonary Embolism Reporting and Data System. Koweek LM et al. Radiology 2026;320(1):e252721.", 9, "normal", [95,112,121]);
+    y += 14;
+
+    doc.setFont("courier", "bold"); doc.setFontSize(19); doc.setTextColor(22,35,43);
+    need(24); doc.text(pdfSafe(codeString() || "Categoría pendiente"), M, y); y += 18;
+    const mean = meaningText();
+    if(mean){ lines(mean, 10.5, "normal", [51,70,79]); }
+    y += 8;
+
+    if(S.ves.length){
+      const cnv = drawTreeCanvas();
+      const dw = 230, dh = dw*cnv.height/cnv.width;
+      need(dh + 12);
+      doc.addImage(cnv.toDataURL("image/png"), "PNG", M, y, dw, dh, undefined, "FAST");
+      y += dh + 14;
+    }
+
+    lines("HALLAZGOS", 11, "bold", [22,35,43]); y += 2;
+    R.findings.forEach(f=>{ lines(f.h + ": " + f.t, 10.5, "normal", [51,70,79]); y += 4; });
+    y += 6;
+    lines("IMPRESIÓN", 11, "bold", [22,35,43]); y += 2;
+    lines(R.impression || "Pendiente: falta la calidad de imagen o la ubicación del émbolo.", 10.5, "normal", [22,35,43]);
+
+    const rows = R.rows.filter(r=>!r.uiOnly);
+    if(S.incMgmt && rows.length){
+      y += 10;
+      lines("CONSIDERACIONES DE MANEJO (PE-RADS v2026)*", 11, "bold", [22,35,43]); y += 2;
+      rows.forEach(r=>{
+        lines(r.t + ". " + r.f, 10.5, "bold", [51,70,79]);
+        r.i.forEach((it,k)=>lines((k+1) + ") " + it, 10.5, "normal", [51,70,79]));
+        if(r.x) lines("Estudios adicionales: " + r.x, 10.5, "normal", [51,70,79]);
+        y += 4;
+      });
+      footnotes(rows).forEach(([s,t])=>lines(s + " " + t, 8.5, "normal", [95,112,121]));
+    }
+
+    if(S.images.length){
+      y += 12;
+      lines("Imágenes adjuntas", 11, "bold", [22,35,43]); y += 4;
+      const cols = 3, gap = 12;
+      const cellW = (TW - gap*(cols-1))/cols, cellH = cellW*0.75;
+      let col = 0;
+      S.images.forEach(im=>{
+        if(col===0) need(cellH + gap);
+        const x = M + col*(cellW + gap);
+        let w = cellW, h = cellW*(im.height/im.width);
+        if(h > cellH){ h = cellH; w = cellH*(im.width/im.height); }
+        doc.addImage(im.dataUrl, "JPEG", x, y, w, h);
+        col++;
+        if(col>=cols){ col = 0; y += cellH + gap; }
+      });
+      if(col!==0) y += cellH + gap;
+    }
+
+    doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(140,155,162);
+    const pages = doc.getNumberOfPages();
+    for(let p=1; p<=pages; p++){
+      doc.setPage(p);
+      doc.text("Documento generado con PE-RADS v2026. El manejo de cada paciente debe incluir sus factores individuales.", M, H - 28);
+    }
+    doc.save(exportFilename("pdf"));
+    toast("PDF descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el PDF");
+  }
+}
+
+/* ---------- Word (.doc compatible, sin dependencias) ---------- */
+function buildWordHtml(){
+  const R = buildReport();
+  const code = esc(codeString() || "Categoría pendiente");
+  const mean = esc(meaningText());
+  const map = S.ves.length ? '<p><img src="' + drawTreeCanvas().toDataURL("image/png") + '" style="width:260px"></p>' : "";
+  const f = R.findings.map(x=>"<p><b>" + esc(x.h) + ".</b> " + esc(x.t) + "</p>").join("");
+  const imp = "<p>" + esc(R.impression || "Pendiente: falta la calidad de imagen o la ubicación del émbolo.") + "</p>";
+  const rows = R.rows.filter(r=>!r.uiOnly);
+  let mg = "";
+  if(S.incMgmt && rows.length){
+    mg = "<h3>Consideraciones de manejo (PE-RADS v2026)*</h3>" + rows.map(r=>
+      "<p><b>" + esc(r.t) + ".</b> " + esc(r.f) + "</p>"
+      + (r.i.length ? "<ol>" + r.i.map(i=>"<li>" + esc(i) + "</li>").join("") + "</ol>" : "")
+      + (r.x ? "<p><i>Estudios adicionales:</i> " + esc(r.x) + "</p>" : "")
+    ).join("") + '<p class="foot">' + footnotes(rows).map(([s,t])=>esc(s + " " + t)).join("<br>") + "</p>";
+  }
+  let att = "";
+  if(S.images.length){
+    att = "<h3>Imágenes adjuntas</h3><table style='width:100%;border-collapse:collapse;' cellpadding='4'><tr>"
+      + S.images.map(im=>'<td style="text-align:center;vertical-align:top;"><img src="' + im.dataUrl + '" style="width:160px;height:auto;border:1px solid #C9D3D8;"><div style="font-size:9pt;color:#5F7079;margin-top:2px;">' + esc(im.name) + "</div></td>").join("")
+      + "</tr></table>";
+  }
+  return "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>"
+    + '<head><meta charset="utf-8"><title>Informe PE-RADS</title>'
+    + "<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->"
+    + "<style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#16232B;}h1{font-size:15pt;margin-bottom:2pt;}h3{font-size:11pt;margin-top:16pt;}"
+    + ".meta{font-size:9pt;color:#5F7079;margin-bottom:12pt;}.code{font-family:'Courier New',monospace;font-size:15pt;font-weight:bold;margin:0 0 2pt;}"
+    + ".foot{font-size:8.5pt;color:#5F7079;}.end{font-size:8pt;color:#8C9BA2;margin-top:20pt;font-style:italic;}</style></head><body>"
+    + "<h1>Tromboembolismo pulmonar: clasificación PE-RADS v2026</h1>"
+    + '<p class="meta">Pulmonary Embolism Reporting and Data System. Koweek LM et al. Radiology 2026;320(1):e252721.</p>'
+    + '<p class="code">' + code + "</p><p>" + mean + "</p>" + map
+    + "<h3>Hallazgos</h3>" + f + "<h3>Impresión</h3>" + imp + mg + att
+    + '<p class="end">Documento generado con PE-RADS v2026. El manejo de cada paciente debe incluir sus factores individuales.</p>'
+    + "</body></html>";
+}
+function downloadWord(){
+  try{
+    const blob = new Blob(["﻿", buildWordHtml()], {type:"application/msword"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = exportFilename("doc");
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 3000);
+    toast("Word descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el Word");
+  }
+}
+$("btn-pdf").addEventListener("click", downloadPDF);
+$("btn-word").addEventListener("click", downloadWord);
+
+/* ============================================================
+   Inicio
+   ============================================================ */
+buildTree();
+buildChips();
+render();
+</script>
+</body>
+</html>
