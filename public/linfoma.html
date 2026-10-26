@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Estadificación de linfoma: clasificación de Lugano</title>
+<meta name="description" content="Estadificación de linfoma de Hodgkin y no Hodgkin con la clasificación de Lugano 2014 (Ann Arbor modificada): regiones ganglionares, bazo, afectación extraganglionar, masa voluminosa, síntomas B y texto de informe.">
+<meta name="theme-color" content="#16232B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Estadificación de linfoma: clasificación de Lugano">
+<meta property="og:description" content="Marca las regiones ganglionares y la afectación extraganglionar y obtén el estadio de Lugano 2014 con el texto del informe.">
+<meta property="og:locale" content="es_MX">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F171C'/%3E%3Cpath d='M9.5 10.5L16 21.5L22.5 10.5' stroke='%23E9F0F2' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='9.5' cy='10.5' r='4' fill='%23E9F0F2'/%3E%3Ccircle cx='22.5' cy='10.5' r='4' fill='%23E9F0F2'/%3E%3Ccircle cx='16' cy='22' r='5' fill='%23E9A74C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600;700&family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EBEFF0;
+  --surface:#FFFFFF;
+  --ink:#16232B;
+  --ink-2:#33464F;
+  --muted:#5F7079;
+  --line:#C9D3D8;
+  --line-soft:#DCE3E6;
+  --visor:#0F171C;
+  --visor-line:#26343C;
+  --visor-text:#9FB1B9;
+  --body:#1C2A31;
+  --iodine:#B8741A;
+  --iodine-lt:#E9A74C;
+  --iodine-ink:#7E4A08;
+  --iodine-soft:#F5E8D3;
+  --info:#2D6F99;
+  --info-soft:#E3EEF4;
+  --focus:#2D7BB0;
+  --sans:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Atkinson Hyperlegible Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;
+}
+a{color:var(--ink-2)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button,.chips label,.tg label,svg{touch-action:manipulation}
+img,canvas{max-width:100%}
+
+/* ---------- navegación y cabecera ---------- */
+.topnav{padding:10px 28px;background:var(--surface);border-bottom:1px solid var(--line);font-size:14px}
+.topnav a{color:var(--ink-2);text-decoration:none}
+.topnav a:hover{text-decoration:underline}
+.masthead{background:var(--surface);border-bottom:1px solid var(--line);padding:26px 28px 24px}
+.masthead-inner{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px 48px;align-items:flex-end;justify-content:space-between}
+h1{margin:0;font-size:40px;line-height:1.02;font-weight:800;letter-spacing:-.025em}
+.masthead .sub{margin:10px 0 0;max-width:62ch;color:var(--ink-2);font-size:15.5px}
+.cite{margin:0;font-size:13px;color:var(--muted);line-height:1.5;max-width:46ch}
+
+/* ---------- distribución ---------- */
+.wrap{max-width:1320px;margin:0 auto;padding:28px 28px 56px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:36px;align-items:start}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr;gap:26px;padding:20px 16px 48px}}
+
+/* ---------- formulario ---------- */
+.group{margin-bottom:34px}
+.group:last-child{margin-bottom:0}
+.group-head{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.group-head h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.token{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--iodine-ink);background:var(--iodine-soft);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.group-lede{margin:-2px 0 14px;color:var(--muted);font-size:14px;max-width:70ch}
+.field{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:16px 18px 18px;margin-bottom:12px}
+.field-title{display:block;font-weight:700;font-size:16px;margin:0 0 4px}
+.opt{font-weight:400;color:var(--muted);font-size:14px}
+.hint{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.5;max-width:72ch}
+.muted-line{margin:4px 0 0;color:var(--muted);font-size:14px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.chips label{
+  display:inline-flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  border:1px solid var(--line);background:#fff;padding:7px 12px;border-radius:6px;
+  cursor:pointer;font-size:14.5px;line-height:1.3;transition:background .12s,border-color .12s,color .12s;
+}
+.chips label .tag{font-size:12.5px;color:var(--muted)}
+.chips label:hover{border-color:var(--ink-2)}
+.chips input:checked + label{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips input:checked + label .tag{color:#B9C9D0}
+.chips input:focus-visible + label{outline:2px solid var(--focus);outline-offset:2px}
+.chips.small label{font-size:13.5px;padding:6px 10px}
+
+.sublabel{display:block;font-size:13.5px;color:var(--muted);margin:14px 0 6px}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.row.spaced{margin-top:12px}
+.sub{flex:1 1 150px;min-width:130px}
+.sub.full{flex:1 1 100%}
+.sub > span{display:block;font-size:13.5px;color:var(--muted);margin-bottom:4px}
+input[type=text],textarea{
+  width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);
+  border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:6px;
+}
+input[type=text]:focus,textarea:focus{outline:2px solid var(--focus);outline-offset:-1px;border-color:var(--focus)}
+input.num{font-family:var(--mono)}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.readout{margin-top:12px;font-family:var(--mono);font-size:14px;background:#F1F4F5;border-radius:6px;padding:9px 12px;color:var(--ink-2)}
+.readout.hit{background:var(--iodine-soft);color:var(--iodine-ink);font-weight:600}
+.readout[hidden],.note[hidden],[hidden]{display:none!important}
+.note{margin-top:12px;font-size:14px;background:var(--info-soft);border-left:3px solid var(--info);padding:9px 12px;border-radius:0 6px 6px 0;color:#1F4B66}
+.switch{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;color:var(--ink-2);margin-top:14px;cursor:pointer;line-height:1.4}
+.switch input{width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+details.more{margin-top:14px;font-size:14px;border-top:1px solid var(--line-soft);padding-top:12px}
+details.more summary{cursor:pointer;color:var(--ink-2);font-weight:600}
+details.more[open] summary{margin-bottom:10px}
+details.more p,details.more li{color:var(--ink-2);margin:0 0 8px;line-height:1.5}
+details.more ul{margin:0;padding-left:18px}
+
+/* ---------- regiones ganglionares: esquema + tabla ---------- */
+.nodal{display:grid;grid-template-columns:minmax(220px,270px) minmax(0,1fr);gap:18px;align-items:start;margin-top:4px}
+@media (max-width:760px){.nodal{grid-template-columns:1fr}.nodal .visor{width:100%;max-width:340px;margin:0 auto}}
+
+.visor{background:var(--visor);border-radius:12px;padding:10px 10px 12px;color:var(--visor-text)}
+.visor-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 12px;font-size:13px;margin:2px 6px 2px}
+.visor-top b{color:#E6EDF0;font-weight:600}
+svg.map{display:block;width:100%;height:auto;-webkit-user-select:none;user-select:none}
+.bd{fill:var(--body)}
+.bd-l{fill:none;stroke:var(--body);stroke-linecap:round;stroke-linejoin:round}
+.dia{fill:none;stroke:#5A717B;stroke-width:1.5;stroke-dasharray:5 4}
+.mlab{font-family:var(--sans);font-size:11.5px;fill:#6F838C}
+.nd{cursor:pointer}
+.nd:focus{outline:none}
+.nd .hit{fill:transparent}
+.nd .halo{fill:var(--iodine-lt);opacity:0;transition:opacity .12s}
+.nd .dot{fill:var(--visor);stroke:#8DA0A9;stroke-width:2;transition:fill .12s,stroke .12s}
+.nd .org{fill:#24343C;stroke:#8DA0A9;stroke-width:1.6;transition:fill .12s,stroke .12s}
+.nd:hover .dot,.nd:hover .org{stroke:#FFFFFF}
+.nd.on .dot{fill:var(--iodine-lt);stroke:var(--iodine-lt)}
+.nd.on .halo{opacity:.22}
+.nd.on .org{fill:var(--iodine-lt);stroke:var(--iodine-lt)}
+.nd:focus-visible .dot,.nd:focus-visible .org{stroke:#4DA0D6;stroke-width:3}
+.visor-read{border-top:1px solid var(--visor-line);margin:4px 6px 0;padding-top:10px;font-size:13.5px;color:#E6EDF0}
+.visor-read dt{color:var(--visor-text);font-size:12.5px;margin-top:8px}
+.visor-read dt:first-child{margin-top:0}
+.visor-read dd{margin:1px 0 0;line-height:1.4}
+.visor-read dd.dim{color:#6F838C}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 6px 0;font-size:12.5px;color:var(--visor-text)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+.rg-h{margin:0 0 2px;font-size:13.5px;font-weight:700;color:var(--ink-2)}
+.rg-h.second{margin-top:16px}
+.rg-row{display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line-soft)}
+.rg-n{font-size:14.5px;line-height:1.3;color:var(--ink)}
+.rg-n small{display:block;font-size:12.5px;color:var(--muted);line-height:1.35}
+.rg-t{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rg-t.one{grid-template-columns:1fr}
+.tg{position:relative;display:block}
+.tg input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.tg label{display:flex;align-items:center;justify-content:center;min-height:34px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:13.5px;font-weight:600;color:var(--ink-2);cursor:pointer;transition:background .12s,border-color .12s,color .12s}
+.tg label:hover{border-color:var(--ink-2)}
+.tg input:checked + label{background:var(--ink);border-color:var(--ink);color:#fff}
+.tg input:focus-visible + label{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ---------- extraganglionar ---------- */
+.xrows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.xrows:empty{display:none}
+.xrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:8px;background:#F8FAFA}
+.xrow.need{border-color:var(--iodine);background:var(--iodine-soft)}
+.xr-n{font-weight:700;font-size:14.5px;min-width:8.5em}
+.xr-fixed{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--iodine-ink);background:var(--iodine-soft);padding:3px 8px;border-radius:4px}
+
+/* ---------- panel de salida ---------- */
+.panel{position:sticky;top:18px}
+.codebox{background:var(--visor);color:#fff;border-radius:12px 12px 0 0;padding:18px 20px 16px}
+.cb-label{margin:0;font-size:13.5px;color:var(--visor-text)}
+.cb-code{margin:4px 0 2px;font-family:var(--mono);font-size:40px;font-weight:700;line-height:1.15;letter-spacing:-.01em;min-height:46px;overflow-wrap:anywhere}
+.cb-code .pre{font-family:var(--sans);font-size:22px;color:#C8D4D9;font-weight:600;margin-right:.32em;letter-spacing:0}
+.cb-code .seg{font:inherit;color:#fff;background:none;border:0;padding:0 .02em;margin:0;cursor:pointer;border-bottom:2px solid transparent;line-height:inherit;letter-spacing:inherit}
+.cb-code .seg.mod{color:var(--iodine-lt)}
+.cb-code .seg:hover{border-bottom-color:currentColor}
+.cb-wait{display:block;font-family:var(--sans);font-size:18px;font-weight:600;color:#C8D4D9;line-height:1.35;padding:8px 0 4px}
+.cb-group{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.cb-group:empty{display:none}
+.grp{display:inline-block;font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px;line-height:1.4}
+.grp.lim{background:#1D4A63;color:#D3E8F5}
+.grp.adv{background:#5C3B0C;color:#F7D7A6}
+.grp.amb{background:#2C3B43;color:#E1E8EB}
+.grp.bulk{background:transparent;border:1px solid var(--iodine-lt);color:var(--iodine-lt);cursor:pointer;font-family:var(--sans)}
+.cb-meaning{margin:8px 0 0;font-size:15px;color:#DCE4E8;min-height:1.5em}
+.cb-parts{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--visor-line)}
+.cb-parts div{min-width:0}
+.cb-parts dt{font-size:12.5px;color:var(--visor-text)}
+.cb-parts dd{margin:1px 0 0;font-size:14.5px;color:#fff}
+.cb-parts dd.dim{color:#7F939C}
+
+.report{background:var(--surface);border:1px solid var(--line-soft);border-top:0;border-radius:0 0 12px 12px;padding:18px 20px 20px;max-height:calc(100vh - 380px);min-height:240px;overflow:auto;display:flex;flex-direction:column}
+/* en pantalla se lee primero la impresión; al imprimir vuelve el orden del informe */
+.imp-wrap{order:1}
+.find-wrap{order:2;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr{order:3}
+.rep-sec{margin:0 0 14px}
+.rep-sec h3{margin:0 0 6px;font-size:15px;font-weight:700;color:var(--ink)}
+.rep-sec p{margin:0 0 7px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.rep-sec p b{color:var(--ink);font-weight:700}
+.rep-empty{color:var(--muted)!important;font-style:italic}
+.imp{background:#F2F5F6;border-radius:8px;padding:12px 14px}
+.imp p{color:var(--ink)}
+
+.imgmgr{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.imgmgr-head .lbl{font-size:14px;font-weight:700}
+.addimg-btn{font-family:var(--sans);font-size:13.5px;font-weight:600;border:1px dashed var(--line);background:#fff;color:var(--ink-2);padding:6px 12px;border-radius:6px;cursor:pointer}
+.addimg-btn:hover{border-color:var(--ink-2)}
+.imgmgr-grid{display:flex;flex-wrap:wrap;gap:8px}
+.imgmgr-grid:empty::after{content:"Sin imágenes adjuntas.";color:var(--muted);font-size:13.5px}
+.thumb{position:relative;width:72px;height:72px;border-radius:6px;overflow:hidden;border:1px solid var(--line-soft);flex:0 0 auto}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:3px;right:3px;width:20px;height:20px;border:0;border-radius:50%;background:rgba(15,23,28,.75);color:#fff;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+button.act{font-family:var(--sans);font-size:14.5px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:9px 16px;cursor:pointer;border-radius:6px}
+button.act.ghost{background:#fff;color:var(--ink)}
+button.act:hover{background:var(--ink-2);border-color:var(--ink-2);color:#fff}
+.toast{font-size:13.5px;color:var(--info);font-weight:600}
+
+/* ---------- referencia ---------- */
+.refs{max-width:1320px;margin:0 auto;padding:8px 28px 40px}
+.refs > h2{font-size:20px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink);font-weight:700}
+.refs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1150px){.refs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.refs-grid{grid-template-columns:1fr}}
+.ref{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:16px 16px 14px}
+.ref h3{margin:0 0 8px;font-size:16px}
+.ref table{width:100%;border-collapse:collapse;font-size:14px}
+.ref td{padding:6px 0;vertical-align:top;border-top:1px solid var(--line-soft);color:var(--ink-2);line-height:1.45}
+.ref td.k{font-family:var(--mono);font-weight:700;width:4.2em;color:var(--ink);padding-right:8px}
+.ref p{margin:8px 0 0;font-size:14px;color:var(--ink-2)}
+.ref dl{margin:0;font-size:14px}
+.ref dt{font-weight:700;color:var(--ink);margin-top:8px}
+.ref dt:first-child{margin-top:0}
+.ref dd{margin:2px 0 0;color:var(--ink-2);line-height:1.45}
+.ref ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.ref li{margin:0 0 6px;line-height:1.45}
+
+footer.legal{max-width:1320px;margin:0 auto;padding:0 28px 40px;color:var(--muted);font-size:13px;line-height:1.6}
+footer.legal .editor{margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid var(--line);font-weight:700;font-size:15px;color:var(--ink)}
+footer.legal .editor span{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-bottom:2px}
+
+/* barra fija con el estadio (solo móvil) */
+.codebar{display:none}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- móvil ---------- */
+@media (max-width:1000px){
+  .panel{position:static}
+  .report{max-height:none;min-height:0;overflow:visible}
+  .codebar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--visor);color:#fff;border-top:1px solid var(--visor-line);
+    padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    transition:transform .2s ease;
+  }
+  .codebar.away{transform:translateY(120%)}
+  .codebar .c{font-family:var(--mono);font-weight:700;font-size:18px;overflow-wrap:anywhere}
+  .codebar button{font-family:var(--sans);font-size:15px;font-weight:600;background:#fff;color:var(--ink);border:0;border-radius:6px;padding:10px 14px;min-height:44px;flex:0 0 auto;cursor:pointer}
+  body{padding-bottom:76px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .topnav{padding:10px 16px}
+  .masthead{padding:max(18px,env(safe-area-inset-top)) 16px 18px}
+  h1{font-size:32px}
+  .wrap{padding:16px max(14px,env(safe-area-inset-right)) 40px max(14px,env(safe-area-inset-left));gap:22px}
+  .refs{padding:4px 14px 32px}
+  footer.legal{padding:0 16px max(32px,env(safe-area-inset-bottom))}
+  .field{padding:14px 14px 16px}
+  .chips{gap:8px}
+  .chips label{min-height:44px;padding:9px 14px;font-size:15px;align-items:center}
+  .chips.small label{min-height:40px;font-size:14px}
+  .rg-row{grid-template-columns:minmax(0,1fr) 122px}
+  .tg label{min-height:44px;font-size:14.5px}
+  input[type=text],textarea{font-size:16px;min-height:44px;padding:9px 11px}
+  .sub{flex:1 1 100%}
+  .switch{font-size:15px;min-height:40px}
+  .switch input{width:22px;height:22px}
+  .xr-n{min-width:0;flex:1 1 100%}
+  .cb-code{font-size:34px}
+  .codebox{padding:16px 16px 14px}
+  .report{padding:16px 14px}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.act{min-height:46px;padding:10px 8px;width:100%}
+  .toast{grid-column:1/-1}
+  .thumb button{width:28px;height:28px;font-size:16px}
+}
+
+/* ---------- impresión ---------- */
+@media print{
+  body{background:#fff;padding:0}
+  .topnav,.masthead,.formcol,.actions,.refs,footer.legal,.codebar,.imgmgr-head .addimg-btn,.thumb button{display:none!important}
+  .wrap{display:block;padding:0}
+  .panel{position:static}
+  .codebox{background:#fff;color:#000;border:1px solid #000;border-radius:0}
+  .cb-label,.cb-meaning,.cb-parts dt,.cb-parts dd,.cb-parts dd.dim,.cb-code .pre,.cb-code .seg,.cb-code .seg.mod{color:#000}
+  .grp{background:#fff!important;color:#000!important;border:1px solid #000}
+  .cb-parts{border-top-color:#999}
+  .report{max-height:none;min-height:0;overflow:visible;border:1px solid #000;border-top:0;border-radius:0}
+  .report > *{order:0!important}
+  .find-wrap{margin-top:0;padding-top:0;border-top:0}
+  .imgmgr:has(.imgmgr-grid:empty){display:none}
+  .imp{background:#fff;border:1px solid #999}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="/">← Hub</a></nav>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <h1>Estadificación de linfoma</h1>
+      <p class="sub">Clasificación de Lugano 2014 (Ann Arbor modificada) para linfomas de Hodgkin y no Hodgkin de afectación ganglionar primaria: estadio, enfermedad limitada o avanzada y texto de informe.</p>
+    </div>
+    <p class="cite">Cheson BD, Fisher RI, Barrington SF, et al. Recommendations for Initial Evaluation, Staging, and Response Assessment of Hodgkin and Non-Hodgkin Lymphoma: The Lugano Classification. <i>J Clin Oncol</i> 2014;32(27):3059-68. Sigue vigente según el taller ICML-17 (International Conference on Malignant Lymphoma), <i>Hematol Oncol</i> 2025;43(4):e70103.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ FORMULARIO ============ -->
+  <div class="formcol">
+
+    <section class="group" id="sec-estudio">
+      <div class="group-head"><h2>Estudio e histología</h2></div>
+
+      <div class="field">
+        <span class="field-title">Estudio</span>
+        <div class="chips" id="f-mod"></div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Histología <span class="opt">(opcional)</span></span>
+        <p class="hint">Define si se registran los síntomas A o B (solo en Hodgkin), el umbral de masa voluminosa y el estudio recomendado.</p>
+        <div class="chips" id="f-hist"></div>
+        <div class="row spaced" id="hist-other-row" hidden>
+          <label class="sub full"><span>Otra histología</span><input type="text" id="f-hist-other" autocomplete="off" placeholder="p. ej., linfoma anaplásico de células grandes"></label>
+        </div>
+        <div class="note" id="note-mod" hidden></div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-ganglios">
+      <div class="group-head"><h2>Regiones ganglionares</h2><span class="token" title="Componente del estadio de Lugano">I–III</span></div>
+
+      <div class="field">
+        <span class="field-title">Regiones afectadas</span>
+        <p class="hint">En el PET-CT, captación aumentada de FDG; en la TC, ganglios aumentados de tamaño sin otra causa (un ganglio es medible si su eje largo supera 1.5 cm). El anillo de Waldeyer y el bazo cuentan como tejido ganglionar.</p>
+        <div class="nodal">
+          <div class="visor">
+            <div class="visor-top"><span>Vista frontal</span><b id="v-count">Sin regiones</b></div>
+            <svg class="map" id="map" role="group" aria-label="Esquema corporal: toca una región para marcarla o desmarcarla"></svg>
+            <dl class="visor-read" id="v-read"></dl>
+            <div class="legend" aria-hidden="true">
+              <span><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" fill="#0F171C" stroke="#8DA0A9" stroke-width="2"/></svg>Sin afectación</span>
+              <span><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" fill="#E9A74C"/></svg>Afectada</span>
+              <span><svg width="26" height="14" viewBox="0 0 26 14"><line x1="2" y1="7" x2="24" y2="7" stroke="#5A717B" stroke-width="1.6" stroke-dasharray="5 4"/></svg>Diafragma</span>
+            </div>
+          </div>
+          <div id="f-regions"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Bazo</span>
+        <p class="hint">PET-CT: captación difusa, masa única, lesiones miliares o nódulos. TC: longitud vertical mayor de 13 cm, masa o nódulos. Ganglios supradiafragmáticos con afectación esplénica equivalen a estadio III.</p>
+        <div class="row">
+          <label class="sub"><span>Longitud vertical (cm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-spl-len" placeholder="12.5"></label>
+        </div>
+        <div class="readout" id="calc-spl"></div>
+        <label class="switch"><input type="checkbox" id="f-spl-on"> Bazo con afectación por linfoma</label>
+        <div id="spl-more" hidden>
+          <span class="sublabel">Patrón de afectación</span>
+          <div class="chips small" id="f-spl-pat"></div>
+        </div>
+        <div class="note" id="note-spl" hidden></div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-extra">
+      <div class="group-head"><h2>Afectación extraganglionar</h2><span class="token" title="Componentes del estadio de Lugano">E, IV</span></div>
+
+      <div class="field">
+        <span class="field-title">¿Hay afectación extraganglionar?</span>
+        <div class="chips" id="f-extra"></div>
+        <div id="extra-more" hidden>
+          <span class="sublabel">Órganos o sitios</span>
+          <div class="chips small" id="f-sites"></div>
+          <div class="row spaced" id="site-other-row" hidden>
+            <label class="sub full"><span>Otro sitio</span><input type="text" id="f-site-other" autocomplete="off" placeholder="p. ej., la mama"></label>
+          </div>
+          <div class="xrows" id="f-rel"></div>
+          <div class="row spaced">
+            <label class="sub full"><span>Localización y descripción <span class="opt">(opcional)</span></span><input type="text" id="f-extra-desc" autocomplete="off" placeholder="p. ej., masa mediastínica que infiltra el lóbulo superior derecho"></label>
+          </div>
+        </div>
+        <div class="note" id="note-extra" hidden></div>
+        <details class="more">
+          <summary>Cuándo es E y cuándo es IV</summary>
+          <ul>
+            <li><b>IE:</b> lesión extraganglionar única, sin afectación ganglionar.</li>
+            <li><b>IIE:</b> ganglios en estadio I o II con afectación extraganglionar limitada y contigua, por ejemplo una masa mediastínica que infiltra el pulmón o el pericardio.</li>
+            <li>El sufijo E no se usa en la enfermedad avanzada: con ganglios a ambos lados del diafragma, cualquier afectación extraganglionar es estadio IV.</li>
+            <li>Hígado, médula ósea y sistema nervioso central (incluido el líquido cefalorraquídeo) son siempre estadio IV; el pulmón también, salvo la extensión directa en un estadio IIE (AJCC, American Joint Committee on Cancer, 8.ª edición).</li>
+          </ul>
+        </details>
+        <details class="more">
+          <summary>Médula ósea y biopsia</summary>
+          <p>El PET-CT basta para valorar la médula ósea: en Hodgkin y en el linfoma difuso de células B grandes la afectación suele ser focal o multifocal, y la captación difusa sugiere un proceso inflamatorio (PRoLoG).</p>
+          <p>Con PET-CT ya no se requiere biopsia de médula ósea en Hodgkin. En el difuso de células B grandes, la afectación ósea o medular en el PET basta para el estadio avanzado; si el PET es negativo, la biopsia se reserva para cuando una histología discordante cambie el manejo. En el folicular y en las histologías no ávidas o de avidez variable, el PET no reemplaza la biopsia.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="group" id="sec-masa">
+      <div class="group-head"><h2>Masa voluminosa y síntomas</h2><span class="token" title="Modificadores del estadio de Lugano">bulky, A/B</span></div>
+
+      <div class="field">
+        <span class="field-title">Masa ganglionar de mayor tamaño</span>
+        <p class="hint">Lugano ya no usa el sufijo X: se registra el diámetro mayor medido en la TC.</p>
+        <div class="row">
+          <label class="sub"><span>Diámetro mayor (cm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-mass" placeholder="7.4"></label>
+          <label class="sub"><span>Localización</span><input type="text" autocomplete="off" id="f-mass-loc" placeholder="p. ej., el mediastino anterior"></label>
+        </div>
+        <div class="readout" id="calc-mass"></div>
+        <label class="switch" id="gray-wrap" hidden><input type="checkbox" id="f-bulky-user"> Informar como enfermedad voluminosa, según el umbral del centro o del protocolo</label>
+        <span class="sublabel">Masa mediastínica <span class="opt">(opcional)</span></span>
+        <div class="row">
+          <label class="sub"><span>Diámetro transversal de la masa (cm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-med-mass" placeholder="9.8"></label>
+          <label class="sub"><span>Diámetro transtorácico en el mismo nivel (cm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-med-thor" placeholder="26.0"></label>
+        </div>
+        <div class="readout" id="calc-ratio"></div>
+      </div>
+
+      <div class="field" id="ab-field" hidden>
+        <span class="field-title">Síntomas B</span>
+        <p class="hint">B: fiebre mayor de 38 °C sin otra causa, sudoración nocturna profusa o pérdida de más del 10 % del peso corporal en los 6 meses previos.</p>
+        <div class="chips" id="f-ab"></div>
+      </div>
+      <p class="muted-line" id="ab-na">Lugano conserva los sufijos A y B solo para el linfoma de Hodgkin.</p>
+    </section>
+
+    <section class="group" id="sec-otros">
+      <div class="group-head"><h2>Datos complementarios</h2></div>
+      <p class="group-lede">No modifican el estadio.</p>
+
+      <div class="field" id="met-field">
+        <span class="field-title">Datos metabólicos <span class="opt">(opcional)</span></span>
+        <p class="hint">SUVmax: valor máximo de captación estandarizado. MTV: volumen tumoral metabólico; el taller ICML-17 de 2025 avaló segmentarlo con un umbral de SUV de 4.0 y alentó incluirlo en el informe, aunque aún no forma parte del estadio.</p>
+        <div class="row">
+          <label class="sub"><span>SUVmax de la lesión más ávida</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-suv" placeholder="18.6"></label>
+          <label class="sub"><span>Localización</span><input type="text" autocomplete="off" id="f-suv-loc" placeholder="p. ej., la región cervical izquierda"></label>
+        </div>
+        <div class="row spaced">
+          <label class="sub"><span>MTV total (mL)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-mtv" placeholder="245"></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="sub full"><span>Otros hallazgos</span><textarea id="f-other" placeholder="Derrame pleural, compresión vascular, hallazgos incidentales…"></textarea></label>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ SALIDA ============ -->
+  <aside class="panel" id="panel" aria-label="Resultado">
+    <div class="codebox">
+      <p class="cb-label">Estadio de Lugano 2014</p>
+      <div class="cb-code" id="out-code"></div>
+      <div class="cb-group" id="out-group"></div>
+      <p class="cb-meaning" id="out-meaning"></p>
+      <dl class="cb-parts" id="out-parts"></dl>
+    </div>
+    <div class="report">
+      <div class="find-wrap" id="out-find"></div>
+      <div class="imp-wrap" id="out-imp"></div>
+      <div class="imgmgr">
+        <div class="imgmgr-head">
+          <span class="lbl">Imágenes adjuntas</span>
+          <button type="button" class="addimg-btn" id="btn-addimg">Añadir imágenes</button>
+          <input type="file" id="f-images" accept="image/*" multiple hidden>
+        </div>
+        <div class="imgmgr-grid" id="out-images"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="act" id="btn-copy" type="button">Copiar texto</button>
+      <button class="act" id="btn-pdf" type="button">Descargar PDF</button>
+      <button class="act" id="btn-word" type="button">Descargar Word</button>
+      <button class="act ghost" id="btn-print" type="button">Imprimir</button>
+      <button class="act ghost" id="btn-reset" type="button">Vaciar formulario</button>
+      <span class="toast" id="toast" role="status" aria-live="polite"></span>
+    </div>
+    <p class="sr-only" id="sr-status" aria-live="polite"></p>
+  </aside>
+</main>
+
+<section class="refs" aria-labelledby="refs-h">
+  <h2 id="refs-h">Referencia rápida de la clasificación de Lugano</h2>
+  <div class="refs-grid">
+    <div class="ref">
+      <h3>Estadios</h3>
+      <table>
+        <tr><td class="k">I</td><td>Una región ganglionar: un ganglio o un grupo de ganglios adyacentes. <b>IE:</b> lesión extraganglionar única sin afectación ganglionar.</td></tr>
+        <tr><td class="k">II</td><td>Dos o más regiones ganglionares del mismo lado del diafragma. <b>IIE:</b> estadio I o II ganglionar con afectación extraganglionar limitada y contigua.</td></tr>
+        <tr><td class="k">II bulky</td><td>Estadio II con enfermedad voluminosa: limitado o avanzado según la histología y los factores pronósticos.</td></tr>
+        <tr><td class="k">III</td><td>Ganglios a ambos lados del diafragma, o ganglios supradiafragmáticos con afectación esplénica.</td></tr>
+        <tr><td class="k">IV</td><td>Afectación extralinfática adicional no contigua.</td></tr>
+      </table>
+      <p>Limitada: I y II no voluminosos. Avanzada: III y IV. Las amígdalas, el anillo de Waldeyer y el bazo cuentan como tejido ganglionar.</p>
+    </div>
+    <div class="ref">
+      <h3>Sufijos y masa voluminosa</h3>
+      <dl>
+        <dt>E</dt>
+        <dd>Solo en la enfermedad limitada: lesión extraganglionar única (IE) o extensión directa desde ganglios en estadio I o II (IIE).</dd>
+        <dt>A y B</dt>
+        <dd>Solo en el linfoma de Hodgkin. B: fiebre mayor de 38 °C, sudoración nocturna profusa o pérdida de más del 10 % del peso en 6 meses.</dd>
+        <dt>Enfermedad voluminosa (bulky)</dt>
+        <dd>Hodgkin: masa ganglionar única de 10 cm o más, o mayor de un tercio del diámetro transtorácico en cualquier nivel vertebral torácico en la TC. No Hodgkin: sin definición validada; se sugieren 6 cm en el folicular y de 6 a 10 cm en el difuso de células B grandes. El sufijo X ya no se usa.</dd>
+      </dl>
+    </div>
+    <div class="ref">
+      <h3>Criterios de afectación</h3>
+      <dl>
+        <dt>Ganglios</dt>
+        <dd>PET-CT: captación aumentada de FDG. TC, en histologías no ávidas: aumento de tamaño sin otra causa.</dd>
+        <dt>Bazo</dt>
+        <dd>PET-CT: captación difusa, masa única, lesiones miliares o nódulos. TC: más de 13 cm de longitud vertical, masa o nódulos.</dd>
+        <dt>Hígado</dt>
+        <dd>PET-CT: captación difusa o masa. TC: nódulos. El tamaño hepático ya no se valora (PRoLoG).</dd>
+        <dt>Sistema nervioso central</dt>
+        <dd>TC o resonancia magnética (masa, infiltración leptomeníngea) y estudio del líquido cefalorraquídeo.</dd>
+      </dl>
+    </div>
+    <div class="ref">
+      <h3>Estudio indicado y alcance</h3>
+      <ul>
+        <li><b>PET-CT con FDG</b> (fluorodesoxiglucosa): Hodgkin, linfomas B agresivos y T, folicular y del manto, por recomendación unánime del taller ICML-17. La TC con contraste queda para radioterapia, trombosis mediastínica o urgencias.</li>
+        <li><b>TC:</b> linfoma linfocítico de células pequeñas y leucemia linfocítica crónica, salvo sospecha de transformación.</li>
+        <li><b>Avidez variable</b> (zona marginal, linfoplasmocítico o Waldenström, linfomas T cutáneos): PET-CT y TC con contraste.</li>
+        <li><b>Fuera del alcance:</b> linfomas extraganglionares primarios, como el del sistema nervioso central o el MALT (tejido linfoide asociado a mucosas) gástrico, y los cutáneos (micosis fungoide y síndrome de Sézary), que tienen criterios propios.</li>
+        <li>La respuesta se valora con la escala de Deauville de 5 puntos, que no forma parte del estadio.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="legal">
+  <p class="editor"><span>Edición y adaptación</span>Dr. Carlos Leonardo Maldonado Estrada, médico radiólogo (UNAH), fellow en imagen cardiaca</p>
+  Herramienta de apoyo a la documentación clínica. Todo el procesamiento ocurre en tu navegador: no se transmite, guarda ni registra ningún dato del paciente. El estadio por imagen no sustituye la valoración clínica ni la biopsia cuando están indicadas. Basado en Cheson BD et al., <i>J Clin Oncol</i> 2014;32(27):3059-68; Barrington SF et al., <i>J Clin Oncol</i> 2014;32(27):3048-58; Ricard F et al., consenso PRoLoG (PINTaD Response Criteria in Lymphoma Working Group), <i>J Nucl Med</i> 2023;64(1):102-8; el informe del taller ICML-17, <i>Hematol Oncol</i> 2025;43(4):e70103, y la 8.ª edición del AJCC para los órganos que siempre son estadio IV.
+</footer>
+
+<div class="codebar" id="codebar">
+  <span class="c" id="cbar-code">Estadio pendiente</span>
+  <button type="button" id="cbar-go">Ver informe</button>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Utilidades
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+const NS = "http://www.w3.org/2000/svg";
+
+function num(v){
+  if(v===null || v===undefined) return null;
+  const s = String(v).trim().replace(",", ".");
+  if(s==="" || s==="-" || s===".") return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+function pos(v){ const n = num(v); return (n!==null && n>0) ? n : null; }
+function fmt(n){ return String(Math.round(n*10)/10); }
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function joinY(arr){
+  const a = arr.filter(Boolean);
+  if(a.length < 2) return a.join("");
+  const last = a[a.length-1];
+  const conj = /^h?i(?![aeouáéóú])/i.test(last) ? " e " : " y ";
+  return a.slice(0,-1).join(", ") + conj + last;
+}
+function toggleIn(arr, v, on){
+  const i = arr.indexOf(v);
+  if(on && i<0) arr.push(v);
+  if(!on && i>=0) arr.splice(i,1);
+}
+function sentence(s){
+  s = String(s || "").trim();
+  return s ? cap(s) + (/[.!?…]$/.test(s) ? "" : ".") : "";
+}
+function clean(s){ return String(s || "").trim().replace(/[.\s]+$/, ""); }
+
+/* ============================================================
+   Catálogos
+   ============================================================ */
+const MODS = [
+  ["pet","PET-CT con FDG","tomografía por emisión de positrones con fluorodesoxiglucosa"],
+  ["tc","TC con contraste","tomografía computarizada"]
+];
+const HIST = [
+  {id:"lh",      chip:"Hodgkin",                         text:"linfoma de Hodgkin",                     avid:"si"},
+  {id:"ldcbg",   chip:"Difuso de células B grandes",     text:"linfoma difuso de células B grandes",    avid:"si"},
+  {id:"fol",     chip:"Folicular",                       text:"linfoma folicular",                      avid:"si"},
+  {id:"manto",   chip:"De células del manto",            text:"linfoma de células del manto",           avid:"si"},
+  {id:"burkitt", chip:"Burkitt",                         text:"linfoma de Burkitt",                     avid:"si"},
+  {id:"ltp",     chip:"T periférico",                    text:"linfoma T periférico",                   avid:"si"},
+  {id:"lzm",     chip:"De la zona marginal",             text:"linfoma de la zona marginal",            avid:"var"},
+  {id:"lpl",     chip:"Linfoplasmocítico", tag:"Waldenström", text:"linfoma linfoplasmocítico",         avid:"var"},
+  {id:"llc",     chip:"Linfocítico de células pequeñas", tag:"y leucemia linfocítica crónica", text:"linfoma linfocítico de células pequeñas", avid:"no"},
+  {id:"otro",    chip:"Otra",                            text:"",                                       avid:"?"}
+];
+const HBY = {};
+HIST.forEach(h=>{ HBY[h.id] = h; });
+
+/* regiones de Ann Arbor; las pares se separan en derecha (d) e izquierda (i) */
+const BASES = {
+  wal:  {side:"sup", name:"Anillo de Waldeyer", tag:"amígdalas, adenoides y base de la lengua", sing:"el anillo de Waldeyer", adj:"anillo de Waldeyer", pos:[150,57]},
+  cerv: {side:"sup", pair:true, fem:true, name:"Cervical", tag:"incluye supraclavicular, occipital y preauricular", sing:"la región cervical", both:"ambas regiones cervicales", adj:"cervical", pos:[[136,80],[164,80]]},
+  infra:{side:"sup", pair:true, fem:true, name:"Infraclavicular", sing:"la región infraclavicular", both:"ambas regiones infraclaviculares", adj:"infraclavicular", pos:[[122,104],[178,104]]},
+  axil: {side:"sup", pair:true, fem:true, name:"Axilar", tag:"incluye pectoral", sing:"la región axilar", both:"ambas regiones axilares", adj:"axilar", pos:[[110,130],[190,130]]},
+  med:  {side:"sup", name:"Mediastínica", tag:"incluye el timo", sing:"el mediastino", adj:"mediastínica", pos:[150,122]},
+  hil:  {side:"sup", pair:true, fem:false, name:"Hiliar pulmonar", sing:"el hilio pulmonar", both:"ambos hilios pulmonares", adj:"hiliar", pos:[[135,150],[165,150]]},
+  epi:  {side:"sup", pair:true, fem:true, name:"Epitroclear", tag:"incluye braquial", sing:"la región epitroclear", both:"ambas regiones epitrocleares", adj:"epitroclear", pos:[[91,192],[209,192]]},
+  bazo: {side:"inf", name:"Bazo", tag:"cuenta como tejido ganglionar", sing:"el bazo", adj:"bazo"},
+  cel:  {side:"inf", name:"Celíaca", tag:"incluye los hilios hepático y esplénico", sing:"la región celíaca", adj:"celíaca", pos:[150,212]},
+  pao:  {side:"inf", name:"Paraaórtica", tag:"retroperitoneal", sing:"el retroperitoneo paraaórtico", adj:"paraaórtica", pos:[150,240]},
+  mes:  {side:"inf", name:"Mesentérica", sing:"el mesenterio", adj:"mesentérica", pos:[126,254]},
+  ili:  {side:"inf", pair:true, fem:true, name:"Ilíaca", sing:"la región ilíaca", both:"ambas regiones ilíacas", adj:"ilíaca", pos:[[134,280],[166,280]]},
+  ing:  {side:"inf", pair:true, fem:true, name:"Inguinal", tag:"incluye femoral", sing:"la región inguinal", both:"ambas regiones inguinales", adj:"inguinal", pos:[[126,305],[174,305]]},
+  pop:  {side:"inf", pair:true, fem:true, name:"Poplítea", sing:"la región poplítea", both:"ambas regiones poplíteas", adj:"poplítea", pos:[[128,378],[172,378]]}
+};
+const BASE_ORDER = ["wal","cerv","infra","axil","med","hil","epi","bazo","cel","pao","mes","ili","ing","pop"];
+const REG = {};
+const REG_ORDER = [];
+BASE_ORDER.forEach(b=>{
+  const B = BASES[b];
+  if(B.pair){
+    [["d","derecha","derecho",0],["i","izquierda","izquierdo",1]].forEach(([s,f,m,k])=>{
+      const id = b + "_" + s;
+      REG[id] = {id:id, base:b, side:B.side, label:B.name + " " + f, adj:B.adj + " " + f, text:B.sing + " " + (B.fem ? f : m), pos:B.pos[k]};
+      REG_ORDER.push(id);
+    });
+  } else {
+    REG[b] = {id:b, base:b, side:B.side, label:B.name, adj:B.adj, text:B.sing, pos:B.pos};
+    REG_ORDER.push(b);
+  }
+});
+
+const SPL_PAT = [
+  ["difusa","Captación difusa","captación difusa de FDG","pet"],
+  ["masa","Masa única","masa única","both"],
+  ["miliar","Lesiones miliares","lesiones miliares","pet"],
+  ["nodulos","Nódulos","nódulos","both"]
+];
+const SPL_TEXT = {};
+SPL_PAT.forEach(p=>{ SPL_TEXT[p[0]] = p[2]; });
+
+const SITES = [
+  {id:"pulmon",      chip:"Pulmón",                   text:"el pulmón"},
+  {id:"pleura",      chip:"Pleura",                   text:"la pleura"},
+  {id:"pericardio",  chip:"Pericardio",               text:"el pericardio"},
+  {id:"corazon",     chip:"Corazón",                  text:"el corazón"},
+  {id:"higado",      chip:"Hígado",                   text:"el hígado", iv:true},
+  {id:"medula",      chip:"Médula ósea",              text:"la médula ósea", iv:true},
+  {id:"snc",         chip:"Sistema nervioso central", text:"el sistema nervioso central", iv:true},
+  {id:"hueso",       chip:"Hueso",                    text:"el hueso"},
+  {id:"digestivo",   chip:"Tubo digestivo",           text:"el tubo digestivo"},
+  {id:"rinon",       chip:"Riñón",                    text:"el riñón"},
+  {id:"suprarrenal", chip:"Suprarrenal",              text:"la glándula suprarrenal"},
+  {id:"pancreas",    chip:"Páncreas",                 text:"el páncreas"},
+  {id:"piel",        chip:"Piel y tejido subcutáneo", text:"el tejido cutáneo o subcutáneo"},
+  {id:"partes",      chip:"Partes blandas",           text:"las partes blandas"},
+  {id:"otro",        chip:"Otro",                     text:""}
+];
+const SBY = {};
+SITES.forEach(s=>{ SBY[s.id] = s; });
+const SITE_ORDER = SITES.map(s=>s.id);
+const REL = [["e","Contigua o única","E"],["iv","A distancia o múltiple","IV"]];
+const ROMAN = {1:"I", 2:"II", 3:"III", 4:"IV"};
+
+/* ============================================================
+   Esquema corporal (vista frontal; la derecha del paciente queda a la izquierda)
+   ============================================================ */
+const MAP = {w:300, h:456};
+const BODY = {
+  head:[150,38,25],
+  neck:"M150 60L150 90",
+  torso:"M104 100Q104 89 117 88L183 88Q196 89 196 100L192 200Q190 236 194 268Q198 300 180 306L120 306Q102 300 106 268Q110 236 108 200Z",
+  arms:["M100 104L84 196L78 278","M200 104L216 196L222 278"],
+  legs:["M132 298L128 376L126 438","M168 298L172 376L174 438"]
+};
+const DIA = "M106 198Q128 182 150 193Q172 182 194 198";
+const SPL = {cx:178, cy:220, rx:9, ry:17, rot:22};
+
+/* ============================================================
+   Estado
+   ============================================================ */
+function defaults(){
+  return {
+    mod:"pet", hist:"", histOther:"",
+    regs:[], splLen:"", splPat:[],
+    extra:"", sites:[], rel:{}, siteOther:"", extraDesc:"",
+    massD:"", massLoc:"", medMass:"", medThor:"", bulkyUser:false, ab:"",
+    suv:"", suvLoc:"", mtv:"", other:"",
+    images:[]
+  };
+}
+const S = defaults();
+
+/* ============================================================
+   Lógica de Lugano
+   ============================================================ */
+function isHL(){ return S.hist==="lh"; }
+function histText(){
+  if(!S.hist) return "";
+  if(S.hist==="otro") return clean(S.histOther);
+  return HBY[S.hist].text;
+}
+function siteText(id){ return id==="otro" ? (clean(S.siteOther) || "otro sitio") : SBY[id].text; }
+function siteLabel(id){ return id==="otro" ? (cap(clean(S.siteOther)) || "Otro sitio") : SBY[id].chip; }
+function sitesText(ids){ return joinY(ids.map(siteText)); }
+function forcedIV(id){ return !!(SBY[id] && SBY[id].iv); }
+function selSites(){ return S.extra==="si" ? SITE_ORDER.filter(s=>S.sites.includes(s)) : []; }
+
+function classify(){
+  const nodal = REG_ORDER.filter(id=>id!=="bazo" && S.regs.includes(id));
+  const spl = S.regs.includes("bazo");
+  const above = nodal.filter(id=>REG[id].side==="sup");
+  const below = nodal.filter(id=>REG[id].side==="inf");
+  const sites = selSites();
+  const undef = sites.filter(s=>!forcedIV(s) && !S.rel[s]);
+  const distant = sites.filter(s=>forcedIV(s) || S.rel[s]==="iv");
+  const contig = sites.filter(s=>!forcedIV(s) && S.rel[s]==="e");
+  const nInf = below.length + (spl ? 1 : 0);
+  const nTot = above.length + nInf;
+  let ns = 0;                                   // extensión ganglionar: 0, I, II o III
+  if(above.length && nInf) ns = 3;
+  else if(nTot===1) ns = 1;
+  else if(nTot>1) ns = 2;
+  const c = {nodal, spl, above, below, sites, undef, distant, contig, nInf, nTot, ns,
+    side: above.length && nInf ? "both" : above.length ? "sup" : nInf ? "inf" : ""};
+  if(!nTot && !sites.length){ c.kind = "pending"; c.why = S.extra==="si" ? "sites" : "none"; return c; }
+  if(undef.length){ c.kind = "pending"; c.why = "rel"; return c; }
+  c.kind = "ok"; c.E = false;
+  if(distant.length) c.num = 4;                               // afectación extralinfática no contigua
+  else if(ns===3) c.num = contig.length ? 4 : 3;              // E no aplica en la enfermedad avanzada
+  else if(ns===0){ c.num = 1; c.E = true; }                   // IE: lesión extraganglionar única sin ganglios
+  else if(contig.length){ c.num = 2; c.E = true; }            // IIE: estadio I o II ganglionar con extensión contigua
+  else c.num = ns;
+  return c;
+}
+function stageCode(c){
+  return ROMAN[c.num] + (c.E ? "E" : "") + (isHL() && S.ab ? S.ab.toUpperCase() : "");
+}
+
+function medRatio(){
+  const a = pos(S.medMass), b = pos(S.medThor);
+  if(a===null || b===null) return null;
+  return a/b;
+}
+/* masa voluminosa: Hodgkin 10 cm o más de un tercio del diámetro transtorácico;
+   folicular, más de 6 cm; resto de LNH sin umbral validado (6 a 10 cm sugeridos) */
+function bulk(){
+  const d = pos(S.massD), r = medRatio();
+  const rule = isHL() ? "lh" : S.hist==="fol" ? "fol" : "gen";
+  if(rule==="lh"){
+    const byD = d!==null && d>=10, byR = r!==null && r>1/3;
+    if(byD || byR){
+      return {state:"yes", rule, d, crit: byD && byR ? "por medir 10 cm o más y superar un tercio del diámetro transtorácico"
+        : byD ? "por medir 10 cm o más" : "por superar un tercio del diámetro transtorácico"};
+    }
+    if(d!==null) return {state:"no", rule, d};
+    return {state:"none", rule, d};
+  }
+  if(d===null) return {state:"none", rule, d};
+  if(rule==="fol") return d>6 ? {state:"yes", rule, d, crit:"por superar 6 cm, umbral sugerido en el linfoma folicular"} : {state:"no", rule, d};
+  if(d>=10) return {state:"yes", rule, d, crit:"por medir 10 cm o más"};
+  if(d<6) return {state:"no", rule, d};
+  return S.bulkyUser
+    ? {state:"yes", rule, d, gray:true, crit:"según el umbral del centro"}
+    : {state:"no", rule, d, gray:true};
+}
+
+function group(c){
+  if(c.kind!=="ok") return null;
+  if(c.num>=3) return {k:"adv", t:"Enfermedad avanzada"};
+  if(bulk().state==="yes") return {k:"amb", t:"Limitada o avanzada"};
+  return {k:"lim", t:"Enfermedad limitada"};
+}
+function sideAdj(side, plural){
+  return side==="sup" ? (plural ? "supradiafragmáticas" : "supradiafragmática")
+       : side==="inf" ? (plural ? "infradiafragmáticas" : "infradiafragmática") : "";
+}
+function reasonText(c){
+  if(c.num===4){
+    if(c.distant.length){
+      let s = "afectación extraganglionar no contigua en " + sitesText(c.distant);
+      if(c.contig.length) s += " y por contigüidad en " + sitesText(c.contig);
+      return s;
+    }
+    return "afectación ganglionar a ambos lados del diafragma con afectación extraganglionar en " + sitesText(c.contig);
+  }
+  if(c.num===3){
+    return c.below.length ? "afectación ganglionar a ambos lados del diafragma"
+      : "afectación ganglionar supradiafragmática con afectación esplénica";
+  }
+  if(c.num===2 && c.E){
+    return "afectación ganglionar " + sideAdj(c.side) + " con extensión extraganglionar por contigüidad en " + sitesText(c.contig);
+  }
+  if(c.num===2){
+    return "afectación de " + c.nTot + " regiones ganglionares " + sideAdj(c.side, true) + (c.spl ? ", incluido el bazo" : "");
+  }
+  if(c.E){
+    return (c.contig.length===1 ? "lesión extraganglionar única en " : "lesión extraganglionar única con extensión por contigüidad en ")
+      + sitesText(c.contig) + ", sin afectación ganglionar";
+  }
+  if(c.spl && !c.nodal.length) return "afectación esplénica aislada";
+  return "afectación de una sola región ganglionar: " + REG[c.nodal[0]].adj;
+}
+function meaningText(){
+  const c = classify();
+  if(c.kind!=="ok") return "";
+  return cap(reasonText(c)) + ".";
+}
+
+/* ============================================================
+   Texto del informe
+   ============================================================ */
+function regionsPhrase(ids){
+  const out = [];
+  BASE_ORDER.forEach(b=>{
+    if(b==="bazo") return;
+    const B = BASES[b];
+    if(B.pair){
+      const d = ids.includes(b+"_d"), i = ids.includes(b+"_i");
+      if(d && i) out.push(B.both);
+      else if(d) out.push(REG[b+"_d"].text);
+      else if(i) out.push(REG[b+"_i"].text);
+    } else if(ids.includes(b)) out.push(B.sing);
+  });
+  return joinY(out);
+}
+function studyText(){
+  const h = histText();
+  const what = " para la estadificación de " + (h || "linfoma") + ".";
+  return S.mod==="pet"
+    ? "Tomografía por emisión de positrones con tomografía computarizada (PET-CT) con 18F-fluorodesoxiglucosa (FDG)" + what
+    : "Tomografía computarizada (TC) con contraste intravenoso" + what;
+}
+function nodesText(c){
+  const pet = S.mod==="pet";
+  if(!c.nodal.length){
+    return (c.spl || c.sites.length) ? (pet ? "Sin ganglios con captación aumentada de FDG." : "Sin adenopatías.") : "";
+  }
+  const lead = pet ? "Ganglios con captación aumentada de FDG" : "Adenopatías";
+  const n = c.nodal.length;
+  const count = " (" + n + (n===1 ? " región ganglionar" : " regiones ganglionares") + ").";
+  if(c.above.length && c.below.length){
+    return lead + " a ambos lados del diafragma: supradiafragmáticos en " + regionsPhrase(c.above)
+      + "; infradiafragmáticos en " + regionsPhrase(c.below) + count;
+  }
+  return lead + " en " + regionsPhrase(c.nodal) + ", de distribución " + sideAdj(c.above.length ? "sup" : "inf") + count;
+}
+function spleenText(){
+  const L = pos(S.splLen), on = S.regs.includes("bazo");
+  if(!on && L===null) return "";
+  if(on){
+    const pats = S.splPat.filter(p=>patOk(p)).map(p=>SPL_TEXT[p]);
+    let s = "Afectación esplénica" + (pats.length ? " con " + joinY(pats) : "") + ".";
+    if(L!==null) s += " Longitud vertical de " + fmt(L) + " cm" + (L>13 ? " (esplenomegalia)" : "") + ".";
+    return s;
+  }
+  /* en la TC, más de 13 cm ya es criterio de afectación: no se afirma lo contrario */
+  if(S.mod==="tc" && L>13) return "Bazo de " + fmt(L) + " cm de longitud vertical (esplenomegalia).";
+  return "Bazo de " + fmt(L) + " cm de longitud vertical" + (L>13 ? " (esplenomegalia)" : "") + ", sin criterios de afectación por linfoma.";
+}
+function extraText(c){
+  if(S.extra==="no") return "Sin afectación extraganglionar.";
+  if(S.extra!=="si" || !c.sites.length) return "";
+  const nodes = c.nTot > 0, parts = [];
+  if(c.contig.length){
+    if(nodes) parts.push("por contigüidad en " + sitesText(c.contig));
+    else parts.push(c.contig.length===1 ? "única en " + sitesText(c.contig) + ", sin afectación ganglionar"
+      : "única con extensión por contigüidad en " + sitesText(c.contig) + ", sin afectación ganglionar");
+  }
+  if(c.distant.length) parts.push("no contigua en " + sitesText(c.distant));
+  if(c.undef.length) parts.push("en " + sitesText(c.undef));
+  let s = (c.contig.length && !nodes ? "Lesión extraganglionar " : "Afectación extraganglionar ") + parts.join("; ") + ".";
+  const d = clean(S.extraDesc);
+  if(d) s += " " + sentence(d);
+  return s;
+}
+function massText(){
+  const B = bulk(), r = medRatio();
+  let s = "";
+  if(B.d!==null){
+    const loc = clean(S.massLoc);
+    s = "La de mayor tamaño" + (loc ? ", en " + loc + "," : "") + " mide " + fmt(B.d) + " cm de diámetro mayor";
+    if(B.state==="yes") s += ": enfermedad voluminosa (bulky) " + B.crit;
+    else s += ", sin criterio de enfermedad voluminosa";
+    s += ".";
+  }
+  if(r!==null){
+    s += (s ? " " : "") + "Relación entre el diámetro transversal de la masa mediastínica y el diámetro transtorácico de "
+      + r.toFixed(2) + (r>1/3 ? ", mayor de un tercio" : ", no mayor de un tercio")
+      + (B.d===null && B.state==="yes" ? ": enfermedad voluminosa (bulky)" : "") + ".";
+  }
+  return s;
+}
+function metText(){
+  if(S.mod!=="pet") return "";
+  const suv = pos(S.suv), mtv = pos(S.mtv), out = [];
+  if(suv!==null){
+    const loc = clean(S.suvLoc);
+    out.push("Lesión más ávida" + (loc ? " en " + loc : "") + ", con valor máximo de captación estandarizado (SUVmax) de " + fmt(suv) + ".");
+  }
+  if(mtv!==null){
+    out.push("Volumen tumoral metabólico (MTV) total de " + fmt(mtv) + " mL, segmentado con un umbral de "
+      + (suv!==null ? "SUV" : "valor de captación estandarizado (SUV)") + " de 4.0.");
+  }
+  return out.join(" ");
+}
+function impressionText(){
+  const c = classify();
+  if(c.kind!=="ok") return "";
+  const h = histText(), B = bulk(), g = group(c);
+  let s = (h ? cap(h) + ", estadio " : "Estadio ") + stageCode(c) + " de Lugano 2014 (Ann Arbor modificada)";
+  if(B.state==="yes") s += ", con enfermedad voluminosa (bulky)";
+  s += ": " + reasonText(c) + ". ";
+  if(g.k==="lim") s += "Enfermedad limitada.";
+  else if(g.k==="adv") s += "Enfermedad avanzada.";
+  else s += "Estadio " + ROMAN[c.num] + " con enfermedad voluminosa: se considera limitado o avanzado según la histología y los factores pronósticos.";
+  return s;
+}
+function buildReport(){
+  const c = classify(), f = [{h:"Estudio", t:studyText()}];
+  const g = nodesText(c);  if(g) f.push({h:"Ganglios", t:g});
+  const b = spleenText();  if(b) f.push({h:"Bazo", t:b});
+  const x = extraText(c);  if(x) f.push({h:"Extraganglionar", t:x});
+  const m = massText();    if(m) f.push({h:"Masa ganglionar", t:m});
+  const t = metText();     if(t) f.push({h:"Datos metabólicos", t:t});
+  const o = sentence(S.other); if(o) f.push({h:"Otros hallazgos", t:o});
+  return {findings:f, impression:impressionText()};
+}
+const PENDING = "Pendiente: marca las regiones ganglionares o la afectación extraganglionar.";
+function plainText(){
+  const R = buildReport();
+  let out = "LINFOMA: ESTADIFICACIÓN DE LUGANO 2014\n";
+  out += "(Clasificación de Lugano, Ann Arbor modificada. Cheson BD et al. J Clin Oncol 2014;32(27):3059-68)\n\n";
+  out += "HALLAZGOS\n";
+  R.findings.forEach(s=>{ out += s.h + ": " + s.t + "\n"; });
+  out += "\nIMPRESIÓN\n" + (R.impression || PENDING) + "\n";
+  if(S.images.length) out += "\n[Incluye " + S.images.length + " imagen(es) adjunta(s): descarga en PDF o Word para verlas.]\n";
+  return out;
+}
+
+/* ============================================================
+   Esquema corporal (SVG)
+   ============================================================ */
+function svgEl(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  Object.keys(attrs).forEach(k=>e.setAttribute(k, attrs[k]));
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function toggleRegion(id){
+  toggleIn(S.regs, id, !S.regs.includes(id));
+  render();
+}
+function addNode(svg, id, draw){
+  const n = svgEl("g", {class:"nd", tabindex:"0", role:"button", "aria-pressed":"false", "aria-label":REG[id].label, "data-id":id}, svg);
+  draw(n);
+  n.addEventListener("click", ()=>toggleRegion(id));
+  n.addEventListener("keydown", e=>{
+    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); toggleRegion(id); }
+  });
+}
+function buildMap(){
+  const svg = $("map");
+  svg.setAttribute("viewBox", "0 0 " + MAP.w + " " + MAP.h);
+  const g = svgEl("g", {"aria-hidden":"true"}, svg);
+  svgEl("circle", {cx:BODY.head[0], cy:BODY.head[1], r:BODY.head[2], class:"bd"}, g);
+  svgEl("path", {d:BODY.neck, class:"bd-l", "stroke-width":22}, g);
+  svgEl("path", {d:BODY.torso, class:"bd"}, g);
+  BODY.arms.forEach(d=>svgEl("path", {d:d, class:"bd-l", "stroke-width":20}, g));
+  BODY.legs.forEach(d=>svgEl("path", {d:d, class:"bd-l", "stroke-width":28}, g));
+  svgEl("path", {d:DIA, class:"dia"}, g);
+  const t1 = svgEl("text", {x:8, y:20, class:"mlab"}, g); t1.textContent = "Derecha";
+  const t2 = svgEl("text", {x:MAP.w-8, y:20, class:"mlab", "text-anchor":"end"}, g); t2.textContent = "Izquierda";
+  const rot = "rotate(" + SPL.rot + " " + SPL.cx + " " + SPL.cy + ")";
+  addNode(svg, "bazo", n=>{
+    svgEl("ellipse", {cx:SPL.cx, cy:SPL.cy, rx:SPL.rx+6, ry:SPL.ry+6, transform:rot, class:"hit"}, n);
+    svgEl("ellipse", {cx:SPL.cx, cy:SPL.cy, rx:SPL.rx, ry:SPL.ry, transform:rot, class:"org"}, n);
+  });
+  REG_ORDER.filter(id=>id!=="bazo").forEach(id=>{
+    const x = REG[id].pos[0], y = REG[id].pos[1];
+    addNode(svg, id, n=>{
+      svgEl("circle", {cx:x, cy:y, r:14, class:"hit"}, n);
+      svgEl("circle", {cx:x, cy:y, r:11, class:"halo"}, n);
+      svgEl("circle", {cx:x, cy:y, r:6, class:"dot"}, n);
+    });
+  });
+}
+function renderMap(){
+  $("map").querySelectorAll(".nd").forEach(n=>{
+    const on = S.regs.includes(n.getAttribute("data-id"));
+    n.classList.toggle("on", on);
+    n.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+function renderVisor(c){
+  $("v-count").textContent = c.nTot ? c.nTot + (c.nTot===1 ? " región" : " regiones") : "Sin regiones";
+  const sup = c.above.map(id=>REG[id].adj);
+  const inf = (c.spl ? ["bazo"] : []).concat(c.below.map(id=>REG[id].adj));
+  let ex = "Sin evaluar";
+  if(S.extra==="no") ex = "No";
+  else if(S.extra==="si"){
+    ex = c.sites.length ? c.sites.map(s=>siteLabel(s) + (forcedIV(s) || S.rel[s]==="iv" ? " (IV)" : S.rel[s]==="e" ? " (E)" : "")).join(", ") : "Elige el sitio";
+  }
+  const rows = [
+    ["Supradiafragmáticas", sup.length ? cap(sup.join(", ")) : "Ninguna", !sup.length],
+    ["Infradiafragmáticas", inf.length ? cap(inf.join(", ")) : "Ninguna", !inf.length],
+    ["Extraganglionar", ex, S.extra!=="si"]
+  ];
+  $("v-read").innerHTML = rows.map(r=>"<dt>" + r[0] + "</dt><dd" + (r[2] ? ' class="dim"' : "") + ">" + esc(r[1]) + "</dd>").join("");
+}
+
+/* ============================================================
+   Controles
+   ============================================================ */
+const SYNCS = new Map();
+function chipSet(hostId, name, options, type, getVal, onChange, allowEmpty){
+  const el = $(hostId);
+  el.innerHTML = "";
+  options.forEach((opt, i)=>{
+    const val = opt[0], label = opt[1], tag = opt[2];
+    const id = hostId + "-" + i;
+    const inp = document.createElement("input");
+    inp.type = type; inp.name = name; inp.id = id; inp.value = val;
+    const lab = document.createElement("label");
+    lab.htmlFor = id;
+    lab.innerHTML = "<span>" + esc(label) + "</span>" + (tag ? ' <span class="tag">' + esc(tag) + "</span>" : "");
+    if(type==="radio" && allowEmpty){
+      inp.addEventListener("click", ()=>{ if(getVal(val)){ onChange(val, false); render(); } });
+    }
+    inp.addEventListener("change", ()=>{ onChange(val, inp.checked); render(); });
+    el.appendChild(inp); el.appendChild(lab);
+  });
+  SYNCS.set(hostId, ()=>{ el.querySelectorAll("input").forEach(i=>{ i.checked = !!getVal(i.value); }); });
+}
+function patOk(p){ const x = SPL_PAT.find(k=>k[0]===p); return !!x && (x[3]==="both" || x[3]===S.mod); }
+function buildSplPat(){
+  chipSet("f-spl-pat", "splpat", SPL_PAT.filter(p=>p[3]==="both" || p[3]===S.mod).map(p=>[p[0], p[1]]), "checkbox",
+    v=>S.splPat.includes(v), (v,on)=>toggleIn(S.splPat, v, on));
+}
+function buildRegions(){
+  const host = $("f-regions");
+  host.innerHTML = "";
+  [["sup","Supradiafragmáticas"],["inf","Infradiafragmáticas"]].forEach(([side, title], k)=>{
+    const h = document.createElement("p");
+    h.className = "rg-h" + (k ? " second" : "");
+    h.textContent = title;
+    host.appendChild(h);
+    BASE_ORDER.filter(b=>BASES[b].side===side).forEach(b=>{
+      const B = BASES[b];
+      const row = document.createElement("div");
+      row.className = "rg-row";
+      const n = document.createElement("span");
+      n.className = "rg-n";
+      n.innerHTML = esc(B.name) + (B.tag ? "<small>" + esc(B.tag) + "</small>" : "");
+      const t = document.createElement("div");
+      t.className = "rg-t" + (B.pair ? "" : " one");
+      (B.pair ? [[b+"_d","Der."],[b+"_i","Izq."]] : [[b,"Sí"]]).forEach(([id, lab])=>{
+        const w = document.createElement("span");
+        w.className = "tg";
+        const inp = document.createElement("input");
+        inp.type = "checkbox"; inp.id = "rg-" + id; inp.value = id;
+        inp.setAttribute("aria-label", REG[id].label);
+        const l = document.createElement("label");
+        l.htmlFor = inp.id; l.textContent = lab;
+        inp.addEventListener("change", ()=>{ toggleIn(S.regs, id, inp.checked); render(); });
+        w.appendChild(inp); w.appendChild(l); t.appendChild(w);
+      });
+      row.appendChild(n); row.appendChild(t);
+      host.appendChild(row);
+    });
+  });
+  SYNCS.set("f-regions", ()=>{ host.querySelectorAll("input").forEach(i=>{ i.checked = S.regs.includes(i.value); }); });
+}
+let relKey = null;
+function buildRel(){
+  const sites = SITE_ORDER.filter(s=>S.sites.includes(s));
+  const key = sites.join(",");
+  if(key===relKey) return;
+  relKey = key;
+  const host = $("f-rel");
+  host.innerHTML = "";
+  Array.from(SYNCS.keys()).forEach(k=>{ if(k.startsWith("rel-")) SYNCS.delete(k); });
+  sites.forEach(s=>{
+    const row = document.createElement("div");
+    row.className = "xrow"; row.id = "xrow-" + s;
+    const n = document.createElement("span");
+    n.className = "xr-n"; n.textContent = siteLabel(s);
+    row.appendChild(n);
+    host.appendChild(row);
+    if(forcedIV(s)){
+      const f = document.createElement("span");
+      f.className = "xr-fixed"; f.textContent = "Siempre estadio IV";
+      row.appendChild(f);
+    } else {
+      const box = document.createElement("div");
+      box.className = "chips small"; box.id = "rel-" + s;
+      row.appendChild(box);
+      chipSet("rel-" + s, "rel-" + s, REL, "radio", v=>S.rel[s]===v, (v,on)=>{ if(on) S.rel[s] = v; }, false);
+    }
+  });
+}
+function buildChips(){
+  chipSet("f-mod", "mod", MODS, "radio", v=>S.mod===v, (v,on)=>{
+    if(!on) return;
+    S.mod = v;
+    S.splPat = S.splPat.filter(patOk);
+    buildSplPat();
+  }, false);
+  chipSet("f-hist", "hist", HIST.map(h=>[h.id, h.chip, h.tag || ""]), "radio", v=>S.hist===v, (v,on)=>{
+    S.hist = on ? v : "";
+    if(!isHL()) S.ab = "";
+  }, true);
+  buildSplPat();
+  chipSet("f-extra", "extra", [["no","No"],["si","Sí"]], "radio", v=>S.extra===v, (v,on)=>{ S.extra = on ? v : ""; }, true);
+  chipSet("f-sites", "sites", SITES.map(s=>[s.id, s.chip, s.iv ? "IV" : ""]), "checkbox", v=>S.sites.includes(v), (v,on)=>{
+    toggleIn(S.sites, v, on);
+    if(!on) delete S.rel[v];
+    buildRel();
+  });
+  chipSet("f-ab", "ab", [["a","A","sin síntomas B"],["b","B","con síntomas B"]], "radio", v=>S.ab===v, (v,on)=>{ S.ab = on ? v : ""; }, true);
+  buildRegions();
+}
+
+/* ============================================================
+   Render
+   ============================================================ */
+let lastCode = null;
+function modNote(){
+  const h = S.hist ? HBY[S.hist] : null;
+  if(!h || h.avid==="?") return "";
+  if(S.mod==="pet" && h.avid==="no") return "El linfoma linfocítico de células pequeñas y la leucemia linfocítica crónica suelen no ser ávidos por FDG: Lugano y PRoLoG recomiendan estadificar con TC y reservar el PET-CT para la sospecha de transformación agresiva.";
+  if(S.mod==="pet" && h.avid==="var") return "Avidez variable por FDG: el taller ICML-17 de 2025 sugiere estadificar con PET-CT y TC con contraste, y valorar la respuesta con PET-CT solo si hubo captación al inicio.";
+  if(S.mod==="tc" && h.avid==="si") return "Para esta histología, el taller ICML-17 de 2025 recomendó de forma unánime el PET-CT; la TC con contraste queda para planear radioterapia, valorar trombosis mediastínica o urgencias que no permiten esperar el PET-CT.";
+  return "";
+}
+function bulkReadout(B){
+  const rule = B.rule;
+  if(B.state==="none"){
+    if(rule==="lh") return "Hodgkin: voluminosa con 10 cm o más, o con más de un tercio del diámetro transtorácico.";
+    if(rule==="fol") return "Folicular: umbral sugerido de 6 cm.";
+    if(S.hist==="ldcbg") return "Difuso de células B grandes: sin umbral validado; se sugieren de 6 a 10 cm.";
+    return "Umbral según la histología: Hodgkin 10 cm; folicular 6 cm; otros no Hodgkin, de 6 a 10 cm.";
+  }
+  if(B.d===null) return "Enfermedad voluminosa por la relación con el diámetro transtorácico.";
+  if(B.state==="yes") return fmt(B.d) + " cm: enfermedad voluminosa (bulky) " + B.crit + ".";
+  if(B.gray) return fmt(B.d) + " cm: entre 6 y 10 cm, sin umbral validado en los linfomas no Hodgkin.";
+  return fmt(B.d) + " cm: sin criterio de enfermedad voluminosa.";
+}
+function renderCodebox(c){
+  const host = $("out-code");
+  const B = bulk();
+  if(c.kind!=="ok"){
+    const msg = {
+      none:"Marca las regiones ganglionares o la afectación extraganglionar",
+      sites:"Elige el órgano con afectación extraganglionar",
+      rel:"Indica si la afectación extraganglionar es contigua (E) o a distancia (IV)"
+    }[c.why];
+    host.innerHTML = '<span class="cb-wait">' + esc(msg) + "</span>";
+    $("out-group").innerHTML = "";
+  } else {
+    const numSec = (c.num===4 && c.distant.length) ? "sec-extra" : "sec-ganglios";
+    let h = '<span class="pre">Estadio</span><button type="button" class="seg" data-sec="' + numSec + '" title="Ir a la sección">' + ROMAN[c.num] + "</button>";
+    if(c.E) h += '<button type="button" class="seg mod" data-sec="sec-extra" title="Ir a la sección">E</button>';
+    if(isHL() && S.ab) h += '<button type="button" class="seg mod" data-sec="sec-masa" title="Ir a la sección">' + S.ab.toUpperCase() + "</button>";
+    host.innerHTML = h;
+    const g = group(c);
+    $("out-group").innerHTML = '<span class="grp ' + g.k + '">' + esc(g.t) + "</span>"
+      + (B.state==="yes" ? '<button type="button" class="grp bulk" data-sec="sec-masa" title="Ir a la sección">Enfermedad voluminosa</button>' : "");
+  }
+  $("out-meaning").textContent = meaningText();
+
+  const ext = c.nTot
+    ? {sup:"Supradiafragmática", inf:"Infradiafragmática", both:"A ambos lados del diafragma"}[c.side] + ", " + c.nTot + (c.nTot===1 ? " región" : " regiones")
+    : "Sin regiones";
+  let ex = "Sin evaluar";
+  if(S.extra==="no") ex = "No";
+  else if(S.extra==="si"){
+    const p = [];
+    if(c.contig.length) p.push("contigua (E)");
+    if(c.distant.length) p.push("a distancia (IV)");
+    if(c.undef.length) p.push("por definir");
+    ex = p.length ? cap(p.join(", ")) : "Elige el sitio";
+  }
+  let bk = "Sin medir";
+  if(B.state==="yes") bk = "Sí" + (B.d!==null ? ", " + fmt(B.d) + " cm" : "");
+  else if(B.state==="no") bk = "No, " + fmt(B.d) + " cm";
+  const ab = isHL() ? (S.ab==="b" ? "B, con síntomas" : S.ab==="a" ? "A, sin síntomas" : "Sin definir") : "Solo en Hodgkin";
+  const parts = [
+    ["Extensión ganglionar", ext, !c.nTot],
+    ["Extraganglionar", ex, S.extra===""],
+    ["Masa voluminosa", bk, B.state==="none"],
+    ["Síntomas A o B", ab, !isHL() || !S.ab]
+  ];
+  $("out-parts").innerHTML = parts.map(p=>"<div><dt>" + p[0] + "</dt><dd" + (p[2] ? ' class="dim"' : "") + ">" + esc(p[1]) + "</dd></div>").join("");
+
+  const cs = c.kind==="ok" ? "Estadio " + stageCode(c) + (B.state==="yes" ? " bulky" : "") : "";
+  $("cbar-code").textContent = cs || "Estadio pendiente";
+  if(cs !== lastCode){
+    $("sr-status").textContent = cs ? "Estadio actual: " + cs : "";
+    lastCode = cs;
+  }
+}
+function renderReport(){
+  const R = buildReport();
+  $("out-find").innerHTML = '<section class="rep-sec"><h3>Hallazgos</h3>'
+    + R.findings.map(f=>"<p><b>" + esc(f.h) + ".</b> " + esc(f.t) + "</p>").join("") + "</section>";
+  $("out-imp").innerHTML = '<section class="rep-sec imp"><h3>Impresión</h3>' + (R.impression
+    ? "<p>" + esc(R.impression) + "</p>"
+    : '<p class="rep-empty">Marca las regiones ganglionares o la afectación extraganglionar para generar la impresión.</p>') + "</section>";
+}
+function render(){
+  buildRel();
+  SYNCS.forEach(fn=>fn());
+  const c = classify(), B = bulk();
+
+  $("hist-other-row").hidden = S.hist!=="otro";
+  const mn = modNote(), nm = $("note-mod");
+  nm.hidden = !mn; nm.textContent = mn;
+
+  /* bazo */
+  const L = pos(S.splLen), spl = S.regs.includes("bazo");
+  $("f-spl-on").checked = spl;
+  $("spl-more").hidden = !spl;
+  const cs = $("calc-spl");
+  if(L===null){ cs.className = "readout"; cs.textContent = "Esplenomegalia: más de 13 cm de longitud vertical."; }
+  else { cs.className = "readout" + (L>13 ? " hit" : ""); cs.textContent = fmt(L) + " cm: " + (L>13 ? "esplenomegalia (más de 13 cm)" : "sin esplenomegalia"); }
+  const ns = $("note-spl"), showNs = S.mod==="tc" && L!==null && L>13 && !spl;
+  ns.hidden = !showNs;
+  if(showNs) ns.textContent = "En la TC, más de 13 cm de longitud vertical cuenta como afectación esplénica (tabla 1 de Lugano). Marca el bazo si corresponde.";
+
+  /* extraganglionar */
+  $("extra-more").hidden = S.extra!=="si";
+  $("site-other-row").hidden = !(S.extra==="si" && S.sites.includes("otro"));
+  c.sites.forEach(s=>{
+    const row = $("xrow-" + s);
+    if(!row) return;
+    row.classList.toggle("need", !forcedIV(s) && !S.rel[s]);
+    row.querySelector(".xr-n").textContent = siteLabel(s);
+  });
+  let ne = "";
+  if(S.extra==="si" && !S.sites.length) ne = "Elige al menos un órgano o sitio.";
+  else if(c.undef.length) ne = "Indica en cada sitio si la afectación es contigua o única (E) o a distancia o múltiple (IV): el estadio queda pendiente.";
+  else if(c.ns===3 && c.contig.length) ne = "Con ganglios a ambos lados del diafragma, toda afectación extraganglionar es estadio IV: el sufijo E solo se usa en la enfermedad limitada.";
+  else if(!c.nTot && c.contig.length>1) ne = "Sin ganglios afectados, varios órganos son IE solo si forman una sola lesión contigua; si son lesiones separadas, márcalas como a distancia (IV).";
+  const nx = $("note-extra");
+  nx.hidden = !ne; nx.textContent = ne;
+
+  /* masa voluminosa y síntomas */
+  const cm = $("calc-mass");
+  cm.className = "readout" + (B.state==="yes" ? " hit" : "");
+  cm.textContent = bulkReadout(B);
+  $("gray-wrap").hidden = !B.gray;
+  $("f-bulky-user").checked = S.bulkyUser;
+  const r = medRatio(), cr = $("calc-ratio");
+  if(r===null){
+    cr.className = "readout";
+    cr.textContent = (pos(S.medMass)!==null || pos(S.medThor)!==null) ? "Ingresa ambas medidas para calcular la relación." : "Relación = masa ÷ diámetro transtorácico. En Hodgkin, voluminosa si supera un tercio.";
+  } else {
+    cr.className = "readout" + (r>1/3 && isHL() ? " hit" : "");
+    cr.textContent = "Relación = " + r.toFixed(2) + ": " + (r>1/3 ? "mayor de un tercio" + (isHL() ? ", enfermedad voluminosa en Hodgkin" : "") : "no mayor de un tercio");
+  }
+  $("ab-field").hidden = !isHL();
+  $("ab-na").hidden = isHL();
+  $("met-field").hidden = S.mod!=="pet";
+
+  renderMap();
+  renderVisor(c);
+  renderCodebox(c);
+  renderReport();
+  renderImages();
+}
+
+/* ============================================================
+   Imágenes adjuntas
+   ============================================================ */
+function renderImages(){
+  const host = $("out-images");
+  host.innerHTML = "";
+  S.images.forEach((im, i)=>{
+    const div = document.createElement("div");
+    div.className = "thumb";
+    div.innerHTML = '<img src="' + im.dataUrl + '" alt="' + esc(im.name) + '"><button type="button" aria-label="Quitar imagen">×</button>';
+    div.querySelector("button").addEventListener("click", ()=>{ S.images.splice(i,1); renderImages(); });
+    host.appendChild(div);
+  });
+}
+function addImageFiles(fileList){
+  Array.from(fileList).forEach(file=>{
+    if(!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const maxDim = 1600;
+        let w = img.naturalWidth, h = img.naturalHeight;
+        if(w>maxDim || h>maxDim){ const sc = maxDim/Math.max(w,h); w = Math.round(w*sc); h = Math.round(h*sc); }
+        const cnv = document.createElement("canvas");
+        cnv.width = w; cnv.height = h;
+        cnv.getContext("2d").drawImage(img, 0, 0, w, h);
+        S.images = S.images.concat([{name:file.name, dataUrl:cnv.toDataURL("image/jpeg", 0.85), width:w, height:h}]);
+        renderImages();
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ============================================================
+   Enlaces de entradas
+   ============================================================ */
+const TEXT_INPUTS = [
+  ["f-hist-other","histOther"],["f-spl-len","splLen"],["f-site-other","siteOther"],["f-extra-desc","extraDesc"],
+  ["f-mass","massD"],["f-mass-loc","massLoc"],["f-med-mass","medMass"],["f-med-thor","medThor"],
+  ["f-suv","suv"],["f-suv-loc","suvLoc"],["f-mtv","mtv"],["f-other","other"]
+];
+TEXT_INPUTS.forEach(([id, key])=>{
+  const el = $(id);
+  el.value = S[key];
+  el.addEventListener("input", ()=>{ S[key] = el.value; render(); });
+});
+$("f-spl-on").addEventListener("change", e=>{ toggleIn(S.regs, "bazo", e.target.checked); render(); });
+$("f-bulky-user").addEventListener("change", e=>{ S.bulkyUser = e.target.checked; render(); });
+
+function goTo(id){ $(id).scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"}); }
+$("out-code").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-sec]");
+  if(b) goTo(b.getAttribute("data-sec"));
+});
+$("out-group").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-sec]");
+  if(b) goTo(b.getAttribute("data-sec"));
+});
+
+/* barra fija en móvil: se oculta cuando el panel de resultado está a la vista */
+(function(){
+  const bar = $("codebar"), panel = $("panel");
+  $("cbar-go").addEventListener("click", ()=>panel.scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"}));
+  if(!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(entries=>{
+    entries.forEach(en=>bar.classList.toggle("away", en.isIntersecting));
+  }, {threshold:0.02}).observe(panel);
+})();
+
+/* ============================================================
+   Acciones
+   ============================================================ */
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  setTimeout(()=>{ if(t.textContent===msg) t.textContent = ""; }, 2600);
+}
+$("btn-copy").addEventListener("click", async ()=>{
+  const text = plainText();
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Texto copiado");
+  }catch(err){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Texto copiado"); }
+    catch(e2){ toast("No se pudo copiar; selecciona el texto manualmente"); }
+    document.body.removeChild(ta);
+  }
+});
+$("btn-addimg").addEventListener("click", ()=>$("f-images").click());
+$("f-images").addEventListener("change", e=>{ addImageFiles(e.target.files); e.target.value = ""; });
+$("btn-print").addEventListener("click", ()=>window.print());
+$("btn-reset").addEventListener("click", ()=>{
+  if(!confirm("Se borrarán todos los datos capturados. ¿Continuar?")) return;
+  Object.assign(S, defaults());
+  TEXT_INPUTS.forEach(([id])=>{ $(id).value = ""; });
+  $("f-images").value = "";
+  relKey = null;
+  buildSplPat();
+  render();
+  toast("Formulario vacío");
+});
+
+/* ---------- esquema en canvas para PDF y Word ---------- */
+function drawMapCanvas(){
+  const sc = 2, W = MAP.w, H = MAP.h;
+  const cnv = document.createElement("canvas");
+  cnv.width = W*sc; cnv.height = H*sc;
+  const ctx = cnv.getContext("2d");
+  ctx.scale(sc, sc);
+  ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, W, H);
+  const bodyCol = "#E3E9EC";
+  ctx.fillStyle = bodyCol; ctx.strokeStyle = bodyCol;
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.beginPath(); ctx.arc(BODY.head[0], BODY.head[1], BODY.head[2], 0, Math.PI*2); ctx.fill();
+  ctx.lineWidth = 22; ctx.stroke(new Path2D(BODY.neck));
+  ctx.fill(new Path2D(BODY.torso));
+  ctx.lineWidth = 20; BODY.arms.forEach(d=>ctx.stroke(new Path2D(d)));
+  ctx.lineWidth = 28; BODY.legs.forEach(d=>ctx.stroke(new Path2D(d)));
+  ctx.setLineDash([5,4]); ctx.lineWidth = 1.4; ctx.strokeStyle = "#8C9BA2";
+  ctx.stroke(new Path2D(DIA)); ctx.setLineDash([]);
+  const spl = S.regs.includes("bazo");
+  ctx.save();
+  ctx.translate(SPL.cx, SPL.cy); ctx.rotate(SPL.rot*Math.PI/180);
+  ctx.beginPath(); ctx.ellipse(0, 0, SPL.rx, SPL.ry, 0, 0, Math.PI*2);
+  ctx.fillStyle = spl ? "#B8741A" : "#FFFFFF"; ctx.fill();
+  ctx.lineWidth = 1.4; ctx.strokeStyle = spl ? "#7E4A08" : "#8C9BA2"; ctx.stroke();
+  ctx.restore();
+  REG_ORDER.filter(id=>id!=="bazo").forEach(id=>{
+    const x = REG[id].pos[0], y = REG[id].pos[1], on = S.regs.includes(id);
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2);
+    ctx.fillStyle = on ? "#B8741A" : "#FFFFFF"; ctx.fill();
+    ctx.lineWidth = 1.6; ctx.strokeStyle = on ? "#7E4A08" : "#8C9BA2"; ctx.stroke();
+  });
+  ctx.font = "11px Arial, Helvetica, sans-serif"; ctx.fillStyle = "#6F838C";
+  ctx.textAlign = "left"; ctx.fillText("Derecha", 8, 20);
+  ctx.textAlign = "right"; ctx.fillText("Izquierda", W-8, 20);
+  return cnv;
+}
+
+/* ---------- PDF (jsPDF bajo demanda) ---------- */
+function loadScript(src){
+  return new Promise((resolve, reject)=>{
+    if(document.querySelector('script[data-src="' + src + '"]')){ resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src; s.dataset.src = src;
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error("No se pudo cargar " + src));
+    document.head.appendChild(s);
+  });
+}
+async function ensureJsPDF(){
+  if(window.jspdf && window.jspdf.jsPDF) return;
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+}
+function codeLine(){
+  const c = classify();
+  if(c.kind!=="ok") return "Estadio pendiente";
+  return "Estadio " + stageCode(c) + (bulk().state==="yes" ? " bulky" : "");
+}
+function groupLine(){
+  const c = classify(), g = group(c);
+  if(!g) return "";
+  return g.k==="amb" ? "Enfermedad limitada o avanzada según la histología y los factores pronósticos" : g.t;
+}
+function exportFilename(ext){
+  const c = classify();
+  const code = c.kind==="ok" ? stageCode(c) + (bulk().state==="yes" ? "_bulky" : "") : "pendiente";
+  return "Linfoma_Lugano_" + code + "." + ext;
+}
+function pdfSafe(s){
+  return String(s).replace(/≥/g, ">=").replace(/≤/g, "<=").replace(/→/g, "->").replace(/−/g, "-").replace(/÷/g, "/");
+}
+async function downloadPDF(){
+  try{
+    toast("Generando PDF…");
+    await ensureJsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:"pt", format:"letter"});
+    const M = 54, W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+    const TW = W - M*2;
+    let y = 56;
+    const need = h=>{ if(y + h > H - 50){ doc.addPage(); y = 56; } };
+    const lines = (txt, size, style, color)=>{
+      doc.setFont("helvetica", style); doc.setFontSize(size); doc.setTextColor(color[0], color[1], color[2]);
+      doc.splitTextToSize(pdfSafe(txt), TW).forEach(l=>{ need(size*1.35); doc.text(l, M, y); y += size*1.35; });
+    };
+    const R = buildReport();
+
+    lines("Linfoma: estadificación de Lugano 2014", 15, "bold", [22,35,43]);
+    y += 2;
+    lines("Clasificación de Lugano (Ann Arbor modificada). Cheson BD et al. J Clin Oncol 2014;32(27):3059-68.", 9, "normal", [95,112,121]);
+    y += 14;
+
+    doc.setFont("courier", "bold"); doc.setFontSize(19); doc.setTextColor(22,35,43);
+    need(24); doc.text(pdfSafe(codeLine()), M, y); y += 18;
+    const gl = groupLine();
+    if(gl) lines(gl, 10.5, "bold", [51,70,79]);
+    const mean = meaningText();
+    if(mean) lines(mean, 10.5, "normal", [51,70,79]);
+    y += 8;
+
+    if(S.regs.length){
+      const cnv = drawMapCanvas();
+      const dw = 150, dh = dw*cnv.height/cnv.width;
+      need(dh + 12);
+      doc.addImage(cnv.toDataURL("image/png"), "PNG", M, y, dw, dh, undefined, "FAST");
+      y += dh + 14;
+    }
+
+    lines("HALLAZGOS", 11, "bold", [22,35,43]); y += 2;
+    R.findings.forEach(f=>{ lines(f.h + ": " + f.t, 10.5, "normal", [51,70,79]); y += 4; });
+    y += 6;
+    lines("IMPRESIÓN", 11, "bold", [22,35,43]); y += 2;
+    lines(R.impression || PENDING, 10.5, "normal", [22,35,43]);
+
+    if(S.images.length){
+      y += 12;
+      lines("Imágenes adjuntas", 11, "bold", [22,35,43]); y += 4;
+      const cols = 3, gap = 12;
+      const cellW = (TW - gap*(cols-1))/cols, cellH = cellW*0.75;
+      let col = 0;
+      S.images.forEach(im=>{
+        if(col===0) need(cellH + gap);
+        const x = M + col*(cellW + gap);
+        let w = cellW, h = cellW*(im.height/im.width);
+        if(h > cellH){ h = cellH; w = cellH*(im.width/im.height); }
+        doc.addImage(im.dataUrl, "JPEG", x, y, w, h);
+        col++;
+        if(col>=cols){ col = 0; y += cellH + gap; }
+      });
+      if(col!==0) y += cellH + gap;
+    }
+
+    doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(140,155,162);
+    const pages = doc.getNumberOfPages();
+    for(let p=1; p<=pages; p++){
+      doc.setPage(p);
+      doc.text("Documento generado con la clasificación de Lugano 2014. El estadio por imagen no sustituye la valoración clínica.", M, H - 28);
+    }
+    doc.save(exportFilename("pdf"));
+    toast("PDF descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el PDF");
+  }
+}
+
+/* ---------- Word (.doc compatible, sin dependencias) ---------- */
+function buildWordHtml(){
+  const R = buildReport();
+  const gl = groupLine(), mean = meaningText();
+  const map = S.regs.length ? '<p><img src="' + drawMapCanvas().toDataURL("image/png") + '" style="width:170px"></p>' : "";
+  const f = R.findings.map(x=>"<p><b>" + esc(x.h) + ".</b> " + esc(x.t) + "</p>").join("");
+  const imp = "<p>" + esc(R.impression || PENDING) + "</p>";
+  let att = "";
+  if(S.images.length){
+    att = "<h3>Imágenes adjuntas</h3><table style='width:100%;border-collapse:collapse;' cellpadding='4'><tr>"
+      + S.images.map(im=>'<td style="text-align:center;vertical-align:top;"><img src="' + im.dataUrl + '" style="width:160px;height:auto;border:1px solid #C9D3D8;"><div style="font-size:9pt;color:#5F7079;margin-top:2px;">' + esc(im.name) + "</div></td>").join("")
+      + "</tr></table>";
+  }
+  return "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>"
+    + '<head><meta charset="utf-8"><title>Informe de estadificación de linfoma</title>'
+    + "<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->"
+    + "<style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#16232B;}h1{font-size:15pt;margin-bottom:2pt;}h3{font-size:11pt;margin-top:16pt;}"
+    + ".meta{font-size:9pt;color:#5F7079;margin-bottom:12pt;}.code{font-family:'Courier New',monospace;font-size:15pt;font-weight:bold;margin:0 0 2pt;}"
+    + ".grp{font-weight:bold;margin:0 0 2pt;}.end{font-size:8pt;color:#8C9BA2;margin-top:20pt;font-style:italic;}</style></head><body>"
+    + "<h1>Linfoma: estadificación de Lugano 2014</h1>"
+    + '<p class="meta">Clasificación de Lugano (Ann Arbor modificada). Cheson BD et al. J Clin Oncol 2014;32(27):3059-68.</p>'
+    + '<p class="code">' + esc(codeLine()) + "</p>"
+    + (gl ? '<p class="grp">' + esc(gl) + "</p>" : "") + (mean ? "<p>" + esc(mean) + "</p>" : "") + map
+    + "<h3>Hallazgos</h3>" + f + "<h3>Impresión</h3>" + imp + att
+    + '<p class="end">Documento generado con la clasificación de Lugano 2014. El estadio por imagen no sustituye la valoración clínica.</p>'
+    + "</body></html>";
+}
+function downloadWord(){
+  try{
+    const blob = new Blob(["﻿", buildWordHtml()], {type:"application/msword"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = exportFilename("doc");
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 3000);
+    toast("Word descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el Word");
+  }
+}
+$("btn-pdf").addEventListener("click", downloadPDF);
+$("btn-word").addEventListener("click", downloadWord);
+
+/* ============================================================
+   Inicio
+   ============================================================ */
+buildMap();
+buildChips();
+render();
+</script>
+</body>
+</html>
