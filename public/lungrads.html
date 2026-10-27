@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lung-RADS v2022: tamizaje de cáncer de pulmón con TC de baja dosis</title>
+<meta name="description" content="Categoría Lung-RADS v2022 de la TC de baja dosis para tamizaje de cáncer de pulmón: nódulos sólidos, subsólidos, yuxtapleurales y de vía aérea, quistes atípicos, manejo escalonado, modificador S, texto de informe y fecha del siguiente estudio.">
+<meta name="theme-color" content="#16232B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lung-RADS v2022: tamizaje de cáncer de pulmón">
+<meta property="og:description" content="Describe los nódulos de la TC de baja dosis y obtén la categoría Lung-RADS, el texto del informe y la fecha del siguiente estudio.">
+<meta property="og:locale" content="es_MX">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F171C'/%3E%3Cpath d='M14 7.5C10 7.5 6.8 13 6.8 19.2C6.8 23.4 8.8 25.3 12 24.6L14.6 23.6Z' fill='%23E9F0F2'/%3E%3Cpath d='M18 7.5C22 7.5 25.2 13 25.2 19.2C25.2 23.4 23.2 25.3 20 24.6L17.4 23.6Z' fill='%23E9F0F2'/%3E%3Ccircle cx='11.2' cy='15.2' r='2.5' fill='%23E9A74C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600;700&family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EBEFF0;
+  --surface:#FFFFFF;
+  --ink:#16232B;
+  --ink-2:#33464F;
+  --muted:#5F7079;
+  --line:#C9D3D8;
+  --line-soft:#DCE3E6;
+  --visor:#0F171C;
+  --visor-line:#26343C;
+  --visor-text:#9FB1B9;
+  --lung:#18252C;
+  --iodine:#B8741A;
+  --iodine-lt:#E9A74C;
+  --iodine-ink:#7E4A08;
+  --iodine-soft:#F5E8D3;
+  --info:#2D6F99;
+  --info-soft:#E3EEF4;
+  --focus:#2D7BB0;
+  --sans:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Atkinson Hyperlegible Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;
+}
+a{color:var(--ink-2)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button,.chips label,svg{touch-action:manipulation}
+img,canvas{max-width:100%}
+
+/* ---------- navegación y cabecera ---------- */
+.topnav{padding:10px 28px;background:var(--surface);border-bottom:1px solid var(--line);font-size:14px}
+.topnav a{color:var(--ink-2);text-decoration:none}
+.topnav a:hover{text-decoration:underline}
+.masthead{background:var(--surface);border-bottom:1px solid var(--line);padding:26px 28px 24px}
+.masthead-inner{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px 48px;align-items:flex-end;justify-content:space-between}
+h1{margin:0;font-size:40px;line-height:1.02;font-weight:800;letter-spacing:-.025em}
+.masthead .sub{margin:10px 0 0;max-width:62ch;color:var(--ink-2);font-size:15.5px}
+.cite{margin:0;font-size:13px;color:var(--muted);line-height:1.5;max-width:46ch}
+
+/* ---------- distribución ---------- */
+.wrap{max-width:1320px;margin:0 auto;padding:28px 28px 56px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:36px;align-items:start}
+@media (max-width:1000px){.wrap{grid-template-columns:1fr;gap:26px;padding:20px 16px 48px}}
+
+/* ---------- formulario ---------- */
+.group{margin-bottom:34px}
+.group:last-child{margin-bottom:0}
+.group-head{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.group-head h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.token{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--iodine-ink);background:var(--iodine-soft);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.group-lede{margin:-2px 0 14px;color:var(--muted);font-size:14px;max-width:70ch}
+.field{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:16px 18px 18px;margin-bottom:12px}
+.field-title{display:block;font-weight:700;font-size:16px;margin:0 0 4px}
+.field-title .opt,.opt{font-weight:400;color:var(--muted);font-size:14px}
+.hint{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.5;max-width:72ch}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.chips label{
+  display:inline-flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  border:1px solid var(--line);background:#fff;padding:7px 12px;border-radius:6px;
+  cursor:pointer;font-size:14.5px;line-height:1.3;transition:background .12s,border-color .12s,color .12s;
+}
+.chips label .tag{font-size:12.5px;color:var(--muted)}
+.chips label:hover{border-color:var(--ink-2)}
+.chips input:checked + label{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips input:checked + label .tag{color:#B9C9D0}
+.chips input:focus-visible + label{outline:2px solid var(--focus);outline-offset:2px}
+.chips.small label{font-size:13.5px;padding:6px 10px}
+
+.sublabel{display:block;font-size:13.5px;color:var(--muted);margin:14px 0 6px}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.row.spaced{margin-top:12px}
+.sub{flex:1 1 150px;min-width:130px}
+.sub.full{flex:1 1 100%}
+.sub > span{display:block;font-size:13.5px;color:var(--muted);margin-bottom:4px}
+input[type=text],input[type=date],textarea{
+  width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);
+  border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:6px;
+}
+input[type=text]:focus,input[type=date]:focus,textarea:focus{outline:2px solid var(--focus);outline-offset:-1px;border-color:var(--focus)}
+input.num{font-family:var(--mono)}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.readout{margin-top:12px;font-family:var(--mono);font-size:14px;background:#F1F4F5;border-radius:6px;padding:9px 12px;color:var(--ink-2)}
+.readout.hit{background:var(--iodine-soft);color:var(--iodine-ink);font-weight:600}
+.readout[hidden],.note[hidden],[hidden]{display:none!important}
+.note{margin-top:12px;font-size:14px;background:var(--info-soft);border-left:3px solid var(--info);padding:9px 12px;border-radius:0 6px 6px 0;color:#1F4B66}
+.note p{margin:0 0 4px}
+.note p:last-child{margin:0}
+.switch{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;color:var(--ink-2);margin-top:14px;cursor:pointer;line-height:1.4}
+.switch input{width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--ink)}
+details.more{margin-top:14px;font-size:14px;border-top:1px solid var(--line-soft);padding-top:12px}
+details.more summary{cursor:pointer;color:var(--ink-2);font-weight:600}
+details.more[open] summary{margin-bottom:10px}
+details.more p,details.more li{color:var(--ink-2);margin:0 0 8px;line-height:1.5}
+details.more ul{margin:0;padding-left:18px}
+
+/* ---------- categorías ---------- */
+.cat{display:inline-flex;align-items:center;justify-content:center;min-width:2.4em;padding:2px 8px;border-radius:5px;font-family:var(--mono);font-weight:700;font-size:13.5px;line-height:1.4;background:#E4E7EA;color:#33464F}
+.cat.c0{background:#E4E7EA;color:#33464F}
+.cat.c1{background:#D5EEDD;color:#1E6B3A}
+.cat.c2{background:#E7F5EC;color:#1E6B3A}
+.cat.c3{background:#FFF1BF;color:#6E5200}
+.cat.c4A{background:#FFDDB8;color:#8A4B00}
+.cat.c4B{background:#F8CDC7;color:#9A2A1F}
+.cat.c4X{background:#EFB1A9;color:#7D1B12}
+.cat.cS{background:#DCEAF3;color:#2D6F99}
+.cat.cnone{background:#F1F4F5;color:var(--muted)}
+
+/* ---------- hallazgos (tarjetas) ---------- */
+.nod{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:14px 18px 18px;margin-bottom:12px}
+.nod-head{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--line-soft);margin-bottom:2px}
+.nod-n{font-weight:700;font-size:16px}
+.nod-del{margin-left:auto;font-family:var(--sans);font-size:13.5px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink-2);padding:5px 12px;border-radius:6px;cursor:pointer}
+.nod-del:hover{border-color:var(--ink-2)}
+.addnod{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font-family:var(--sans);font-size:15px;font-weight:600;border:1px dashed var(--ink-2);background:transparent;color:var(--ink);padding:12px 16px;border-radius:8px;cursor:pointer;min-height:46px}
+.addnod:hover{background:#fff}
+.addnod[disabled]{opacity:.5;cursor:not-allowed}
+.empty-nod{margin:0 0 12px;color:var(--muted);font-size:14px}
+
+/* ---------- visor: mapa por lóbulos (elemento distintivo) ---------- */
+.visor{background:var(--visor);border-radius:12px;padding:12px 12px 14px;color:var(--visor-text);margin-bottom:14px}
+.visor-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 12px;font-size:13px;margin:2px 6px 4px}
+.visor-top b{color:#E6EDF0;font-weight:600}
+svg.map{display:block;width:100%;height:auto;-webkit-user-select:none;user-select:none}
+.lung{fill:var(--lung)}
+.fis{fill:none;stroke:#3A4C55;stroke-width:1.6;stroke-dasharray:5 5}
+.zlab{font-family:var(--sans);font-size:12px;font-weight:600;fill:#6F838C}
+.orient{font-family:var(--sans);font-size:11.5px;fill:#6F838C}
+.mk circle{stroke:#0F171C;stroke-width:2}
+.mk text{font-family:var(--mono);font-size:12px;font-weight:700;fill:#0F171C}
+.visor-read{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;border-top:1px solid var(--visor-line);margin:6px 6px 0;padding-top:10px;font-size:14.5px;color:#E6EDF0}
+.visor-read dt{color:var(--visor-text)}
+.visor-read dd{margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 6px 0;font-size:12.5px;color:var(--visor-text)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%}
+.key{margin:10px 6px 0;font-size:12.5px;line-height:1.5;color:#7F939C}
+
+/* ---------- panel de salida ---------- */
+.panel{position:sticky;top:18px}
+.codebox{background:var(--visor);color:#fff;border-radius:12px 12px 0 0;padding:18px 20px 16px}
+.cb-label{margin:0;font-size:13.5px;color:var(--visor-text)}
+.cb-code{margin:4px 0 2px;font-family:var(--mono);font-size:36px;font-weight:700;line-height:1.2;letter-spacing:-.01em;min-height:44px;overflow-wrap:anywhere}
+.cb-code .pre{color:#C8D4D9;font-weight:600;margin-right:.28em}
+.cb-code .seg{font:inherit;color:#fff;background:none;border:0;padding:0 .03em;margin:0;cursor:pointer;border-bottom:2px solid transparent;line-height:inherit;letter-spacing:inherit}
+.cb-code .seg:hover{border-bottom-color:currentColor}
+.cb-code .seg.k0{color:#AEBBC1}.cb-code .seg.k1{color:#7FD3A0}.cb-code .seg.k2{color:#A9DEBC}
+.cb-code .seg.k3{color:#F2CF5B}.cb-code .seg.k4A{color:#F5A55C}.cb-code .seg.k4B{color:#F28374}.cb-code .seg.k4X{color:#F07A6C}
+.cb-code .seg.mod{color:#7DBDE6;margin-left:.08em}
+.cb-wait{display:block;font-family:var(--sans);font-size:18px;font-weight:600;color:#C8D4D9;line-height:1.35;padding:8px 0 4px}
+.cb-meaning{margin:2px 0 0;font-size:15px;color:#DCE4E8;min-height:1.5em}
+.cb-parts{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin:16px 0 0;padding-top:14px;border-top:1px solid var(--visor-line)}
+.cb-parts div{min-width:0}
+.cb-parts dt{font-size:12.5px;color:var(--visor-text)}
+.cb-parts dd{margin:1px 0 0;font-size:14.5px;color:#fff}
+.cb-parts dd.dim{color:#7F939C}
+
+.report{background:var(--surface);border:1px solid var(--line-soft);border-top:0;border-radius:0 0 12px 12px;padding:18px 20px 20px;max-height:calc(100vh - 330px);overflow:auto;display:flex;flex-direction:column}
+/* en pantalla se lee primero la impresión; al imprimir vuelve el orden del informe */
+.imp-wrap{order:1}
+.find-wrap{order:2;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr{order:3}
+.rep-sec{margin:0 0 14px}
+.rep-sec h3{margin:0 0 6px;font-size:15px;font-weight:700;color:var(--ink)}
+.rep-sec p{margin:0 0 7px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.rep-sec p b{color:var(--ink);font-weight:700}
+.rep-empty{color:var(--muted)!important;font-style:italic}
+.imp{background:#F2F5F6;border-radius:8px;padding:12px 14px}
+.imp p{color:var(--ink)}
+
+.imgmgr{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.imgmgr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.imgmgr-head .lbl{font-size:14px;font-weight:700}
+.addimg-btn{font-family:var(--sans);font-size:13.5px;font-weight:600;border:1px dashed var(--line);background:#fff;color:var(--ink-2);padding:6px 12px;border-radius:6px;cursor:pointer}
+.addimg-btn:hover{border-color:var(--ink-2)}
+.imgmgr-grid{display:flex;flex-wrap:wrap;gap:8px}
+.imgmgr-grid:empty::after{content:"Sin imágenes adjuntas.";color:var(--muted);font-size:13.5px}
+.thumb{position:relative;width:72px;height:72px;border-radius:6px;overflow:hidden;border:1px solid var(--line-soft);flex:0 0 auto}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:3px;right:3px;width:20px;height:20px;border:0;border-radius:50%;background:rgba(15,23,28,.75);color:#fff;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+button.act{font-family:var(--sans);font-size:14.5px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:9px 16px;cursor:pointer;border-radius:6px}
+button.act.ghost{background:#fff;color:var(--ink)}
+button.act:hover{background:var(--ink-2);border-color:var(--ink-2);color:#fff}
+.toast{font-size:13.5px;color:var(--info);font-weight:600}
+
+/* ---------- referencia ---------- */
+.refs{max-width:1320px;margin:0 auto;padding:8px 28px 40px}
+.refs > h2{font-size:20px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink);font-weight:700}
+.refs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1150px){.refs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.refs-grid{grid-template-columns:1fr}}
+.ref{background:var(--surface);border:1px solid var(--line-soft);border-radius:8px;padding:16px 16px 14px}
+.ref h3{margin:0 0 8px;font-size:16px}
+.ref table{width:100%;border-collapse:collapse;font-size:14px}
+.ref th{text-align:left;font-size:12.5px;color:var(--muted);font-weight:600;padding:0 0 4px}
+.ref td{padding:6px 0;vertical-align:top;border-top:1px solid var(--line-soft);color:var(--ink-2);line-height:1.45}
+.ref td.k{width:3.6em;padding-right:8px}
+.ref td.m{font-family:var(--mono);font-size:13.5px;color:var(--ink)}
+.ref p{margin:8px 0 0;font-size:14px;color:var(--ink-2)}
+.ref ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.ref li{margin:0 0 6px;line-height:1.45}
+
+footer.legal{max-width:1320px;margin:0 auto;padding:0 28px 40px;color:var(--muted);font-size:13px;line-height:1.6}
+footer.legal .editor{margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid var(--line);font-weight:700;font-size:15px;color:var(--ink)}
+footer.legal .editor span{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-bottom:2px}
+
+/* barra fija con la categoría (solo móvil) */
+.codebar{display:none}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- móvil ---------- */
+@media (max-width:1000px){
+  .panel{position:static}
+  .report{max-height:none;overflow:visible}
+  .codebar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--visor);color:#fff;border-top:1px solid var(--visor-line);
+    padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+    transition:transform .2s ease;
+  }
+  .codebar.away{transform:translateY(120%)}
+  .codebar .c{font-family:var(--mono);font-weight:700;font-size:18px;overflow-wrap:anywhere}
+  .codebar button{font-family:var(--sans);font-size:15px;font-weight:600;background:#fff;color:var(--ink);border:0;border-radius:6px;padding:10px 14px;min-height:44px;flex:0 0 auto;cursor:pointer}
+  body{padding-bottom:76px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .topnav{padding:10px 16px}
+  .masthead{padding:max(18px,env(safe-area-inset-top)) 16px 18px}
+  h1{font-size:32px}
+  .wrap{padding:16px max(14px,env(safe-area-inset-right)) 40px max(14px,env(safe-area-inset-left));gap:22px}
+  .refs{padding:4px 14px 32px}
+  footer.legal{padding:0 16px max(32px,env(safe-area-inset-bottom))}
+  .field,.nod{padding:14px 14px 16px}
+  .chips{gap:8px}
+  .chips label{min-height:44px;padding:9px 14px;font-size:15px;align-items:center}
+  .chips.small label{min-height:40px;font-size:14px}
+  input[type=text],input[type=date],textarea{font-size:16px;min-height:44px;padding:9px 11px}
+  .sub{flex:1 1 100%}
+  .switch{font-size:15px;min-height:40px}
+  .switch input{width:22px;height:22px}
+  .nod-del{min-height:40px}
+  .visor{padding:8px 6px 12px;margin:0 -4px 14px}
+  .zlab{font-size:16px}
+  .orient{font-size:15px}
+  .cb-code{font-size:28px}
+  .codebox{padding:16px 16px 14px}
+  .report{padding:16px 14px}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.act{min-height:46px;padding:10px 8px;width:100%}
+  .toast{grid-column:1/-1}
+  .thumb button{width:28px;height:28px;font-size:16px}
+}
+
+/* ---------- impresión ---------- */
+@media print{
+  body{background:#fff;padding:0}
+  .topnav,.masthead,.formcol,.actions,.refs,footer.legal,.codebar,.imgmgr-head .addimg-btn,.thumb button{display:none!important}
+  .wrap{display:block;padding:0}
+  .panel{position:static}
+  .codebox{background:#fff;color:#000;border:1px solid #000;border-radius:0}
+  .cb-label,.cb-meaning,.cb-parts dt,.cb-parts dd,.cb-parts dd.dim,.cb-code .pre,.cb-code .seg{color:#000!important}
+  .cb-parts{border-top-color:#999}
+  .report{max-height:none;overflow:visible;border:1px solid #000;border-top:0;border-radius:0}
+  .report > *{order:0!important}
+  .imp-wrap{order:2!important}
+  .find-wrap{order:1!important;margin-top:0;padding-top:0;border-top:0}
+  .imgmgr{order:3!important}
+  .imgmgr:has(.imgmgr-grid:empty){display:none}
+  .imp{background:#fff;border:1px solid #999}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="/">← Hub</a></nav>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <h1>Lung-RADS v2022</h1>
+      <p class="sub">Lung CT Screening Reporting and Data System: categoría de la tomografía computarizada de baja dosis (TCBD) para el tamizaje de cáncer de pulmón, con texto de informe, manejo y fecha sugerida del siguiente estudio.</p>
+    </div>
+    <p class="cite">American College of Radiology. Lung-RADS® v2022 (noviembre de 2022). Christensen J, Prosper AE, Wu CC, et al. ACR Lung-RADS v2022: Assessment Categories and Management Recommendations. <i>J Am Coll Radiol</i> 2024;21(3):473-488.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ FORMULARIO ============ -->
+  <div class="formcol">
+
+    <section class="group" id="sec-estudio">
+      <div class="group-head"><h2>Estudio</h2><span class="token" title="Componente de la categoría Lung-RADS">0</span></div>
+
+      <div class="field">
+        <span class="field-title">Tipo de estudio</span>
+        <p class="hint">Lung-RADS solo se aplica a la TCBD de tamizaje en personas asintomáticas elegibles. Los nódulos incidentales de una TC diagnóstica se manejan con la guía Fleischner 2017.</p>
+        <div class="chips" id="f-ronda"></div>
+        <div class="row spaced">
+          <label class="sub"><span>Fecha del estudio</span><input type="date" id="f-fecha"></label>
+          <label class="sub"><span>Índice de dosis (CTDIvol, mGy) <span class="opt">opcional</span></span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-ctdi" placeholder="1.4"></label>
+          <label class="sub"><span>Producto dosis-longitud (DLP, mGy·cm) <span class="opt">opcional</span></span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-dlp" placeholder="52"></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Comparación</span>
+        <div class="chips" id="f-comp"></div>
+        <div class="row spaced" id="fprev-row" hidden>
+          <label class="sub"><span>Fecha del estudio previo</span><input type="date" id="f-fprev"></label>
+        </div>
+        <div class="note" id="note-comp" hidden>Con la TC previa en búsqueda, el examen es categoría 0: al compararla se emite una adenda con la categoría definitiva.</div>
+        <label class="switch"><input type="checkbox" id="f-incompleto"> Pulmón no evaluable de forma total o parcial (cobertura incompleta o artefactos)</label>
+        <div class="row spaced" id="inc-row" hidden>
+          <label class="sub full"><span>Motivo y región</span><input type="text" id="f-incdesc" autocomplete="off" placeholder="p. ej., artefacto por movimiento respiratorio en ambas bases"></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Indicación <span class="opt">(opcional)</span></span>
+        <p class="hint">Solo se usa para la indicación del informe y para revisar la elegibilidad; no modifica la categoría.</p>
+        <div class="row">
+          <label class="sub"><span>Edad (años)</span><input type="text" class="num" inputmode="numeric" autocomplete="off" id="f-edad" placeholder="62"></label>
+          <label class="sub"><span>Paquetes-año</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="f-pa" placeholder="30"></label>
+        </div>
+        <span class="sublabel">Tabaquismo</span>
+        <div class="chips small" id="f-tab"></div>
+        <div class="row spaced" id="anios-row" hidden>
+          <label class="sub"><span>Años desde que dejó de fumar</span><input type="text" class="num" inputmode="numeric" autocomplete="off" id="f-anios" placeholder="8"></label>
+        </div>
+        <div class="readout" id="calc-eleg" hidden></div>
+      </div>
+    </section>
+
+    <section class="group" id="sec-nodulos">
+      <div class="group-head"><h2>Nódulos y otras lesiones</h2><span class="token" title="Componente de la categoría Lung-RADS">1–4X</span></div>
+      <p class="group-lede">Agrega los hallazgos relevantes. La categoría del examen es la del hallazgo más sospechoso. Mide en ventana pulmonar el eje largo y el corto con un decimal: el diámetro medio se calcula solo.</p>
+
+      <div class="visor">
+        <div class="visor-top"><span>Mapa por lóbulos, vista frontal</span><b id="v-count">Sin hallazgos</b></div>
+        <svg class="map" id="map" role="img" aria-label="Esquema de los pulmones por lóbulos con los hallazgos numerados"></svg>
+        <dl class="visor-read" id="v-read"></dl>
+        <div class="legend" aria-hidden="true">
+          <span><i style="background:#7FD3A0"></i>1–2</span>
+          <span><i style="background:#F2CF5B"></i>3</span>
+          <span><i style="background:#F5A55C"></i>4A</span>
+          <span><i style="background:#F28374"></i>4B y 4X</span>
+          <span><i style="background:#9FB1B9"></i>Sin categoría o pendiente</span>
+        </div>
+        <p class="key">LSD, LM y LID: lóbulos superior, medio e inferior derechos. LSI y LII: lóbulos superior e inferior izquierdos. Esquema frontal orientativo.</p>
+      </div>
+
+      <div id="nod-list"></div>
+      <p class="empty-nod" id="nod-empty">Sin hallazgos agregados: si el estudio no tiene nódulos, la categoría es 1.</p>
+      <button type="button" class="addnod" id="btn-addnod">+ Agregar hallazgo</button>
+
+      <details class="more">
+        <summary>Definiciones útiles</summary>
+        <ul>
+          <li><b>Basal:</b> primera TCBD de tamizaje. <b>Nuevo:</b> no visible en el estudio previo. <b>Crecimiento:</b> aumento de más de 1.5 mm del diámetro medio en 12 meses; si el nódulo cruza un umbral de tamaño se reclasifica aunque no cumpla esa definición.</li>
+          <li><b>Yuxtapleural:</b> perifisural, de pleura costal, perimediastínico o peridiafragmático; es categoría 2 si es sólido, liso, ovalado, lentiforme o triangular y mide menos de 10 mm.</li>
+          <li><b>Quiste atípico:</b> unilocular con pared de 2 mm o más (uniforme, asimétrica o nodular) o multilocular. El de pared delgada no se clasifica. Si predomina la pared, se maneja como nódulo sólido.</li>
+          <li><b>Manejo escalonado:</b> 4A estable o menor a los 3 meses pasa a 3; 3 estable o menor a los 6 meses pasa a 2; 4B con benignidad demostrada pasa a 2. No se aplica a los nódulos de vía aérea.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="group" id="sec-inf">
+      <div class="group-head"><h2>Hallazgos infecciosos o inflamatorios</h2><span class="token" title="Componente de la categoría Lung-RADS">0</span></div>
+      <div class="field">
+        <p class="hint">Hallazgos indeterminados para infección o inflamación, o que ocultan el parénquima: categoría 0 con TCBD en 1 a 3 meses. Un nódulo nuevo más sospechoso de malignidad que de infección, con tamaño de 4B, se clasifica como 4B.</p>
+        <div class="chips" id="f-inf"></div>
+        <div class="row spaced" id="infdesc-row" hidden>
+          <label class="sub full"><span>Localización y descripción</span><input type="text" id="f-infdesc" autocomplete="off" placeholder="p. ej., consolidación del segmento posterior del lóbulo inferior derecho"></label>
+        </div>
+        <label class="switch"><input type="checkbox" id="f-tib"> Nódulos en árbol en brote u opacidades de aspecto infeccioso sin sospecha de malignidad (categoría 2, sin control corto)</label>
+      </div>
+    </section>
+
+    <section class="group" id="sec-s">
+      <div class="group-head"><h2>Otros hallazgos y modificador S</h2><span class="token" title="Modificador Lung-RADS">S</span></div>
+      <p class="group-lede">El modificador S señala un hallazgo significativo o potencialmente significativo no relacionado con cáncer de pulmón; no cambia el manejo del nódulo.</p>
+
+      <div class="field">
+        <span class="field-title">Calcio arterial coronario (CAC)</span>
+        <p class="hint">La guía de la SCCT y la STR (sociedades de TC cardiovascular y de radiología torácica) recomienda informarlo en toda TC de tórax sin contraste, por estimación visual o con el puntaje de Agatston.</p>
+        <div class="chips" id="f-cac"></div>
+        <div class="row spaced" id="cac-row" hidden>
+          <label class="sub"><span>Puntaje de Agatston <span class="opt">opcional</span></span><input type="text" class="num" inputmode="numeric" autocomplete="off" id="f-agat" placeholder="185"></label>
+        </div>
+        <label class="switch" id="cacs-wrap" hidden><input type="checkbox" id="f-cacs"> Agregar el modificador S por el calcio coronario y sugerir evaluar el riesgo cardiovascular</label>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Enfisema</span>
+        <div class="chips small" id="f-emph"></div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Hallazgos significativos (S)</span>
+        <p class="hint">Cada hallazgo marcado agrega el modificador S. Describe el hallazgo y la recomendación según la guía rápida de hallazgos incidentales del ACR.</p>
+        <div class="chips small" id="f-sfind"></div>
+        <div class="row spaced">
+          <label class="sub full"><span>Descripción y recomendación</span><textarea id="f-sdesc" placeholder="p. ej., aorta ascendente de 4.6 cm: se sugiere seguimiento por imagen según el ACR"></textarea></label>
+        </div>
+        <div class="row spaced">
+          <label class="sub full"><span>Otros hallazgos sin modificador S</span><textarea id="f-other" placeholder="Bronquiectasias leves, hernia hiatal pequeña…"></textarea></label>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ SALIDA ============ -->
+  <aside class="panel" id="panel" aria-label="Resultado">
+    <div class="codebox">
+      <p class="cb-label">Categoría Lung-RADS</p>
+      <div class="cb-code" id="out-code"></div>
+      <p class="cb-meaning" id="out-meaning"></p>
+      <dl class="cb-parts" id="out-parts"></dl>
+    </div>
+    <div class="report">
+      <div class="find-wrap" id="out-find"></div>
+      <div class="imp-wrap" id="out-imp"></div>
+      <div class="imgmgr">
+        <div class="imgmgr-head">
+          <span class="lbl">Imágenes adjuntas</span>
+          <button type="button" class="addimg-btn" id="btn-addimg">Añadir imágenes</button>
+          <input type="file" id="f-images" accept="image/*" multiple hidden>
+        </div>
+        <div class="imgmgr-grid" id="out-images"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="act" id="btn-copy" type="button">Copiar texto</button>
+      <button class="act" id="btn-pdf" type="button">Descargar PDF</button>
+      <button class="act" id="btn-word" type="button">Descargar Word</button>
+      <button class="act ghost" id="btn-print" type="button">Imprimir</button>
+      <button class="act ghost" id="btn-reset" type="button">Vaciar formulario</button>
+      <span class="toast" id="toast" role="status" aria-live="polite"></span>
+    </div>
+    <p class="sr-only" id="sr-status" aria-live="polite"></p>
+  </aside>
+</main>
+
+<section class="refs" aria-labelledby="refs-h">
+  <h2 id="refs-h">Referencia rápida de Lung-RADS v2022</h2>
+  <div class="refs-grid">
+    <div class="ref">
+      <h3>Categorías y manejo</h3>
+      <table>
+        <tr><td class="k"><span class="cat c0">0</span></td><td>Incompleto: comparar con la TC previa, TCBD adicional o TCBD en 1–3 meses</td></tr>
+        <tr><td class="k"><span class="cat c1">1</span></td><td>Negativo: TCBD en 12 meses</td></tr>
+        <tr><td class="k"><span class="cat c2">2</span></td><td>Benigno: TCBD en 12 meses</td></tr>
+        <tr><td class="k"><span class="cat c3">3</span></td><td>Probablemente benigno: TCBD en 6 meses</td></tr>
+        <tr><td class="k"><span class="cat c4A">4A</span></td><td>Sospechoso: TCBD en 3 meses; tomografía por emisión de positrones con TC (PET/TC) si hay nódulo o componente sólido de 8 mm o más</td></tr>
+        <tr><td class="k"><span class="cat c4B">4B</span></td><td>Muy sospechoso: TC diagnóstica, PET/TC, muestreo tisular y/o evaluación clínica</td></tr>
+        <tr><td class="k"><span class="cat c4X">4X</span></td><td>3 o 4 con rasgos sospechosos: como 4B</td></tr>
+        <tr><td class="k"><span class="cat cS">S</span></td><td>Hallazgo significativo no pulmonar</td></tr>
+      </table>
+      <p>Tamizaje negativo: 1 y 2. Positivo: 3 y 4. Plazos desde la fecha del estudio actual.</p>
+    </div>
+    <div class="ref">
+      <h3>Nódulo sólido</h3>
+      <table>
+        <tr><th></th><th>Basal</th><th>Nuevo</th></tr>
+        <tr><td class="k"><span class="cat c2">2</span></td><td class="m">&lt;6 mm</td><td class="m">&lt;4 mm</td></tr>
+        <tr><td class="k"><span class="cat c3">3</span></td><td class="m">6 a &lt;8 mm</td><td class="m">4 a &lt;6 mm</td></tr>
+        <tr><td class="k"><span class="cat c4A">4A</span></td><td class="m">8 a &lt;15 mm</td><td class="m">6 a &lt;8 mm</td></tr>
+        <tr><td class="k"><span class="cat c4B">4B</span></td><td class="m">≥15 mm</td><td class="m">≥8 mm</td></tr>
+      </table>
+      <p>En crecimiento: menos de 8 mm, 4A; 8 mm o más, 4B. Crecimiento lento en varios estudios: 4B.</p>
+    </div>
+    <div class="ref">
+      <h3>Subsólidos y vía aérea</h3>
+      <ul>
+        <li><b>Parcialmente sólido:</b> total &lt;6 mm, 2; sólido &lt;6 mm, 3; sólido 6 a &lt;8 mm, 4A; sólido ≥8 mm, 4B. Nuevo: total &lt;6 mm, 3; sólido nuevo o en crecimiento &lt;4 mm, 4A; ≥4 mm, 4B.</li>
+        <li><b>Vidrio deslustrado:</b> &lt;30 mm, 2; ≥30 mm basal o nuevo, 3; estable o de crecimiento lento, 2.</li>
+        <li><b>Vía aérea:</b> subsegmentaria, 2; segmentaria o más proximal, 4A; si persiste a los 3 meses, 4B.</li>
+      </ul>
+    </div>
+    <div class="ref">
+      <h3>Quistes, infección y S</h3>
+      <ul>
+        <li><b>Quiste atípico:</b> pared gruesa con crecimiento del componente quístico, 3; pared gruesa, multilocular o que se vuelve multilocular, 4A; aumento de la pared, crecimiento multilocular o más loculaciones u opacidad, 4B.</li>
+        <li><b>Infección o inflamación:</b> consolidación, más de 6 nódulos nuevos o nódulo de 8 mm o más de aparición rápida: 0 con TCBD en 1–3 meses.</li>
+        <li><b>S:</b> por ejemplo, calcio coronario moderado o grave, aneurisma aórtico o masa extrapulmonar.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="legal">
+  <p class="editor"><span>Edición y adaptación</span>Dr. Carlos Leonardo Maldonado Estrada, médico radiólogo (UNAH), fellow en imagen cardiaca</p>
+  Herramienta de apoyo a la documentación clínica. Todo el procesamiento ocurre en tu navegador: no se transmite, guarda ni registra ningún dato del paciente. Las recomendaciones son de nivel poblacional y no sustituyen el juicio clínico. Basado en la tabla oficial Lung-RADS® v2022 del American College of Radiology (ACR) y en Christensen J et al., <i>J Am Coll Radiol</i> 2024;21(3):473-488. Calcio coronario: guía SCCT/STR 2016. Lung-RADS® es una marca registrada del ACR.
+</footer>
+
+<div class="codebar" id="codebar">
+  <span class="c" id="cbar-code">Lung-RADS pendiente</span>
+  <button type="button" id="cbar-go">Ver informe</button>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Utilidades
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+const NS = "http://www.w3.org/2000/svg";
+
+/* LOGIC-START: lógica pura, sin DOM (se prueba aparte) */
+function num(v){
+  if(v===null || v===undefined) return null;
+  const s = String(v).trim().replace(",", ".");
+  if(s==="" || s==="-" || s===".") return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+function pos(v){ const n = num(v); return (n!==null && n>0) ? n : null; }
+function r1(n){ return Math.round(n*10 + 1e-9)/10; }
+function f1(n){ return r1(n).toFixed(1); }            // Lung-RADS: siempre con un decimal
+function fInt(n){ return String(Math.round(n)); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function joinY(arr){
+  const a = arr.filter(Boolean);
+  if(a.length < 2) return a.join("");
+  const last = a[a.length-1];
+  const conj = /^h?i(?![aeouáéóú])/i.test(last) ? " e " : " y ";
+  return a.slice(0,-1).join(", ") + conj + last;
+}
+function toggleIn(arr, v, on){
+  const i = arr.indexOf(v);
+  if(on && i<0) arr.push(v);
+  if(!on && i>=0) arr.splice(i,1);
+}
+function clean(s){ return String(s || "").trim().replace(/[.\s]+$/, ""); }
+
+/* diámetro medio: (eje largo + eje corto) / 2 con un decimal; con un solo eje se asume nódulo redondo */
+function meanD(a, b){
+  if(a===null && b===null) return null;
+  if(a===null) return r1(b);
+  if(b===null) return r1(a);
+  return Math.round((a + b)*5 + 1e-9)/10;
+}
+
+const RANK = {"1":1, "2":2, "3":3, "4A":4, "4B":5, "4X":6};
+function maxCat(a, b){ if(!a) return b; if(!b) return a; return RANK[a] >= RANK[b] ? a : b; }
+
+function solidBase(d){ return d<6 ? "2" : d<8 ? "3" : d<15 ? "4A" : "4B"; }
+function solidNew(d){ return d<4 ? "2" : d<6 ? "3" : d<8 ? "4A" : "4B"; }
+function solidGrow(d){ return d<8 ? "4A" : "4B"; }
+function partBase(t, s){
+  if(t<6) return "2";
+  if(s===null || s<6) return "3";
+  return s<8 ? "4A" : "4B";
+}
+function partNew(t, s){
+  if(s!==null && s>=4) return "4B";
+  return t<6 ? "3" : "4A";
+}
+function ggnCat(d){ return d<30 ? "2" : "3"; }
+
+const NOTE_PREV = "Indica la categoría previa de este hallazgo para aplicar el manejo escalonado; mientras tanto se usan los umbrales del estudio basal.";
+const NOTE_EVOL = "Indica la evolución (basal, nuevo, estable o en crecimiento): sin ella se usan los umbrales del estudio basal.";
+const NOTE_SLOW = "Crecimiento lento de un nódulo sólido o parcialmente sólido: es sospechoso y puede no ser hipermetabólico en la PET/TC.";
+
+/* categoría escalonada de un hallazgo estable o menor, según su categoría previa */
+function stepped(prev, f){
+  if(prev==="4A") return f.type==="via" ? "4B" : "3";
+  if(prev==="3") return "2";
+  if(prev==="2") return "2";
+  if(prev==="4B") return f.benignProven ? "2" : "4B";
+  return null;
+}
+function solidCat(f, d, r){
+  const ev = f.evol;
+  if(ev==="nuevo") return solidNew(d);
+  if(ev==="crece") return solidGrow(d);
+  if(ev==="lento"){ r.slow = true; r.notes.push(NOTE_SLOW); return "4B"; }
+  if(ev==="estable"){
+    const st = stepped(f.prev, f);
+    if(st) return st;
+    r.provisional = true; r.notes.push(NOTE_PREV);
+    return solidBase(d);
+  }
+  if(!ev){ r.provisional = true; r.notes.push(NOTE_EVOL); }
+  return solidBase(d);
+}
+
+/* clasifica un hallazgo; devuelve la categoría y banderas para el manejo */
+function classify(f){
+  const r = {cat:null, exclude:false, pending:false, provisional:false, zero:false, pet8:false, slow:false, airway4B:false, notes:[], d:null, s:null};
+  const d = meanD(pos(f.la), pos(f.sa));
+  const s = meanD(pos(f.sla), pos(f.ssa));
+  r.d = d; r.s = s;
+  const ev = f.evol;
+  if(!f.type){ r.pending = true; return r; }
+  if(ev==="resuelto" && f.type!=="benigno"){ r.exclude = true; return r; }
+
+  switch(f.type){
+    case "benigno":
+      r.cat = "1";
+      break;
+
+    case "vidrio":
+      if(d===null){ r.pending = true; break; }
+      if(ev==="lento"){ r.cat = "2"; r.notes.push("Vidrio deslustrado de crecimiento lento: se mantiene en 2 hasta que cumpla criterios de otra categoría, por ejemplo, al aparecer un componente sólido."); }
+      else if(ev==="estable") r.cat = "2";
+      else r.cat = ggnCat(d);
+      if(!ev) { r.provisional = true; r.notes.push(NOTE_EVOL); }
+      break;
+
+    case "yuxta":
+      if(d===null){ r.pending = true; break; }
+      if(d<10 && (ev==="basal" || ev==="nuevo" || ev==="estable" || !ev)){ r.cat = "2"; break; }
+      if(d>=10) r.notes.push("Yuxtapleural de 10 mm o más: se clasifica con los umbrales del nódulo sólido.");
+      r.cat = solidCat(f, d, r);
+      r.pet8 = d>=8;
+      break;
+
+    case "solido":
+      if(d===null){ r.pending = true; break; }
+      r.cat = solidCat(f, d, r);
+      r.pet8 = d>=8;
+      break;
+
+    case "parcial": {
+      if(d===null){ r.pending = true; break; }
+      if(s!==null && s>d) r.notes.push("El componente sólido no puede medir más que el nódulo completo: revisa las medidas.");
+      if(s===null && d>=6){ r.provisional = true; r.notes.push("Mide el componente sólido: define la categoría del nódulo parcialmente sólido."); }
+      if(ev==="nuevo") r.cat = partNew(d, s);
+      else if(ev==="crece") r.cat = f.grow==="vidrio" ? partBase(d, s) : ((s!==null && s>=4) ? "4B" : "4A");
+      else if(ev==="lento"){ r.cat = "4B"; r.slow = true; r.notes.push(NOTE_SLOW); }
+      else if(ev==="estable"){
+        const st = stepped(f.prev, f);
+        if(st) r.cat = st;
+        else { r.provisional = true; r.notes.push(NOTE_PREV); r.cat = partBase(d, s); }
+      }
+      else { r.cat = partBase(d, s); if(!ev){ r.provisional = true; r.notes.push(NOTE_EVOL); } }
+      r.pet8 = s!==null && s>=8;
+      break;
+    }
+
+    case "via": {
+      const asp = f.viaAspect || "nodulo";
+      if(asp==="aire"){ r.cat = "2"; break; }
+      if(asp==="tubular"){
+        if(f.tubCat==="0") r.zero = true; else r.cat = "2";
+        break;
+      }
+      if(!f.via){ r.pending = true; break; }
+      if(f.via==="sub"){
+        r.cat = "2";
+        if(ev==="crece" || ev==="lento" || f.obst) r.notes.push("Lung-RADS v2022 no define una categoría específica para el nódulo subsegmentario obstructivo o en crecimiento: valora el contexto y considera los umbrales del nódulo sólido.");
+      } else {
+        if(ev==="estable" || ev==="crece" || ev==="lento"){ r.cat = "4B"; r.airway4B = true; }
+        else r.cat = "4A";
+      }
+      break;
+    }
+
+    case "quiste": {
+      const qt = f.qtype;
+      if(!qt){ r.pending = true; break; }
+      if(qt==="delgada"){ r.exclude = true; r.notes.push("El quiste unilocular de pared delgada (menos de 2 mm) se considera benigno y no se clasifica con Lung-RADS."); break; }
+      const ch = f.qchange || "";
+      if(ch==="pared" || ch==="multicrece" || ch==="multimas") r.cat = "4B";
+      else if(ch==="semulti") r.cat = "4A";
+      else if(ch==="cquiste" && qt==="gruesa") r.cat = "3";
+      else if(ev==="estable"){
+        const st = stepped(f.prev, f);
+        if(st) r.cat = st;
+        else { r.cat = "4A"; r.provisional = true; r.notes.push(NOTE_PREV); }
+      }
+      else r.cat = "4A";
+      break;
+    }
+  }
+
+  if(r.cat && f.x4 && f.x4.length){
+    if(r.cat==="3" || r.cat==="4A" || r.cat==="4B") r.cat = "4X";
+    else r.notes.push("La categoría 4X solo se asigna a hallazgos de categoría 3 o 4: revisa el tamaño o el tipo del hallazgo.");
+  }
+  return r;
+}
+
+const DESC = {"0":"incompleto", "1":"negativo", "2":"benigno por su apariencia o comportamiento", "3":"probablemente benigno",
+  "4A":"sospechoso", "4B":"muy sospechoso", "4X":"muy sospechoso, con rasgos adicionales"};
+
+/* evaluación del examen completo */
+function evaluate(st){
+  const items = st.findings.map((f, i)=>({f:f, i:i, r:classify(f)}));
+  const active = items.filter(x=>!x.r.exclude && !x.r.pending && x.r.cat);
+  let top = null;
+  active.forEach(x=>{ top = maxCat(top, x.r.cat); });
+  if(st.tib) top = maxCat(top, "2");
+  const zero = [];
+  if(st.comp==="buscando") zero.push("comp");
+  if(st.incompleto) zero.push("inc");
+  const infz = (st.inf && st.inf.length>0) || items.some(x=>x.r.zero);
+  const pending = items.some(x=>x.r.pending);
+  let cat = null, infOverride = false;
+  if(!st.ronda) cat = null;
+  else if(zero.length) cat = "0";
+  else if(infz){
+    if(top==="4B" || top==="4X"){ cat = top; infOverride = true; }
+    else cat = "0";
+  }
+  else if(top) cat = top;
+  else if(pending) cat = null;
+  else cat = "1";
+  if(infz && cat==="0") zero.push("inf");
+  const det = cat && cat!=="0" ? active.filter(x=>x.r.cat===cat) : [];
+  const sMod = sPresent(st);
+  return {cat:cat, items:items, active:active, zero:zero, det:det, sMod:sMod, pending:pending, infOverride:infOverride, top:top};
+}
+function sPresent(st){
+  return (st.sfind && st.sfind.length>0) || (!!st.cac && st.cacS===true);
+}
+function codeString(E){
+  if(!E.cat) return "";
+  return "Lung-RADS " + E.cat + (E.sMod ? "S" : "");
+}
+function screenResult(cat){
+  if(cat==="0") return "Incompleto";
+  if(cat==="1" || cat==="2") return "Negativo";
+  if(cat) return "Positivo";
+  return "";
+}
+
+/* fechas: suma de meses con ajuste al último día del mes */
+function addMonths(iso, m){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) return null;
+  const p = iso.split("-").map(Number);
+  const t = new Date(Date.UTC(p[0], p[1]-1+m, 1));
+  const last = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth()+1, 0)).getUTCDate();
+  t.setUTCDate(Math.min(p[2], last));
+  return t;
+}
+function fmtDate(dt){
+  return dt ? dt.toLocaleDateString("es-MX", {day:"numeric", month:"long", year:"numeric", timeZone:"UTC"}) : "";
+}
+function fmtIso(iso){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) return "";
+  const p = iso.split("-").map(Number);
+  return fmtDate(new Date(Date.UTC(p[0], p[1]-1, p[2])));
+}
+
+/* siguiente paso: texto corto, texto completo y fecha */
+function nextStep(E, st){
+  const c = E.cat;
+  const out = {short:"", text:"", date:""};
+  if(!c) return out;
+  const d = m=>fmtDate(addMonths(st.fecha, m));
+  if(c==="0"){
+    const parts = [], shorts = [];
+    if(E.zero.includes("comp")){ parts.push("comparar con la TC de tórax previa y emitir una adenda con la categoría definitiva"); shorts.push("Comparar con la TC previa"); }
+    if(E.zero.includes("inc")){ parts.push("completar con TCBD adicional de tamizaje"); shorts.push("TCBD adicional"); }
+    if(E.zero.includes("inf")){
+      const a = d(1), b = d(3);
+      parts.push("TCBD de control en 1 a 3 meses para valorar la resolución" + (a && b ? " (aprox. entre el " + a + " y el " + b + ")" : ""));
+      shorts.push("TCBD en 1–3 meses");
+      out.date = a && b ? a + " – " + b : "";
+    }
+    out.text = cap(joinY(parts)) + ".";
+    out.short = shorts.join(" · ");
+    return out;
+  }
+  if(c==="1" || c==="2"){ out.date = d(12); out.short = "TCBD en 12 meses"; out.text = "Continuar el tamizaje anual con TCBD en 12 meses" + (out.date ? " (aprox. " + out.date + ")" : "") + "."; return out; }
+  if(c==="3"){ out.date = d(6); out.short = "TCBD en 6 meses"; out.text = "TCBD en 6 meses" + (out.date ? " (aprox. " + out.date + ")" : "") + "."; return out; }
+  if(c==="4A"){
+    out.date = d(3); out.short = "TCBD en 3 meses";
+    out.text = "TCBD en 3 meses" + (out.date ? " (aprox. " + out.date + ")" : "") + ".";
+    if(E.det.some(x=>x.r.pet8)) out.text += " Puede considerarse PET/TC por nódulo o componente sólido de 8 mm o más.";
+    return out;
+  }
+  out.short = "Evaluación diagnóstica";
+  out.text = "Evaluación diagnóstica según la valoración clínica, la preferencia del paciente y la probabilidad de malignidad: TC de tórax diagnóstica con o sin contraste, PET/TC si hay nódulo o componente sólido de 8 mm o más, muestreo tisular y/o referencia para evaluación clínica.";
+  if(E.det.some(x=>x.r.airway4B)) out.text += " Para el nódulo de vía aérea persistente, la evaluación clínica suele incluir broncoscopia.";
+  if(E.det.some(x=>x.r.slow)) out.text += " En los nódulos de crecimiento lento la PET/TC puede ser negativa: considerar biopsia, si es factible, o evaluación quirúrgica.";
+  return out;
+}
+
+/* elegibilidad de referencia (USPSTF 2021 y ACS 2023) */
+function eligibility(st){
+  const a = num(st.edad), p = num(st.pa);
+  if(a===null || p===null) return null;
+  const ageOk = a>=50 && a<=80, paOk = p>=20;
+  const yq = num(st.anios);
+  const smoker = st.tab==="actual" || st.tab==="ex";
+  const usp = ageOk && paOk && (st.tab==="actual" || (st.tab==="ex" && yq!==null && yq<=15));
+  const acs = ageOk && paOk && smoker;
+  return {usp:usp, acs:acs, ageOk:ageOk, paOk:paOk, needTab:!smoker, needYq: st.tab==="ex" && yq===null};
+}
+/* LOGIC-END */
+
+/* ============================================================
+   Catálogos
+   ============================================================ */
+const RONDA = [["basal","Basal","primera TCBD"],["anual","Anual"],["c3","Control a 3 meses"],["c6","Control a 6 meses"],["c13","Control a 1–3 meses","hallazgo infeccioso"]];
+const RONDA_TEXT = {
+  basal:"TCBD de tórax basal de tamizaje",
+  anual:"TCBD de tórax de tamizaje anual",
+  c3:"TCBD de tórax de control a 3 meses",
+  c6:"TCBD de tórax de control a 6 meses",
+  c13:"TCBD de tórax de control a 1–3 meses por hallazgos de probable origen infeccioso o inflamatorio"
+};
+const COMP = [["previa","Con TC previa"],["sin","Sin estudios previos"],["buscando","TC previa en búsqueda"]];
+const TAB = [["actual","Fuma actualmente"],["ex","Exfumador"]];
+const TYPES = [["solido","Sólido"],["parcial","Parcialmente sólido"],["vidrio","Vidrio deslustrado"],["yuxta","Yuxtapleural","benigno"],["via","Vía aérea"],["quiste","Quiste atípico"],["benigno","Calcificado o con grasa"]];
+const LOBES = [["lsd","LSD","el lóbulo superior derecho"],["lm","LM","el lóbulo medio"],["lid","LID","el lóbulo inferior derecho"],["lsi","LSI","el lóbulo superior izquierdo"],["lin","Língula","la língula"],["lii","LII","el lóbulo inferior izquierdo"]];
+const LOBE_TEXT = {}; LOBES.forEach(l=>{ LOBE_TEXT[l[0]] = l[2]; });
+const EVOL = [["basal","Basal"],["nuevo","Nuevo"],["estable","Estable o menor"],["crece","Crece",">1.5 mm/12 m"],["lento","Crecimiento lento"],["resuelto","Resuelto"]];
+const PREV = [["2","2"],["3","3"],["4A","4A"],["4B","4B"]];
+const GROW = [["solido","Crece el componente sólido"],["vidrio","Solo crece el vidrio deslustrado"]];
+const X4 = [["espic","Espiculación"],["adeno","Adenopatías"],["meta","Metástasis"],["duplica","Vidrio que duplica su tamaño en 1 año"],["otro","Otro rasgo"]];
+const X4_TEXT = {espic:"espiculación", adeno:"adenopatías asociadas", meta:"enfermedad metastásica", duplica:"duplicación de su tamaño en 1 año"};
+const BEN = [["completa","Calcificación completa"],["central","Calcificación central"],["palomita","En palomita de maíz"],["anillos","En anillos concéntricos"],["grasa","Con grasa"]];
+const BEN_TEXT = {completa:"calcificación completa", central:"calcificación central", palomita:"calcificación en palomita de maíz", anillos:"calcificación en anillos concéntricos", grasa:"contenido graso"};
+const VIA = [["sub","Subsegmentario"],["seg","Segmentario o más proximal"]];
+const VIA_ASP = [["nodulo","Nódulo de partes blandas"],["aire","Aire o secreciones, sin nódulo"],["tubular","Lesiones tubulares múltiples"]];
+const TUB = [["2","Categoría 2"],["0","Categoría 0 y control en 1–3 meses"]];
+const QTYPE = [["gruesa","Pared gruesa (≥2 mm)"],["multi","Multilocular"],["delgada","Pared delgada (<2 mm)"]];
+const QCH_G = [["","Sin cambios"],["cquiste","Crece el componente quístico"],["pared","Aumenta el grosor o la nodularidad de la pared"],["semulti","Se volvió multilocular"]];
+const QCH_M = [["","Sin cambios"],["semulti","Se volvió multilocular"],["multicrece","Crece el quiste multilocular"],["multimas","Más loculaciones u opacidad nueva o mayor"]];
+const QCH_TEXT = {cquiste:"con crecimiento del componente quístico", pared:"con aumento del grosor o de la nodularidad de la pared", semulti:"que se volvió multilocular", multicrece:"con crecimiento del quiste", multimas:"con más loculaciones u opacidad nueva o mayor"};
+const INF = [["consol","Consolidación segmentaria o lobar"],["multi","Más de 6 nódulos nuevos"],["rapido","Nódulo ≥8 mm de aparición rápida"],["contexto","Nódulos nuevos en un contexto clínico particular","p. ej., inmunosupresión"]];
+const INF_TEXT = {consol:"consolidación segmentaria o lobar", multi:"más de seis nódulos nuevos", rapido:"nódulo sólido de 8 mm o más aparecido en un intervalo corto", contexto:"nódulos nuevos en un contexto clínico que favorece infección"};
+const CAC = [["ninguno","Ninguno"],["leve","Leve"],["moderado","Moderado"],["grave","Grave"]];
+const CAC_ADJ = {leve:"leve", moderado:"moderada", grave:"grave"};
+const EMPH = [["no","Sin enfisema"],["leve","Leve"],["moderado","Moderado"],["grave","Grave"]];
+const SFIND = [["aorta","Dilatación o aneurisma aórtico"],["tiroides","Nódulo tiroideo"],["suprarrenal","Lesión suprarrenal"],["renal","Lesión renal indeterminada"],["hepatica","Lesión hepática indeterminada"],["mediastino","Masa o adenopatía mediastínica"],["ila","Anormalidades intersticiales"],["derrame","Derrame pleural o pericárdico"],["oseo","Lesión ósea o fractura vertebral"],["mama","Lesión mamaria"],["otro","Otro"]];
+const SFIND_TEXT = {aorta:"dilatación o aneurisma aórtico", tiroides:"nódulo tiroideo", suprarrenal:"lesión suprarrenal", renal:"lesión renal indeterminada", hepatica:"lesión hepática indeterminada", mediastino:"masa o adenopatía mediastínica", ila:"anormalidades pulmonares intersticiales", derrame:"derrame pleural o pericárdico", oseo:"lesión ósea o fractura vertebral", mama:"lesión mamaria", otro:"otro hallazgo significativo"};
+const CAT_HEX = {"1":"#7FD3A0", "2":"#7FD3A0", "3":"#F2CF5B", "4A":"#F5A55C", "4B":"#F28374", "4X":"#F28374"};
+const MAX_NOD = 6;
+
+/* ============================================================
+   Estado
+   ============================================================ */
+let NID = 0;
+function newFinding(){
+  NID += 1;
+  return {id:NID, type:"", lobe:"", loc:"", evol: S && S.ronda==="basal" ? "basal" : "", la:"", sa:"", sla:"", ssa:"", vol:"",
+    grow:"solido", prev:"", benignProven:false, x4:[], x4other:"", benign:"", via:"", viaAspect:"nodulo", tubCat:"2", obst:false,
+    qtype:"", qchange:"", wall:""};
+}
+function todayIso(){
+  const t = new Date();
+  return t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0") + "-" + String(t.getDate()).padStart(2,"0");
+}
+function defaults(){
+  return {
+    ronda:"", fecha:todayIso(), ctdi:"", dlp:"", comp:"", fprev:"", incompleto:false, incdesc:"",
+    edad:"", pa:"", tab:"", anios:"",
+    findings:[],
+    inf:[], infdesc:"", tib:false,
+    cac:"", agat:"", cacS:false, emph:"", sfind:[], sdesc:"", other:"",
+    images:[]
+  };
+}
+let S = null;
+S = defaults();
+const F = id => S.findings.find(f=>f.id===id);
+
+/* ============================================================
+   Texto del informe
+   ============================================================ */
+function locText(f){
+  const l = LOBE_TEXT[f.lobe], x = clean(f.loc);
+  if(l && x) return " en " + l + " (" + x + ")";
+  if(l) return " en " + l;
+  if(x) return " (" + x + ")";
+  return "";
+}
+function measText(f, r){
+  if(r.d===null) return "";
+  const a = pos(f.la), b = pos(f.sa), v = pos(f.vol);
+  const total = f.type==="parcial" ? "diámetro medio total " : "diámetro medio ";
+  let s;
+  if(a!==null && b!==null) s = ", de " + f1(Math.max(a,b)) + " × " + f1(Math.min(a,b)) + " mm (" + total + f1(r.d) + " mm" + (v!==null ? "; volumen de " + fInt(v) + " mm³" : "") + ")";
+  else s = ", de " + f1(r.d) + " mm" + (v!==null ? " (volumen de " + fInt(v) + " mm³)" : "");
+  if(f.type==="parcial" && r.s!==null){
+    const c = pos(f.sla), e = pos(f.ssa);
+    s += ", con componente sólido de " + ((c!==null && e!==null) ? f1(Math.max(c,e)) + " × " + f1(Math.min(c,e)) + " mm (diámetro medio " + f1(r.s) + " mm)" : f1(r.s) + " mm");
+  }
+  return s;
+}
+function evolText(f){
+  const e = f.evol;
+  if(e==="basal") return "en el estudio basal";
+  if(e==="nuevo") return "nuevo respecto al estudio previo";
+  if(e==="estable") return "estable o de menor tamaño respecto al estudio previo" + (f.prev ? " (categoría previa " + f.prev + (f.prev==="4B" && f.benignProven ? ", con etiología benigna demostrada" : "") + ")" : "");
+  if(e==="crece") return f.type==="parcial" && f.grow==="vidrio" ? "con crecimiento del componente en vidrio deslustrado" : (f.type==="parcial" ? "con crecimiento del componente sólido" : "con crecimiento respecto al estudio previo");
+  if(e==="lento") return "con crecimiento lento a lo largo de varios estudios";
+  return "";
+}
+function typeNoun(f){
+  switch(f.type){
+    case "solido": return "nódulo sólido";
+    case "parcial": return "nódulo parcialmente sólido";
+    case "vidrio": return "nódulo en vidrio deslustrado";
+    case "yuxta": return "nódulo sólido yuxtapleural";
+    case "benigno": return f.benign==="grasa" ? "nódulo con contenido graso" : "nódulo calcificado de patrón benigno";
+    case "via": return "nódulo endobronquial";
+    case "quiste": return f.qtype==="multi" ? "quiste pulmonar atípico multilocular" : f.qtype==="delgada" ? "quiste de pared delgada" : "quiste pulmonar atípico de pared gruesa";
+  }
+  return "hallazgo";
+}
+function x4Text(f){
+  const t = f.x4.filter(k=>k!=="otro").map(k=>X4_TEXT[k]);
+  if(f.x4.includes("otro")) t.push(clean(f.x4other) || "otros rasgos sospechosos");
+  return t;
+}
+function findingSentence(f, i, r){
+  const n = "Hallazgo " + (i+1) + ": ";
+  if(f.evol==="resuelto" && f.type!=="benigno") return n + "resolución del " + typeNoun(f) + " previamente descrito" + locText(f) + ".";
+  let s = "";
+  switch(f.type){
+    case "benigno":
+      s = "nódulo con " + (BEN_TEXT[f.benign] || "rasgos benignos (calcificación de patrón benigno o grasa)") + locText(f) + (r.d!==null ? ", de " + f1(r.d) + " mm" : "");
+      break;
+    case "yuxta":
+      s = "nódulo sólido yuxtapleural" + locText(f) + (r.d!==null && r.d<10 ? ", de márgenes lisos y forma ovalada, lentiforme o triangular" : "") + measText(f, r);
+      break;
+    case "via": {
+      const lvl = f.via==="seg" ? "segmentario o más proximal" : f.via==="sub" ? "subsegmentario" : "";
+      if(f.viaAspect==="aire") s = "lesión endobronquial" + (lvl ? " " + lvl : "") + locText(f) + " con aire o aspecto de secreciones, sin nódulo de partes blandas subyacente";
+      else if(f.viaAspect==="tubular") s = "lesiones endobronquiales tubulares múltiples de aspecto infeccioso, sin nódulo obstructivo subyacente" + locText(f);
+      else s = "nódulo endobronquial" + (lvl ? " " + lvl : "") + locText(f) + measText(f, r) + (f.obst ? ", de aspecto obstructivo" : "");
+      break;
+    }
+    case "quiste": {
+      s = typeNoun(f) + locText(f);
+      const w = pos(f.wall);
+      if(f.qtype==="gruesa" && w!==null) s += ", con pared de " + f1(w) + " mm de grosor";
+      if(r.d!==null) s += ", de " + f1(r.d) + " mm de diámetro medio";
+      if(f.qchange && QCH_TEXT[f.qchange]) s += ", " + QCH_TEXT[f.qchange];
+      break;
+    }
+    default:
+      s = typeNoun(f) + locText(f) + measText(f, r);
+  }
+  const ev = (f.type==="benigno" || (f.type==="via" && f.viaAspect==="tubular")) ? "" : evolText(f);
+  if(ev) s += ", " + ev;
+  const x = x4Text(f);
+  if(x.length) s += ", con " + joinY(x);
+  s = n + cap(s) + ".";
+  if(r.cat) s += " Corresponde a categoría " + r.cat + ".";
+  else if(r.zero) s += " Corresponde a categoría 0.";
+  else if(r.exclude) s += " No se clasifica con Lung-RADS.";
+  return s;
+}
+function detShort(x){
+  const f = x.f, r = x.r;
+  let s = typeNoun(f);
+  if(f.type==="via" && f.via==="seg") s += " segmentario o más proximal";
+  if(f.evol==="nuevo") s += " nuevo";
+  else if(f.evol==="crece") s += " en crecimiento";
+  else if(f.evol==="lento") s += " de crecimiento lento";
+  else if(f.evol==="estable" && f.type==="via" && f.via==="seg") s += " persistente";
+  else if(f.evol==="estable") s += " estable";
+  if(r.d!==null && f.type!=="via") s += " de " + f1(r.d) + " mm";
+  if(f.type==="parcial" && r.s!==null) s += " con componente sólido de " + f1(r.s) + " mm";
+  if(LOBE_TEXT[f.lobe]) s += " en " + LOBE_TEXT[f.lobe];
+  const xx = x4Text(f);
+  if(xx.length) s += ", con " + joinY(xx);
+  return s;
+}
+function zeroText(E){
+  const p = [];
+  if(E.zero.includes("comp")) p.push("TC de tórax previa en búsqueda para comparación");
+  if(E.zero.includes("inc")) p.push("valoración incompleta del parénquima pulmonar" + (clean(S.incdesc) ? " (" + clean(S.incdesc) + ")" : ""));
+  if(E.zero.includes("inf")){
+    const t = S.inf.map(k=>INF_TEXT[k]);
+    if(E.items.some(x=>x.r.zero)) t.push("lesiones endobronquiales tubulares de aspecto infeccioso");
+    p.push("hallazgos sugestivos de proceso infeccioso o inflamatorio" + (t.length ? ": " + joinY(t) : "") + (clean(S.infdesc) ? " (" + clean(S.infdesc) + ")" : ""));
+  }
+  return cap(p.join("; "));
+}
+function indicationText(){
+  const p = ["Tamizaje de cáncer de pulmón"];
+  const a = num(S.edad), pa = num(S.pa), y = num(S.anios);
+  const extra = [];
+  if(a!==null) extra.push(fInt(a) + " años");
+  if(pa!==null) extra.push("tabaquismo de " + (Number.isInteger(pa) ? pa : f1(pa)) + " paquetes-año");
+  if(S.tab==="actual") extra.push("fuma actualmente");
+  if(S.tab==="ex") extra.push("exfumador" + (y!==null ? " desde hace " + fInt(y) + (y===1 ? " año" : " años") : ""));
+  return p[0] + (extra.length ? ": " + joinY(extra) : "") + ".";
+}
+function techText(){
+  let s = (RONDA_TEXT[S.ronda] || "TCBD de tórax de tamizaje") + ", volumétrica, sin contraste, en inspiración.";
+  const c = pos(S.ctdi), d = pos(S.dlp);
+  const dose = [];
+  if(c!==null) dose.push("CTDIvol de " + f1(c) + " mGy");
+  if(d!==null) dose.push("DLP de " + fInt(d) + " mGy·cm");
+  if(dose.length) s += " " + cap(joinY(dose)) + ".";
+  return s;
+}
+function compText(){
+  if(S.comp==="previa") return S.fprev ? "TC de tórax del " + fmtIso(S.fprev) + "." : "TC de tórax previa.";
+  if(S.comp==="sin") return "Sin estudios previos disponibles para comparación.";
+  if(S.comp==="buscando") return "TC de tórax previa en búsqueda para comparación.";
+  return "";
+}
+function nodulesText(E){
+  if(!S.findings.length) return "Sin nódulos pulmonares.";
+  const parts = E.items.map(x=>x.r.pending ? "" : findingSentence(x.f, x.i, x.r)).filter(Boolean);
+  return parts.length ? parts.join(" ") : "Hallazgos pendientes de completar.";
+}
+function lungOtherText(){
+  const p = [];
+  if(S.tib) p.push("Nódulos en árbol en brote de aspecto infeccioso o inflamatorio, sin sospecha de malignidad.");
+  if(S.emph==="no") p.push("Sin enfisema.");
+  else if(S.emph) p.push("Enfisema " + S.emph + ".");
+  return p.join(" ");
+}
+function extraText(){
+  const p = [];
+  if(S.cac==="ninguno") p.push("Sin calcificación arterial coronaria.");
+  else if(S.cac){
+    const ag = num(S.agat);
+    p.push("Calcificación arterial coronaria " + CAC_ADJ[S.cac] + " (estimación visual" + (ag!==null ? "; puntaje de Agatston de " + fInt(ag) : "") + ").");
+  }
+  if(S.sfind.length){
+    let s = "Hallazgos significativos no relacionados con cáncer de pulmón: " + joinY(S.sfind.map(k=>SFIND_TEXT[k]));
+    const d = clean(S.sdesc);
+    s += d ? ". " + cap(d) + "." : ".";
+    p.push(s);
+  }
+  const o = S.other.trim();
+  if(o) p.push(cap(o) + (/[.!?…]$/.test(o) ? "" : "."));
+  return p.join(" ");
+}
+function sImpression(){
+  const p = [];
+  if(S.cac && S.cac!=="ninguno" && S.cacS) p.push("calcificación arterial coronaria " + CAC_ADJ[S.cac] + ": se sugiere evaluar los factores de riesgo cardiovascular");
+  if(S.sfind.length){
+    const d = clean(S.sdesc);
+    p.push(joinY(S.sfind.map(k=>SFIND_TEXT[k])) + (d ? " (" + d + ")" : ""));
+  }
+  return p.length ? "Modificador S: " + p.join("; ") + "." : "";
+}
+function impressionText(E){
+  if(!E.cat) return "";
+  const step = nextStep(E, S);
+  let s = codeString(E) + " — " + DESC[E.cat] + ".";
+  if(E.cat==="0") s += " " + zeroText(E) + ".";
+  else if(E.det.length) s += " " + cap(joinY(E.det.map(detShort))) + ".";
+  else if(E.cat==="1") s += " Sin nódulos pulmonares sospechosos.";
+  else if(E.cat==="2" && S.tib) s += " Nódulos en árbol en brote de aspecto infeccioso o inflamatorio.";
+  if(E.infOverride) s += " Hay además hallazgos de probable origen infeccioso o inflamatorio.";
+  const rec = /^[A-ZÁÉÍÓÚ][a-záéíóúñ]/.test(step.text) ? step.text.charAt(0).toLowerCase() + step.text.slice(1) : step.text;
+  s += " Recomendación: " + rec;
+  const si = sImpression();
+  if(si) s += " " + si;
+  return s;
+}
+
+/* la primera mención de cada abreviatura se expande una sola vez en todo el texto */
+const ABBR = [
+  [/(^|[^\/\w])TC\b/, "tomografía computarizada (TC)", /computarizada \(TC\)/],
+  [/\bTCBD\b/, "tomografía computarizada de baja dosis (TCBD)", /baja dosis \(TCBD\)/],
+  [/\bPET\/TC\b/, "tomografía por emisión de positrones con tomografía computarizada (PET/TC)", /\(PET\/TC\)/],
+  [/\bCTDIvol\b/, "índice de dosis volumétrico de la tomografía computarizada (CTDIvol)", /\(CTDIvol\)/],
+  [/\bDLP\b/, "producto dosis-longitud (DLP)", /dosis-longitud \(DLP\)/]
+];
+/* el reemplazo conserva el carácter previo capturado y usa mayúscula si abre una oración */
+function makeExpander(){
+  const done = ABBR.map(()=>false);
+  return s=>{
+    if(!s) return s;
+    ABBR.forEach((a, k)=>{
+      if(done[k]) return;
+      if(a[2].test(s)){ done[k] = true; return; }
+      const m = s.match(a[0]);
+      if(!m) return;
+      const start = m.index + (m[1] || "").length;
+      const before = s.slice(0, start);
+      const text = (/^\s*$/.test(before) || /[.!?:]\s+$/.test(before)) ? cap(a[1]) : a[1];
+      s = before + text + s.slice(m.index + m[0].length);
+      done[k] = true;
+    });
+    return s;
+  };
+}
+function buildReport(){
+  const E = evaluate(S);
+  const f = [];
+  f.push({h:"Indicación", t:indicationText()});
+  f.push({h:"Técnica", t:techText()});
+  const c = compText(); if(c) f.push({h:"Comparación", t:c});
+  if(S.incompleto) f.push({h:"Calidad", t:"Valoración incompleta del parénquima pulmonar" + (clean(S.incdesc) ? ": " + clean(S.incdesc) : "") + "."});
+  f.push({h:"Nódulos pulmonares", t:nodulesText(E)});
+  if(S.inf.length) f.push({h:"Hallazgos infecciosos o inflamatorios", t:cap(joinY(S.inf.map(k=>INF_TEXT[k]))) + (clean(S.infdesc) ? ": " + clean(S.infdesc) : "") + "."});
+  const lo = lungOtherText(); if(lo) f.push({h:"Otros hallazgos pulmonares", t:lo});
+  const ex = extraText(); if(ex) f.push({h:"Corazón, mediastino y otros", t:ex});
+  const x = makeExpander();
+  f.forEach(s=>{ s.t = x(s.t); });
+  const imp = x(impressionText(E));
+  return {E:E, findings:f, impression:imp};
+}
+function plainText(){
+  const R = buildReport();
+  let out = "TC DE TÓRAX DE BAJA DOSIS: TAMIZAJE DE CÁNCER DE PULMÓN\n";
+  out += "(Lung-RADS v2022, American College of Radiology)\n\n";
+  out += "HALLAZGOS\n";
+  R.findings.forEach(s=>{ out += s.h + ": " + s.t + "\n"; });
+  out += "\nIMPRESIÓN\n" + (R.impression || "Pendiente: elige el tipo de estudio y completa los hallazgos.") + "\n";
+  if(S.images.length) out += "\n[Incluye " + S.images.length + " imagen(es) adjunta(s): descarga en PDF o Word para verlas.]\n";
+  return out;
+}
+
+/* ============================================================
+   Mapa por lóbulos (SVG)
+   ============================================================ */
+const VB = {x:30, y:34, w:500, h:380};
+const LUNGS = [
+  "M152 50C116 52 84 86 66 140C50 190 44 254 46 316C47 356 58 388 92 396C136 404 194 396 230 384C246 378 252 364 250 346L246 250C244 228 238 214 236 196C232 166 226 128 214 98C200 66 180 50 152 50Z",
+  "M408 50C444 52 476 86 494 140C510 190 516 254 514 316C513 356 502 388 468 396C430 404 384 398 352 388C334 382 326 370 328 356C330 336 340 322 338 304C336 288 322 278 318 262L316 220C318 190 324 152 336 112C350 70 378 50 408 50Z"
+];
+const FIS = ["M52 210C110 204 186 206 242 214", "M47 304C110 296 186 276 249 258", "M318 222C380 214 450 212 510 216", "M330 300C392 292 452 284 513 288"];
+const ZONE = {lsd:[150,136], lm:[128,244], lid:[160,346], lsi:[420,136], lin:[446,244], lii:[420,346]};
+const ZLAB = {lsd:"LSD", lm:"LM", lid:"LID", lsi:"LSI", lin:"Língula", lii:"LII"};
+
+function svgEl(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  Object.keys(attrs).forEach(k=>e.setAttribute(k, attrs[k]));
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function markers(E){
+  const by = {};
+  E.items.forEach(x=>{
+    if(!x.f.lobe || !ZONE[x.f.lobe] || !x.f.type) return;
+    (by[x.f.lobe] = by[x.f.lobe] || []).push(x);
+  });
+  const out = [];
+  Object.keys(by).forEach(l=>{
+    const list = by[l], z = ZONE[l], n = list.length;
+    list.forEach((x, k)=>{
+      const dx = (k - (n-1)/2) * 30;
+      out.push({x:z[0] + dx, y:z[1] + 22, n:x.i + 1, fill: x.r.exclude || x.r.pending || (!x.r.cat && !x.r.zero) ? "#9FB1B9" : x.r.zero ? "#AEBBC1" : CAT_HEX[x.r.cat]});
+    });
+  });
+  return out;
+}
+function buildMap(){
+  const svg = $("map");
+  svg.setAttribute("viewBox", VB.x+" "+VB.y+" "+VB.w+" "+VB.h);
+  LUNGS.forEach(d=>svgEl("path", {d:d, class:"lung"}, svg));
+  FIS.forEach(d=>svgEl("path", {d:d, class:"fis"}, svg));
+  Object.keys(ZONE).forEach(k=>{
+    svgEl("text", {x:ZONE[k][0], y:ZONE[k][1] - 8, class:"zlab", "text-anchor":"middle"}, svg).textContent = ZLAB[k];
+  });
+  svgEl("text", {x:44, y:58, class:"orient"}, svg).textContent = "Derecho";
+  svgEl("text", {x:516, y:58, class:"orient", "text-anchor":"end"}, svg).textContent = "Izquierdo";
+  svgEl("g", {id:"map-mk"}, svg);
+}
+function renderMap(E){
+  const g = $("map-mk");
+  g.innerHTML = "";
+  markers(E).forEach(m=>{
+    const G = svgEl("g", {class:"mk"}, g);
+    svgEl("circle", {cx:m.x, cy:m.y, r:13, fill:m.fill}, G);
+    svgEl("text", {x:m.x, y:m.y + 4.3, "text-anchor":"middle"}, G).textContent = String(m.n);
+  });
+  const n = S.findings.length;
+  $("v-count").textContent = n ? n + (n===1 ? " hallazgo" : " hallazgos") : "Sin hallazgos";
+  let h = "";
+  if(E.det.length){
+    h += "<dt>Determinante</dt><dd>" + esc(E.det.map(x=>"Hallazgo " + (x.i+1) + " (" + x.r.cat + ")").join(", ")) + "</dd>";
+  } else if(E.cat==="0"){
+    h += "<dt>Determinante</dt><dd>Condición de categoría 0</dd>";
+  } else {
+    h += "<dt>Determinante</dt><dd>" + (n ? "Completa los hallazgos" : "Agrega un hallazgo o deja la lista vacía si no hay nódulos") + "</dd>";
+  }
+  const sinLobe = S.findings.filter(f=>f.type && !f.lobe).length;
+  if(sinLobe) h += "<dt>Sin lóbulo</dt><dd>" + sinLobe + (sinLobe===1 ? " hallazgo no aparece en el mapa" : " hallazgos no aparecen en el mapa") + "</dd>";
+  $("v-read").innerHTML = h;
+}
+
+/* ============================================================
+   Chips
+   ============================================================ */
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+const SYNCS = new Map();
+function chipSet(hostId, name, options, type, getVal, onChange, allowEmpty){
+  const el = $(hostId);
+  el.innerHTML = "";
+  options.forEach((opt, i)=>{
+    const val = opt[0], label = opt[1], tag = opt[2];
+    const id = hostId + "-" + i;
+    const inp = document.createElement("input");
+    inp.type = type; inp.name = name; inp.id = id; inp.value = val;
+    const lab = document.createElement("label");
+    lab.htmlFor = id;
+    lab.innerHTML = "<span>" + esc(label) + "</span>" + (tag ? ' <span class="tag">' + esc(tag) + "</span>" : "");
+    if(type==="radio" && allowEmpty){
+      inp.addEventListener("click", ()=>{ if(getVal(val)){ onChange(val, false); render(); } });
+    }
+    inp.addEventListener("change", ()=>{ onChange(val, inp.checked); render(); });
+    el.appendChild(inp); el.appendChild(lab);
+  });
+  SYNCS.set(hostId, ()=>{ el.querySelectorAll("input").forEach(i=>{ i.checked = !!getVal(i.value); }); });
+}
+function buildChips(){
+  chipSet("f-ronda", "ronda", RONDA, "radio", v=>S.ronda===v, (v,on)=>{
+    S.ronda = on ? v : "";
+    if(S.ronda==="basal") S.findings.forEach(f=>{ if(!f.evol) f.evol = "basal"; });
+  }, true);
+  chipSet("f-comp", "comp", COMP, "radio", v=>S.comp===v, (v,on)=>{ S.comp = on ? v : ""; }, true);
+  chipSet("f-tab", "tab", TAB, "radio", v=>S.tab===v, (v,on)=>{ S.tab = on ? v : ""; }, true);
+  chipSet("f-inf", "inf", INF, "checkbox", v=>S.inf.includes(v), (v,on)=>toggleIn(S.inf, v, on));
+  chipSet("f-cac", "cac", CAC, "radio", v=>S.cac===v, (v,on)=>{
+    const was = S.cac;
+    S.cac = on ? v : "";
+    if(S.cac!==was) S.cacS = (S.cac==="moderado" || S.cac==="grave");
+  }, true);
+  chipSet("f-emph", "emph", EMPH, "radio", v=>S.emph===v, (v,on)=>{ S.emph = on ? v : ""; }, true);
+  chipSet("f-sfind", "sfind", SFIND, "checkbox", v=>S.sfind.includes(v), (v,on)=>toggleIn(S.sfind, v, on));
+}
+
+/* ---------- tarjetas de hallazgos ---------- */
+function nodCard(f, i){
+  const p = "n" + f.id + "-";
+  const div = document.createElement("div");
+  div.className = "nod"; div.id = "nod-" + f.id;
+  div.innerHTML =
+    '<div class="nod-head"><span class="nod-n">Hallazgo ' + (i+1) + '</span><span class="cat cnone" id="' + p + 'cat">—</span>'
+    + '<button type="button" class="nod-del" id="' + p + 'del" aria-label="Quitar el hallazgo ' + (i+1) + '">Quitar</button></div>'
+    + '<span class="sublabel">Tipo</span><div class="chips small" id="' + p + 'type"></div>'
+    + '<div id="' + p + 'ben-w" hidden><span class="sublabel">Patrón benigno</span><div class="chips small" id="' + p + 'ben"></div></div>'
+    + '<div id="' + p + 'via-w" hidden><span class="sublabel">Nivel</span><div class="chips small" id="' + p + 'via"></div>'
+    + '<span class="sublabel">Aspecto</span><div class="chips small" id="' + p + 'asp"></div>'
+    + '<div id="' + p + 'tub-w" hidden><span class="sublabel">Lesiones tubulares sin nódulo obstructivo: a criterio del radiólogo</span><div class="chips small" id="' + p + 'tub"></div></div>'
+    + '<label class="switch" id="' + p + 'obst-w" hidden><input type="checkbox" id="' + p + 'obst"> De aspecto obstructivo</label></div>'
+    + '<div id="' + p + 'q-w" hidden><span class="sublabel">Tipo de quiste</span><div class="chips small" id="' + p + 'qt"></div>'
+    + '<div id="' + p + 'qg-w" hidden><span class="sublabel">Cambio respecto al previo</span><div class="chips small" id="' + p + 'qg"></div></div>'
+    + '<div id="' + p + 'qm-w" hidden><span class="sublabel">Cambio respecto al previo</span><div class="chips small" id="' + p + 'qm"></div></div>'
+    + '<div class="row spaced" id="' + p + 'wall-w" hidden><label class="sub"><span>Grosor de la pared (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="' + p + 'wall" placeholder="2.5"></label></div></div>'
+    + '<span class="sublabel">Lóbulo</span><div class="chips small" id="' + p + 'lobe"></div>'
+    + '<div class="row spaced"><label class="sub full"><span>Segmento, serie e imagen <span class="opt">opcional</span></span><input type="text" id="' + p + 'loc" autocomplete="off" placeholder="p. ej., segmento apical; serie 3, imagen 54"></label></div>'
+    + '<div id="' + p + 'meas-w"><div class="row spaced">'
+    + '<label class="sub"><span id="' + p + 'la-l">Eje largo (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="' + p + 'la" placeholder="7.4"></label>'
+    + '<label class="sub"><span id="' + p + 'sa-l">Eje corto (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="' + p + 'sa" placeholder="6.2"></label>'
+    + '<label class="sub"><span>Volumen (mm³) <span class="opt">opcional</span></span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="' + p + 'vol" placeholder="165"></label>'
+    + '</div></div>'
+    + '<div class="row spaced" id="' + p + 'sol-w" hidden>'
+    + '<label class="sub"><span>Componente sólido: eje largo (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="' + p + 'sla" placeholder="5.1"></label>'
+    + '<label class="sub"><span>Componente sólido: eje corto (mm)</span><input type="text" class="num" inputmode="decimal" autocomplete="off" id="' + p + 'ssa" placeholder="3.9"></label></div>'
+    + '<div id="' + p + 'evol-w"><span class="sublabel">Evolución</span><div class="chips small" id="' + p + 'evol"></div></div>'
+    + '<div id="' + p + 'grow-w" hidden><span class="sublabel">¿Qué crece?</span><div class="chips small" id="' + p + 'grow"></div></div>'
+    + '<div id="' + p + 'prev-w" hidden><span class="sublabel">Categoría previa de este hallazgo (manejo escalonado)</span><div class="chips small" id="' + p + 'prev"></div>'
+    + '<label class="switch" id="' + p + 'bp-w" hidden><input type="checkbox" id="' + p + 'bp"> Etiología benigna demostrada tras la evaluación diagnóstica</label></div>'
+    + '<div id="' + p + 'x4-w"><span class="sublabel">Rasgos que aumentan la sospecha (4X)</span><div class="chips small" id="' + p + 'x4"></div>'
+    + '<div class="row spaced" id="' + p + 'x4o-w" hidden><label class="sub full"><span>Otro rasgo</span><input type="text" id="' + p + 'x4o" autocomplete="off" placeholder="p. ej., derrame pleural ipsilateral nuevo"></label></div></div>'
+    + '<div class="readout" id="' + p + 'read"></div>'
+    + '<div class="note" id="' + p + 'note" hidden></div>';
+  return div;
+}
+function wireCard(f){
+  const id = f.id, p = "n" + id + "-";
+  const g = k=>()=>F(id) ? F(id)[k] : "";
+  chipSet(p+"type", p+"type", TYPES, "radio", v=>g("type")()===v, (v,on)=>{
+    const x = F(id); if(!x) return;
+    x.type = on ? v : "";
+    if(x.type!=="parcial"){ x.sla = ""; x.ssa = ""; $(p+"sla").value = ""; $(p+"ssa").value = ""; }
+  }, true);
+  chipSet(p+"ben", p+"ben", BEN, "radio", v=>g("benign")()===v, (v,on)=>{ F(id).benign = on ? v : ""; }, true);
+  chipSet(p+"via", p+"via", VIA, "radio", v=>g("via")()===v, (v,on)=>{ F(id).via = on ? v : ""; }, true);
+  chipSet(p+"asp", p+"asp", VIA_ASP, "radio", v=>g("viaAspect")()===v, (v,on)=>{ if(on) F(id).viaAspect = v; }, false);
+  chipSet(p+"tub", p+"tub", TUB, "radio", v=>g("tubCat")()===v, (v,on)=>{ if(on) F(id).tubCat = v; }, false);
+  chipSet(p+"qt", p+"qt", QTYPE, "radio", v=>g("qtype")()===v, (v,on)=>{ const x = F(id); x.qtype = on ? v : ""; x.qchange = ""; }, true);
+  chipSet(p+"qg", p+"qg", QCH_G, "radio", v=>g("qchange")()===v, (v,on)=>{ if(on) F(id).qchange = v; }, false);
+  chipSet(p+"qm", p+"qm", QCH_M, "radio", v=>g("qchange")()===v, (v,on)=>{ if(on) F(id).qchange = v; }, false);
+  chipSet(p+"lobe", p+"lobe", LOBES.map(l=>[l[0], l[1]]), "radio", v=>g("lobe")()===v, (v,on)=>{ F(id).lobe = on ? v : ""; }, true);
+  chipSet(p+"evol", p+"evol", EVOL, "radio", v=>g("evol")()===v, (v,on)=>{ const x = F(id); x.evol = on ? v : ""; if(x.evol!=="estable"){ x.prev = ""; x.benignProven = false; } }, true);
+  chipSet(p+"grow", p+"grow", GROW, "radio", v=>g("grow")()===v, (v,on)=>{ if(on) F(id).grow = v; }, false);
+  chipSet(p+"prev", p+"prev", PREV, "radio", v=>g("prev")()===v, (v,on)=>{ const x = F(id); x.prev = on ? v : ""; if(x.prev!=="4B") x.benignProven = false; }, true);
+  chipSet(p+"x4", p+"x4", X4, "checkbox", v=>(F(id) ? F(id).x4.includes(v) : false), (v,on)=>toggleIn(F(id).x4, v, on));
+  [["la","la"],["sa","sa"],["vol","vol"],["sla","sla"],["ssa","ssa"],["loc","loc"],["wall","wall"],["x4o","x4other"]].forEach(([k, key])=>{
+    const el = $(p+k);
+    el.value = f[key];
+    el.addEventListener("input", ()=>{ const x = F(id); if(!x) return; x[key] = el.value; render(); });
+  });
+  $(p+"obst").addEventListener("change", e=>{ F(id).obst = e.target.checked; render(); });
+  $(p+"bp").addEventListener("change", e=>{ F(id).benignProven = e.target.checked; render(); });
+  $(p+"del").addEventListener("click", ()=>removeFinding(id));
+}
+function buildFindings(){
+  const host = $("nod-list");
+  Array.from(SYNCS.keys()).forEach(k=>{ if(/^n\d+-/.test(k)) SYNCS.delete(k); });
+  host.innerHTML = "";
+  S.findings.forEach((f, i)=>{ host.appendChild(nodCard(f, i)); wireCard(f); });
+}
+function addFinding(){
+  if(S.findings.length>=MAX_NOD) return;
+  const f = newFinding();
+  S.findings.push(f);
+  buildFindings();
+  render();
+  const card = $("nod-" + f.id);
+  if(card){
+    card.scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"nearest"});
+    const first = card.querySelector("input");
+    if(first) first.focus({preventScroll:true});
+  }
+}
+function removeFinding(id){
+  S.findings = S.findings.filter(f=>f.id!==id);
+  buildFindings();
+  render();
+}
+function renderCards(E){
+  E.items.forEach(x=>{
+    const f = x.f, r = x.r, p = "n" + f.id + "-";
+    if(!$(p+"type")) return;
+    const t = f.type;
+    $(p+"ben-w").hidden = t!=="benigno";
+    $(p+"via-w").hidden = t!=="via";
+    $(p+"tub-w").hidden = !(t==="via" && f.viaAspect==="tubular");
+    $(p+"obst-w").hidden = !(t==="via" && f.via==="sub" && f.viaAspect==="nodulo");
+    $(p+"obst").checked = !!f.obst;
+    $(p+"q-w").hidden = t!=="quiste";
+    $(p+"qg-w").hidden = !(t==="quiste" && f.qtype==="gruesa");
+    $(p+"qm-w").hidden = !(t==="quiste" && f.qtype==="multi");
+    $(p+"wall-w").hidden = !(t==="quiste" && f.qtype==="gruesa");
+    $(p+"meas-w").hidden = (t==="via" && f.viaAspect!=="nodulo") || (t==="quiste" && f.qtype==="delgada");
+    $(p+"sol-w").hidden = t!=="parcial";
+    $(p+"evol-w").hidden = t==="benigno" || (t==="via" && f.viaAspect==="tubular");
+    $(p+"grow-w").hidden = !(t==="parcial" && f.evol==="crece");
+    $(p+"prev-w").hidden = !(f.evol==="estable" && ["solido","parcial","yuxta","quiste"].includes(t));
+    $(p+"bp-w").hidden = f.prev!=="4B";
+    $(p+"bp").checked = !!f.benignProven;
+    $(p+"x4-w").hidden = !t || t==="benigno" || (t==="via" && f.viaAspect!=="nodulo") || (t==="quiste" && f.qtype==="delgada");
+    $(p+"x4o-w").hidden = !f.x4.includes("otro");
+    $(p+"la-l").textContent = t==="parcial" ? "Eje largo total (mm)" : t==="quiste" ? "Eje largo del quiste (mm)" : "Eje largo (mm)";
+    $(p+"sa-l").textContent = t==="parcial" ? "Eje corto total (mm)" : t==="quiste" ? "Eje corto del quiste (mm)" : "Eje corto (mm)";
+
+    const badge = $(p+"cat");
+    const k = r.exclude ? "none" : r.zero ? "0" : (r.cat || "none");
+    badge.className = "cat c" + k;
+    badge.textContent = r.exclude ? "No aplica" : r.zero ? "0" : (r.cat || "—");
+
+    const rd = $(p+"read");
+    let txt = "";
+    if(!t) txt = "Elige el tipo de hallazgo.";
+    else if(r.exclude) txt = f.evol==="resuelto" ? "Resuelto: no cuenta para la categoría." : "No se clasifica con Lung-RADS.";
+    else if(r.pending) txt = (t==="via" && f.viaAspect==="nodulo" && !f.via) ? "Elige el nivel de la vía aérea." : t==="quiste" ? "Elige el tipo de quiste." : "Ingresa el eje largo y el corto.";
+    else {
+      const bits = [];
+      if(r.d!==null) bits.push((t==="parcial" ? "Diámetro medio total " : "Diámetro medio ") + f1(r.d) + " mm");
+      if(t==="parcial" && r.s!==null) bits.push("componente sólido " + f1(r.s) + " mm");
+      if(pos(f.la)!==null && pos(f.sa)===null && t!=="benigno") bits.push("con un solo eje se asume nódulo redondo");
+      txt = (bits.length ? bits.join(" · ") + " → " : "") + (r.zero ? "categoría 0" : "categoría " + r.cat) + (r.provisional ? " (provisional)" : "");
+    }
+    rd.textContent = txt;
+    rd.className = "readout" + (r.cat && RANK[r.cat]>=3 ? " hit" : "");
+    const nt = $(p+"note");
+    nt.hidden = !r.notes.length;
+    nt.innerHTML = r.notes.map(n=>"<p>" + esc(n) + "</p>").join("");
+  });
+  $("nod-empty").hidden = S.findings.length>0;
+  $("btn-addnod").disabled = S.findings.length>=MAX_NOD;
+  $("btn-addnod").textContent = S.findings.length>=MAX_NOD ? "Máximo de " + MAX_NOD + " hallazgos" : "+ Agregar hallazgo";
+}
+
+/* ============================================================
+   Render
+   ============================================================ */
+let lastCode = null;
+function renderCodebox(E){
+  const host = $("out-code");
+  if(!E.cat){
+    host.innerHTML = '<span class="cb-wait">' + (S.ronda ? "Completa las medidas de los hallazgos" : "Elige el tipo de estudio para empezar") + "</span>";
+  } else {
+    host.innerHTML = '<span class="pre">Lung-RADS</span><button type="button" class="seg k' + E.cat + '" data-sec="' + (E.cat==="0" ? (E.zero[0]==="inf" ? "sec-inf" : "sec-estudio") : "sec-nodulos") + '" title="Ir a la sección">' + esc(E.cat) + "</button>"
+      + (E.sMod ? '<button type="button" class="seg mod" data-sec="sec-s" title="Ir a la sección">S</button>' : "");
+  }
+  $("out-meaning").textContent = E.cat ? cap(DESC[E.cat]) + (E.sMod ? ", con hallazgo significativo no relacionado con cáncer de pulmón (S)." : ".") : "";
+  const step = nextStep(E, S);
+  const detVal = E.cat==="0" ? "Condición de categoría 0"
+    : E.det.length ? E.det.map(x=>"Hallazgo " + (x.i+1)).join(", ")
+    : E.cat==="1" ? "Sin nódulos sospechosos" : E.cat==="2" && S.tib ? "Árbol en brote" : "Pendiente";
+  const parts = [
+    ["Hallazgo determinante", detVal, !E.cat],
+    ["Resultado del tamizaje", E.cat ? screenResult(E.cat) : "Pendiente", !E.cat],
+    ["Siguiente paso", step.short || "Pendiente", !step.short],
+    ["Fecha sugerida", step.date || (E.cat ? "No aplica" : "Pendiente"), !step.date]
+  ];
+  $("out-parts").innerHTML = parts.map(p=>'<div><dt>' + p[0] + '</dt><dd' + (p[2] ? ' class="dim"' : "") + ">" + esc(p[1]) + "</dd></div>").join("");
+  const cs = codeString(E);
+  $("cbar-code").textContent = cs || "Lung-RADS pendiente";
+  if(cs !== lastCode){
+    $("sr-status").textContent = cs ? "Categoría actual: " + cs : "";
+    lastCode = cs;
+  }
+}
+function renderReport(R){
+  $("out-find").innerHTML = '<section class="rep-sec"><h3>Hallazgos</h3>'
+    + R.findings.map(f=>"<p><b>" + esc(f.h) + ".</b> " + esc(f.t) + "</p>").join("") + "</section>";
+  $("out-imp").innerHTML = '<section class="rep-sec imp"><h3>Impresión</h3>' + (R.impression
+    ? "<p>" + esc(R.impression) + "</p>"
+    : '<p class="rep-empty">Elige el tipo de estudio y completa los hallazgos para generar la impresión.</p>') + "</section>";
+}
+function render(){
+  SYNCS.forEach(fn=>fn());
+  $("fprev-row").hidden = S.comp!=="previa";
+  $("note-comp").hidden = S.comp!=="buscando";
+  $("inc-row").hidden = !S.incompleto;
+  $("f-incompleto").checked = S.incompleto;
+  $("anios-row").hidden = S.tab!=="ex";
+  $("infdesc-row").hidden = !S.inf.length;
+  $("f-tib").checked = S.tib;
+  $("cac-row").hidden = !S.cac || S.cac==="ninguno";
+  $("cacs-wrap").hidden = !S.cac || S.cac==="ninguno";
+  $("f-cacs").checked = !!S.cacS;
+
+  const el = eligibility(S), ce = $("calc-eleg");
+  ce.hidden = !el;
+  if(el){
+    let t;
+    if(!el.ageOk || !el.paOk) t = "No cumple los criterios de referencia: edad de 50 a 80 años y 20 paquetes-año o más.";
+    else if(el.needTab) t = "Indica si fuma actualmente o si es exfumador.";
+    else if(el.usp) t = "Cumple USPSTF 2021 y ACS 2023 (Grupo de Trabajo de Servicios Preventivos de EE. UU. y Sociedad Americana del Cáncer).";
+    else if(el.needYq) t = "Cumple ACS 2023. Para USPSTF 2021 indica los años desde que dejó de fumar (15 o menos).";
+    else t = "Cumple ACS 2023, que no limita los años desde el abandono; no cumple USPSTF 2021 (más de 15 años sin fumar).";
+    ce.textContent = t;
+    ce.className = "readout" + (el.acs ? "" : " hit");
+  }
+
+  const R = buildReport();
+  renderCards(R.E);
+  renderMap(R.E);
+  renderCodebox(R.E);
+  renderReport(R);
+  renderImages();
+}
+
+/* ============================================================
+   Imágenes adjuntas
+   ============================================================ */
+function renderImages(){
+  const host = $("out-images");
+  host.innerHTML = "";
+  S.images.forEach((im, i)=>{
+    const div = document.createElement("div");
+    div.className = "thumb";
+    div.innerHTML = '<img src="' + im.dataUrl + '" alt="' + esc(im.name) + '"><button type="button" aria-label="Quitar imagen">×</button>';
+    div.querySelector("button").addEventListener("click", ()=>{ S.images.splice(i,1); renderImages(); });
+    host.appendChild(div);
+  });
+}
+function addImageFiles(fileList){
+  Array.from(fileList).forEach(file=>{
+    if(!file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const maxDim = 1600;
+        let w = img.naturalWidth, h = img.naturalHeight;
+        if(w>maxDim || h>maxDim){ const sc = maxDim/Math.max(w,h); w = Math.round(w*sc); h = Math.round(h*sc); }
+        const cnv = document.createElement("canvas");
+        cnv.width = w; cnv.height = h;
+        cnv.getContext("2d").drawImage(img, 0, 0, w, h);
+        S.images = S.images.concat([{name:file.name, dataUrl:cnv.toDataURL("image/jpeg", 0.85), width:w, height:h}]);
+        renderImages();
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ============================================================
+   Enlaces de entradas
+   ============================================================ */
+const BINDS = [["f-fecha","fecha"],["f-ctdi","ctdi"],["f-dlp","dlp"],["f-fprev","fprev"],["f-incdesc","incdesc"],["f-edad","edad"],["f-pa","pa"],["f-anios","anios"],
+  ["f-infdesc","infdesc"],["f-agat","agat"],["f-sdesc","sdesc"],["f-other","other"]];
+function bindAll(){
+  BINDS.forEach(([id,key])=>{
+    const el = $(id);
+    el.value = S[key];
+    el.addEventListener("input", ()=>{ S[key] = el.value; render(); });
+  });
+}
+$("f-incompleto").addEventListener("change", e=>{ S.incompleto = e.target.checked; render(); });
+$("f-tib").addEventListener("change", e=>{ S.tib = e.target.checked; render(); });
+$("f-cacs").addEventListener("change", e=>{ S.cacS = e.target.checked; render(); });
+$("btn-addnod").addEventListener("click", addFinding);
+
+$("out-code").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-sec]");
+  if(!b) return;
+  $(b.getAttribute("data-sec")).scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"});
+});
+
+/* barra fija en móvil: se oculta cuando el panel de resultado está a la vista */
+(function(){
+  const bar = $("codebar"), panel = $("panel");
+  $("cbar-go").addEventListener("click", ()=>panel.scrollIntoView({behavior:REDUCED ? "auto" : "smooth", block:"start"}));
+  if(!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(entries=>{
+    entries.forEach(en=>bar.classList.toggle("away", en.isIntersecting));
+  }, {threshold:0.02}).observe(panel);
+})();
+
+/* ============================================================
+   Acciones
+   ============================================================ */
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  setTimeout(()=>{ if(t.textContent===msg) t.textContent = ""; }, 2600);
+}
+$("btn-copy").addEventListener("click", async ()=>{
+  const text = plainText();
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Texto copiado");
+  }catch(err){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Texto copiado"); }
+    catch(e2){ toast("No se pudo copiar; selecciona el texto manualmente"); }
+    document.body.removeChild(ta);
+  }
+});
+$("btn-addimg").addEventListener("click", ()=>$("f-images").click());
+$("f-images").addEventListener("change", e=>{ addImageFiles(e.target.files); e.target.value = ""; });
+$("btn-print").addEventListener("click", ()=>window.print());
+$("btn-reset").addEventListener("click", ()=>{
+  if(!confirm("Se borrarán todos los datos capturados. ¿Continuar?")) return;
+  S = defaults();
+  BINDS.forEach(([id,key])=>{ $(id).value = S[key]; });
+  $("f-images").value = "";
+  buildFindings();
+  render();
+  toast("Formulario vacío");
+});
+
+/* ---------- mapa en canvas para PDF y Word ---------- */
+function drawMapCanvas(E){
+  const sc = 2;
+  const cnv = document.createElement("canvas");
+  cnv.width = VB.w*sc; cnv.height = VB.h*sc;
+  const ctx = cnv.getContext("2d");
+  ctx.scale(sc, sc);
+  ctx.translate(-VB.x, -VB.y);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(VB.x, VB.y, VB.w, VB.h);
+  ctx.fillStyle = "#EDF1F3";
+  LUNGS.forEach(d=>ctx.fill(new Path2D(d)));
+  ctx.strokeStyle = "#9AA9B0"; ctx.lineWidth = 1.4; ctx.setLineDash([5,5]);
+  FIS.forEach(d=>ctx.stroke(new Path2D(d)));
+  ctx.setLineDash([]);
+  ctx.font = "600 12px Arial, Helvetica, sans-serif";
+  ctx.fillStyle = "#5F7079"; ctx.textAlign = "center";
+  Object.keys(ZONE).forEach(k=>ctx.fillText(ZLAB[k], ZONE[k][0], ZONE[k][1] - 8));
+  markers(E).forEach(m=>{
+    ctx.beginPath(); ctx.arc(m.x, m.y, 13, 0, Math.PI*2);
+    ctx.fillStyle = m.fill; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = "#16232B"; ctx.stroke();
+    ctx.fillStyle = "#16232B"; ctx.font = "700 12px Arial, Helvetica, sans-serif";
+    ctx.fillText(String(m.n), m.x, m.y + 4.3);
+  });
+  ctx.font = "11px Arial, Helvetica, sans-serif";
+  ctx.fillStyle = "#6F838C";
+  ctx.textAlign = "left";  ctx.fillText("Derecho", 44, 58);
+  ctx.textAlign = "right"; ctx.fillText("Izquierdo", 516, 58);
+  return cnv;
+}
+
+/* ---------- PDF (jsPDF bajo demanda) ---------- */
+function loadScript(src){
+  return new Promise((resolve, reject)=>{
+    if(document.querySelector('script[data-src="' + src + '"]')){ resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src; s.dataset.src = src;
+    s.onload = ()=>resolve();
+    s.onerror = ()=>reject(new Error("No se pudo cargar " + src));
+    document.head.appendChild(s);
+  });
+}
+async function ensureJsPDF(){
+  if(window.jspdf && window.jspdf.jsPDF) return;
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+}
+function exportFilename(ext, E){
+  const cs = codeString(E);
+  const clean2 = cs ? cs.replace(/^Lung-RADS\s*/, "").replace(/\s+/g, "-") : "pendiente";
+  return "Lung-RADS_" + (clean2 || "pendiente") + "." + ext;
+}
+function pdfSafe(s){
+  return String(s).replace(/≥/g, ">=").replace(/≤/g, "<=").replace(/→/g, "->").replace(/−/g, "-").replace(/÷/g, "/")
+    .replace(/–/g, "-").replace(/—/g, "-").replace(/×/g, "x").replace(/³/g, "3").replace(/·/g, "-");
+}
+async function downloadPDF(){
+  try{
+    toast("Generando PDF…");
+    await ensureJsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({unit:"pt", format:"letter"});
+    const M = 54, W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+    const TW = W - M*2;
+    let y = 56;
+    const need = h=>{ if(y + h > H - 50){ doc.addPage(); y = 56; } };
+    const lines = (txt, size, style, color)=>{
+      doc.setFont("helvetica", style); doc.setFontSize(size); doc.setTextColor(color[0], color[1], color[2]);
+      doc.splitTextToSize(pdfSafe(txt), TW).forEach(l=>{ need(size*1.35); doc.text(l, M, y); y += size*1.35; });
+    };
+    const R = buildReport(), E = R.E;
+
+    lines("TC de tórax de baja dosis: tamizaje de cáncer de pulmón", 15, "bold", [22,35,43]);
+    y += 2;
+    lines("Lung-RADS v2022, American College of Radiology. Christensen J et al. J Am Coll Radiol 2024;21(3):473-488.", 9, "normal", [95,112,121]);
+    y += 14;
+
+    doc.setFont("courier", "bold"); doc.setFontSize(19); doc.setTextColor(22,35,43);
+    need(24); doc.text(pdfSafe(codeString(E) || "Categoría pendiente"), M, y); y += 18;
+    if(E.cat){ lines(cap(DESC[E.cat]) + (E.sMod ? ", con hallazgo significativo no relacionado con cáncer de pulmón (S)." : "."), 10.5, "normal", [51,70,79]); }
+    y += 8;
+
+    if(S.findings.some(f=>f.lobe && f.type)){
+      const cnv = drawMapCanvas(E);
+      const dw = 230, dh = dw*cnv.height/cnv.width;
+      need(dh + 12);
+      doc.addImage(cnv.toDataURL("image/png"), "PNG", M, y, dw, dh, undefined, "FAST");
+      y += dh + 14;
+    }
+
+    lines("HALLAZGOS", 11, "bold", [22,35,43]); y += 2;
+    R.findings.forEach(f=>{ lines(f.h + ": " + f.t, 10.5, "normal", [51,70,79]); y += 4; });
+    y += 6;
+    lines("IMPRESIÓN", 11, "bold", [22,35,43]); y += 2;
+    lines(R.impression || "Pendiente: elige el tipo de estudio y completa los hallazgos.", 10.5, "normal", [22,35,43]);
+
+    if(S.images.length){
+      y += 12;
+      lines("Imágenes adjuntas", 11, "bold", [22,35,43]); y += 4;
+      const cols = 3, gap = 12;
+      const cellW = (TW - gap*(cols-1))/cols, cellH = cellW*0.75;
+      let col = 0;
+      S.images.forEach(im=>{
+        if(col===0) need(cellH + gap);
+        const x = M + col*(cellW + gap);
+        let w = cellW, h = cellW*(im.height/im.width);
+        if(h > cellH){ h = cellH; w = cellH*(im.width/im.height); }
+        doc.addImage(im.dataUrl, "JPEG", x, y, w, h);
+        col++;
+        if(col>=cols){ col = 0; y += cellH + gap; }
+      });
+      if(col!==0) y += cellH + gap;
+    }
+
+    doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(140,155,162);
+    const pages = doc.getNumberOfPages();
+    for(let p=1; p<=pages; p++){
+      doc.setPage(p);
+      doc.text(pdfSafe("Documento generado con Lung-RADS v2022 (ACR). Las recomendaciones no sustituyen el juicio clínico."), M, H - 28);
+    }
+    doc.save(exportFilename("pdf", E));
+    toast("PDF descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el PDF");
+  }
+}
+
+/* ---------- Word (.doc compatible, sin dependencias) ---------- */
+function buildWordHtml(){
+  const R = buildReport(), E = R.E;
+  const code = esc(codeString(E) || "Categoría pendiente");
+  const mean = E.cat ? esc(cap(DESC[E.cat]) + (E.sMod ? ", con hallazgo significativo no relacionado con cáncer de pulmón (S)." : ".")) : "";
+  const map = S.findings.some(f=>f.lobe && f.type) ? '<p><img src="' + drawMapCanvas(E).toDataURL("image/png") + '" style="width:260px"></p>' : "";
+  const f = R.findings.map(x=>"<p><b>" + esc(x.h) + ".</b> " + esc(x.t) + "</p>").join("");
+  const imp = "<p>" + esc(R.impression || "Pendiente: elige el tipo de estudio y completa los hallazgos.") + "</p>";
+  let att = "";
+  if(S.images.length){
+    att = "<h3>Imágenes adjuntas</h3><table style='width:100%;border-collapse:collapse;' cellpadding='4'><tr>"
+      + S.images.map(im=>'<td style="text-align:center;vertical-align:top;"><img src="' + im.dataUrl + '" style="width:160px;height:auto;border:1px solid #C9D3D8;"><div style="font-size:9pt;color:#5F7079;margin-top:2px;">' + esc(im.name) + "</div></td>").join("")
+      + "</tr></table>";
+  }
+  return "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>"
+    + '<head><meta charset="utf-8"><title>Informe Lung-RADS</title>'
+    + "<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->"
+    + "<style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#16232B;}h1{font-size:15pt;margin-bottom:2pt;}h3{font-size:11pt;margin-top:16pt;}"
+    + ".meta{font-size:9pt;color:#5F7079;margin-bottom:12pt;}.code{font-family:'Courier New',monospace;font-size:15pt;font-weight:bold;margin:0 0 2pt;}"
+    + ".end{font-size:8pt;color:#8C9BA2;margin-top:20pt;font-style:italic;}</style></head><body>"
+    + "<h1>TC de tórax de baja dosis: tamizaje de cáncer de pulmón</h1>"
+    + '<p class="meta">Lung-RADS v2022, American College of Radiology. Christensen J et al. J Am Coll Radiol 2024;21(3):473-488.</p>'
+    + '<p class="code">' + code + "</p><p>" + mean + "</p>" + map
+    + "<h3>Hallazgos</h3>" + f + "<h3>Impresión</h3>" + imp + att
+    + '<p class="end">Documento generado con Lung-RADS v2022 (ACR). Las recomendaciones no sustituyen el juicio clínico.</p>'
+    + "</body></html>";
+}
+function downloadWord(){
+  try{
+    const blob = new Blob(["﻿", buildWordHtml()], {type:"application/msword"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = exportFilename("doc", evaluate(S));
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 3000);
+    toast("Word descargado");
+  }catch(err){
+    console.error(err);
+    toast("No se pudo generar el Word");
+  }
+}
+$("btn-pdf").addEventListener("click", downloadPDF);
+$("btn-word").addEventListener("click", downloadWord);
+
+/* ============================================================
+   Inicio
+   ============================================================ */
+bindAll();
+buildChips();
+buildMap();
+buildFindings();
+render();
+</script>
+</body>
+</html>
