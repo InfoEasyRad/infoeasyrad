@@ -551,6 +551,9 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
 .hub-ico{font-size:30px;margin-bottom:10px}
 .hub-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
 .hub-desc{font-size:13px;color:var(--ink-3);line-height:1.5}
+.hub-org-top{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.hub-section-title{font-size:18px;font-weight:700;color:var(--ink)}
+.hub-back{font-size:13px;background:none;border:1.5px solid var(--border);color:var(--ink-3);cursor:pointer;padding:7px 14px;border-radius:7px;font-family:inherit}
 .hub-soon{opacity:.55;cursor:default}
 .hub-soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
 .hub-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-4);background:var(--surface);border-radius:999px;padding:3px 10px;margin-top:8px}
@@ -753,7 +756,8 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
       <div class="auth-title">¿Qué querés hacer?</div>
       <div class="auth-sub">Elegí una herramienta para continuar</div>
     </div>
-    <div class="hub-grid">
+        <div id="hubMain">
+      <div class="hub-grid">
       <button type="button" class="hub-card" onclick="abrirInfoEasy()">
         <span class="hub-ico">🎙️</span>
         <span class="hub-name">InfoEasyRad</span>
@@ -764,6 +768,32 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
         <span class="hub-name">Registro de audios</span>
         <span class="hub-desc">Grabá los dictados con nombre, edad y fecha: se suben solos y después decidís cuáles transcribir e informar.</span>
       </button>
+      <button type="button" class="hub-card" onclick="mostrarOrgano('cardio')">
+        <span class="hub-ico">🫀</span>
+        <span class="hub-name">Cardiovascular</span>
+        <span class="hub-desc">TAVI, cardiometría RM, coronarias, cardiopatías congénitas y anomalías de coronarias.</span>
+      </button>
+      <button type="button" class="hub-card" onclick="mostrarOrgano('pulmon')">
+        <span class="hub-ico">🫁</span>
+        <span class="hub-name">Pulmón</span>
+        <span class="hub-desc">Tromboembolismo pulmonar (PE-RADS) y nódulos pulmonares.</span>
+      </button>
+      <button type="button" class="hub-card" onclick="mostrarOrgano('otros')">
+        <span class="hub-ico">🩻</span>
+        <span class="hub-name">Otros órganos</span>
+        <span class="hub-desc">Estadificación de linfoma y más.</span>
+      </button>
+      </div>
+      <div style="margin-top:26px">
+        <button type="button" onclick="confirmLogout()" style="font-size:13px;background:none;border:1.5px solid var(--border);color:var(--ink-3);cursor:pointer;padding:9px 18px;border-radius:7px;font-family:inherit">⏻ Cerrar sesión</button>
+      </div>
+    </div>
+    <div id="hubOrg-cardio" class="hub-org" style="display:none">
+      <div class="hub-org-top">
+        <button type="button" class="hub-back" onclick="volverHub()">← Volver</button>
+        <div class="hub-section-title">Cardiovascular</div>
+      </div>
+      <div class="hub-grid">
       <button type="button" class="hub-card" onclick="window.location.href='/tavi.html'">
         <span class="hub-ico">🫀</span>
         <span class="hub-name">Formulario TAVI</span>
@@ -789,19 +819,33 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
         <span class="hub-name">Anomalías del origen de coronarias</span>
         <span class="hub-desc">Reporte estructurado AAOCA según la nomenclatura ICAAC: descriptor central, topografía ostial y cálculos automáticos.</span>
       </button>
+      </div>
+    </div>
+    <div id="hubOrg-pulmon" class="hub-org" style="display:none">
+      <div class="hub-org-top">
+        <button type="button" class="hub-back" onclick="volverHub()">← Volver</button>
+        <div class="hub-section-title">Pulmón</div>
+      </div>
+      <div class="hub-grid">
       <button type="button" class="hub-card" onclick="window.location.href='/perads.html'">
         <span class="hub-ico">🫁</span>
         <span class="hub-name">Tromboembolismo pulmonar <span style="white-space:nowrap">(PE-RADS)</span></span>
         <span class="hub-desc">Categoría PE-RADS v2026 en angiotomografía y angiorresonancia, con texto de informe y manejo sugerido.</span>
       </button>
+      </div>
+    </div>
+    <div id="hubOrg-otros" class="hub-org" style="display:none">
+      <div class="hub-org-top">
+        <button type="button" class="hub-back" onclick="volverHub()">← Volver</button>
+        <div class="hub-section-title">Otros órganos</div>
+      </div>
+      <div class="hub-grid">
       <button type="button" class="hub-card" onclick="window.location.href='/linfoma.html'">
         <span class="hub-ico">🩻</span>
         <span class="hub-name">Estadificación de linfoma <span style="white-space:nowrap">(Lugano)</span></span>
         <span class="hub-desc">Estadio de Lugano 2014 en PET-CT o TC: regiones ganglionares, afectación extraganglionar y masa voluminosa, con texto de informe.</span>
       </button>
-    </div>
-    <div style="margin-top:26px">
-      <button type="button" onclick="confirmLogout()" style="font-size:13px;background:none;border:1.5px solid var(--border);color:var(--ink-3);cursor:pointer;padding:9px 18px;border-radius:7px;font-family:inherit">⏻ Cerrar sesión</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1639,6 +1683,17 @@ async function verificarSesion(){
   document.getElementById('authScreen').style.display='flex';
 }
 
+function mostrarOrgano(id){
+  document.getElementById('hubMain').style.display='none';
+  document.querySelectorAll('.hub-org').forEach(e=>e.style.display='none');
+  document.getElementById('hubOrg-'+id).style.display='block';
+  window.scrollTo(0,0);
+}
+function volverHub(){
+  document.querySelectorAll('.hub-org').forEach(e=>e.style.display='none');
+  document.getElementById('hubMain').style.display='block';
+  window.scrollTo(0,0);
+}
 function confirmLogout(){
   if(confirm('¿Cerrar sesión? Tendrás que ingresar tu contraseña de nuevo la próxima vez.'))doLogout();
 }
