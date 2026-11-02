@@ -844,6 +844,7 @@ async function initBio(){
   });
   pintarCola().then(()=>procesarCola());
   cargarLista();
+  if(new URLSearchParams(location.search).get('buscar')==='1'){const b=$('rBuscar');if(b)b.focus();}
 })();
 </script>
 </body>
