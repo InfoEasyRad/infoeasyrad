@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const LIMITES = { trial: null, gratis: 5, basico: 60, pro: 300, clinica: null, starter: 60, ilimitado: null };
+const LIMITES = { trial: null, gratis: 40, basico: 60, pro: 300, clinica: null, starter: 60, ilimitado: null };
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

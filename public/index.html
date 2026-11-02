@@ -732,6 +732,7 @@ textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(10,123
     <h2>Planes simples</h2>
     <p class="psub">Empezá con 1 mes gratis. Sin permanencia.</p>
     <div class="lp-pgrid">
+      <div class="lp-plan"><div><div class="pn">Gratis</div><div class="pd">40 informes al mes · con anuncios</div></div><div class="pp">$0<small>/mes</small></div></div>
       <div class="lp-plan"><div><div class="pn">Básico</div><div class="pd">60 informes al mes</div></div><div class="pp">$19<small>/mes</small></div></div>
       <div class="lp-plan destacado"><div><div class="pn">Pro</div><div class="pd">300 informes al mes</div></div><div class="pp">$39<small>/mes</small></div></div>
       <div class="lp-plan"><div><div class="pn">Clínica</div><div class="pd">Informes ilimitados</div></div><div class="pp">$79<small>/mes</small></div></div>
@@ -1653,7 +1654,7 @@ function doLogout(){
 
 function mostrarPlanInfo(u){
   const pi=document.getElementById('planInfo');
-  const LIMITES={trial:null,gratis:5,basico:60,pro:300,clinica:null,starter:60,ilimitado:null};
+  const LIMITES={trial:null,gratis:40,basico:60,pro:300,clinica:null,starter:60,ilimitado:null};
   const limite=LIMITES[u.plan];
   const restantes=limite===null?'∞':Math.max(0,limite-(u.informes_mes||0));
   const planNombre={trial:'Trial (1 mes gratis)',gratis:'Gratis',basico:'Básico',pro:'Pro',clinica:'Clínica',starter:'Starter',ilimitado:'Ilimitado'};
